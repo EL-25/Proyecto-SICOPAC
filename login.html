@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <title>Login - Alcaldía La Libertad Este</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body class="fondo-alcaldia">
+
+  <!-- Barra institucional superior -->
+  <div class="barra-social">
+    <a href="https://www.facebook.com/alcaldiaantiguocuscatlan" target="_blank" class="social-btn facebook">
+      <i class="fab fa-facebook-f"></i> FACEBOOK
+    </a>
+    <a href="https://www.instagram.com/distritoantiguo/" target="_blank" class="social-btn instagram">
+      <i class="fab fa-instagram"></i> INSTAGRAM
+    </a>
+    <a href="https://x.com/AlcaldiaAntiguo" target="_blank" class="social-btn twitter">
+      <i class="fab fa-twitter"></i> TWITTER
+    </a>
+    <a href="https://www.youtube.com/user/AlcaldiaAntiguo" target="_blank" class="social-btn youtube">
+      <i class="fab fa-youtube"></i> YOUTUBE
+    </a>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="main-container">
+    
+    <!-- Panel informativo institucional (izquierda) -->
+    <div class="info-panel">
+      <h1>Alcaldía Municipal La Libertad Este</h1>
+      <p>
+        Bienvenido al sistema de autenticación para administradores municipales.<br>
+        Este portal permite el acceso seguro y personalizado a los datos institucionales,  
+        garantizando la trazabilidad, privacidad y eficiencia en la gestión pública.
+      </p>
+      <p class="note">
+        Acceso exclusivo para personal autorizado.<br>
+        Todos los registros están protegidos bajo normativa vigente.
+      </p>
+    </div>
+
+    <!-- Formulario de login (derecha) -->
+    <div class="login-container">
+      <img src="img/LogoAlcaldia.png" alt="Logo Alcaldía" class="logo" />
+      <h2>Iniciar Sesión</h2>
+      <form id="loginForm">
+        <input type="text" id="username" placeholder="Usuario" required />
+        <input type="password" id="password" placeholder="Contraseña" required />
+        <button type="submit">Entrar</button>
+        <div class="acciones-extra">
+           <button type="button" onclick="window.location.href='agregar-usuario.html'" class="boton-agregar">
+            Agregar usuario
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal institucional de bienvenida -->
+  <div id="bienvenidaModal" class="modal">
+    <div class="modal-content">
+      <div class="checkmark">✔</div>
+      <h2>Acceso concedido</h2>
+      <p id="mensajeBienvenida">Bienvenido Administrador de la Base de Datos</p>
+      <button onclick="redirigir()">Continuar →</button>
+    </div>
+  </div>
+
+  <script src="loginbs.js"></script>
+  <script>
+  const usuario = localStorage.getItem("usuarioCreado");
+  if (usuario) {
+    alert(`Bienvenido ${usuario}, acceso autorizado`);
+    localStorage.removeItem("usuarioCreado");
+  }
+</script>
+</body>
+</html>

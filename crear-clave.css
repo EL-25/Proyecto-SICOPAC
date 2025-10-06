@@ -1,0 +1,56 @@
+body.fondo-datos {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: url('img/Alcaldia.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.formulario-clave {
+  background: rgba(255, 255, 255, 0.95);
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.logo {
+  width: 120px;
+  margin-bottom: 10px;
+}
+
+h2 {
+  color: #005baa;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 0.9em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #005baa;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #003f7d;
+}

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Único de Solicitud</title>
+    <link rel="stylesheet" href="styleform.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="logo">
+            <img src="IMG/LogoAlcaldia.png" alt="Logo institucional" width="150">
+        </div>
+
+        <h2>FORMULARIO ÚNICO DE SOLICITUD</h2>
+        <br> <br>
+
+        <form id="solicitudForm">
+            <!-- ...existing code... -->
+            <div class="form-row">
+                <label for="refLLE">No. de Presentación REF/LLE:</label>
+                <input type="date" id="refLLE">
+
+                <label for="municipio">Municipio:</label>
+                <select id="municipio" required>
+        <option value="">Seleccione un municipio</option>
+        <option value="Antiguo Cuscatlán">Antiguo Cuscatlán</option>
+        <option value="Nuevo Cuscatlán">Nuevo Cuscatlán</option>
+        <option value="San José Villanueva">San José Villanueva</option>
+        <option value="Zaragoza">Zaragoza</option>
+        <option value="Huizúcar">Huizúcar</option>
+    </select>
+
+                <strong>Distrito:</strong>
+                <span id="distritoResultado">—</span>
+
+                <label for="lugarPresentacion">Lugar de presentación:</label>
+                <input type="text" id="lugarPresentacion" name="lugarPresentacion">
+
+                <label for="fechaPresentacion">Fecha de presentación:</label>
+                <input type="date" id="fechaPresentacion">
+
+                <label for="horaPresentacion">Hora:</label>
+                <input type="time" id="horaPresentacion">
+
+                <label>Contacto para consultar estado de trámite:</label>
+                <input type="text">
+
+                <label>Plazo de respuesta:</label>
+                <input type="text">
+            </div>
+            <!-- ...existing code... -->
+
+
+            <hr>
+            <br>
+            <label>Tipo de Documento de Identificación:</label>
+            <input type="radio" name="docTipo" value="DUI" id="duiRadio"> DUI
+            <input type="radio" name="docTipo" value="Pasaporte" id="pasaporteRadio"> Pasaporte
+            <input type="radio" name="docTipo" value="Otro" id="otroRadio"> Otro
+
+            <!-- Campos ocultos -->
+            <div id="campoDUI" style="display:none;">
+                <label>Número de DUI:</label>
+                <input type="text" id="duiInput" disabled>
+            </div>
+
+            <div id="campoPasaporte" style="display:none;">
+                <label>Número de Pasaporte:</label>
+                <input type="text" id="pasaporteInput" disabled>
+            </div>
+
+            <div id="campoOtro" style="display:none;">
+                <label>Especifique otro documento:</label>
+                <input type="text" id="otroInput" disabled>
+            </div> <br> <br>
+
+            <label>Nombre:</label>
+            <input type="text" required><br>
+
+
+            <p>Domicilio: <input type="text" id="domicilioInput" name="domicilio" readonly></p>
+
+
+            <label>¿Es el mismo titular del asiento?</label>
+            <input type="radio" name="titular" value="Sí"> Sí
+            <input type="radio" name="titular" value="No"> No
+            <br><br>
+
+            <label>Carácter en que comparece:</label>
+            <input type="checkbox"> Informante
+            <input type="checkbox"> Padre
+            <input type="checkbox"> Madre
+            <input type="checkbox"> Responsable
+            <br><br>
+
+            <label>Teléfono:</label>
+            <input type="tel" pattern="[0-9]{8}" placeholder="00000000"><br><br>
+
+            <label>Correo electrónico:</label>
+            <input type="email" required>
+            </fieldset>
+
+
+            <fieldset>
+
+                <legend>Datos del titular del asiento</legend>
+
+                <label>Tipo de Documento de Identificación:</label>
+                <input type="radio" name="docTitular" value="DUI" id="duiTitularRadio"> Dui
+                <input type="radio" name="docTitular" value="NUI" id="nuiTitularRadio"> NUI
+                <br><br>
+
+                <!-- Campos ocultos y deshabilitados -->
+                <div id="campoDUI_Titular" style="display:none;">
+                    <label>Número de Dui:</label>
+                    <input type="text" id="duiTitularInput" disabled>
+                </div>
+
+                <div id="campoNUI_Titular" style="display:none;">
+                    <label>Número de NUI:</label>
+                    <input type="text" id="nuiTitularInput" disabled>
+                </div>
+
+            </fieldset>
+
+
+            <label>Nombre:</label>
+            <input type="text"><br><br>
+
+            <label>Fecha del hecho o acto jurídico:</label>
+            <input type="date"><br><br>
+
+            <label>Lugar del hecho o acto jurídico:</label>
+            <input type="text"><br><br>
+
+            <label>Nombre de la madre:</label>
+            <input type="text"><br><br>
+
+            <label>Nombre del padre:</label>
+            <input type="text">
+            </fieldset>
+
+            <!-- Aquí empieza la segunda página -->
+            <div class="salto-pagina"></div>
+
+
+            <fieldset>
+                <legend>Declaración de la solicitud</legend>
+                <label><input type="checkbox"> Nacimiento</label>
+                <label><input type="checkbox"> Matrimonio</label>
+                <label><input type="checkbox"> Unión no matrimonial</label>
+                <label><input type="checkbox"> Divorio</label>
+                <label><input type="checkbox"> Rectificacion motivada</label>
+                <label><input type="checkbox"> Rectificacion Judicial </label>
+                <label><input type="checkbox"> Defuncion</label>
+                <label><input type="checkbox"> reconocimiento</label>
+                <label><input type="checkbox"> Identidades o adecuciones</label>
+            </fieldset>
+
+
+            <fieldset>
+                <legend>Descripción de la Documentación Presentada</legend>
+
+                <label><input type="checkbox"> Defunción en</label>
+                <label><input type="checkbox"> Registro de Defunción Fetal</label>
+                <label><input type="checkbox"> Estado Familiar adquirido en el extranjero</label>
+                <label><input type="checkbox"> Nacimiento en el extranjero</label>
+                <label><input type="checkbox"> Reposición</label>
+                <label><input type="checkbox"> Anotaciones Marginales</label>
+                <label><input type="checkbox"> Cancelación</label>
+                <label><input type="checkbox"> Modificaciones</label>
+                <label><input type="checkbox"> Acta de reconocimiento</label>
+                <label><input type="checkbox"> Resolución Sustitutiva del Régimen Patrimonial</label>
+                <label><input type="checkbox"> Rectificaciones</label>
+                <label><input type="checkbox"> Subsanaciones</label>
+                <label><input type="checkbox"> Anotaciones a un asiento posterior</label>
+                <label><input type="checkbox"> Otros (según requerimiento del módulo de marginaciones)</label>
+
+                <hr>
+
+                <label><input type="checkbox"> Fecha Médica de Nacimiento</label>
+                <label><input type="checkbox"> Testimonio de Escritura Pública</label>
+                <label><input type="checkbox"> Certificación de Sentencia Ejecutoriada y oficio o correo electrónico de notificación</label>
+                <label><input type="checkbox"> Certificación de Línea Legal</label>
+                <label><input type="checkbox"> Constancia o Certificado Médico de Defunción</label>
+                <label><input type="checkbox"> Documento resultante de autorización de juez competente</label>
+                <label><input type="checkbox"> Documento resultante de hecho o acto procedente del extranjero</label>
+                <label><input type="checkbox"> Certificación de la Resolución Administrativa</label>
+                <label><input type="checkbox"> Certificación de la Resolución Judicial</label>
+        </form>
+    </div>
+
+    <br>
+    <div class="firmas-section">
+        <div class="firmas-row">
+            <div class="firma-col">
+                <hr>
+                <div class="firma-label"><strong>Usuario solicitante</strong></div>
+                <div class="firma-desc">(Firma o huella)</div>
+            </div>
+            <div class="firma-col">
+                <hr>
+                <div class="firma-label"><strong>REF</strong></div>
+                <div class="firma-desc">(Nombre y firma)</div>
+            </div>
+        </div><br><br><br>
+        <div class="texto-legal">
+            La información contenida en esta solicitud es de exclusiva responsabilidad de quien la complete, en los casos donde la persona no supiese leer ni escribir la persona que ayude a completarlo lo hará conforme a lo expresado por el interesado quien deberá
+            en todo caso estampar la huella o firma.-
+        </div>
+    </div>
+
+
+    <div class="botones">
+        <button type="reset">Limpiar</button>
+        <button type="submit">Enviar</button>
+        <!-- Botón para imprimir -->
+        <button type="button" onclick="window.print()">🖨️ Imprimir</button>
+    </div>
+
+
+    <script src="scrip.js"></script>
+</body>
+
+</html>

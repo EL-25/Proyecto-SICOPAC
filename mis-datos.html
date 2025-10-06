@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mis Datos - Alcaldía La Libertad Este</title>
+  <link rel="stylesheet" href="mis-datos.css" />
+</head>
+<body class="fondo-datos">
+
+  <!-- Encabezado institucional -->
+  <header class="encabezado">
+    <img src="img/LogoAlcaldia.png" alt="Logo Alcaldía" class="logo" />
+    <h1>Panel de Usuario</h1>
+    <p>Bienvenido al módulo de consulta personal</p>
+  </header>
+
+  <!-- Tarjeta de datos del usuario -->
+  <section class="tarjeta-datos">
+    <h2>Datos del Administrador</h2>
+    <div class="campo"><strong>Usuario:</strong> <span id="campo-usuario">Cargando...</span></div>
+    <div class="campo"><strong>Nombre completo:</strong> <span id="campo-nombre">Cargando...</span></div>
+    <div class="campo"><strong>Correo institucional:</strong> <span id="campo-correo">Cargando...</span></div>
+    <div class="campo"><strong>Rol:</strong> <span id="campo-rol">Cargando...</span></div>
+    <div class="campo"><strong>Fecha de ingreso:</strong> <span id="campo-fecha">Cargando...</span></div>
+    <div class="campo"><strong>Hora de ingreso:</strong> <span id="campo-hora">Cargando...</span></div>
+    <div class="campo firma-digital">
+      <strong>Firma digital:</strong><br />
+      <img src="img/Firma EL.png" alt="Firma de Edwin Leiva" class="firma-img" />
+    </div>
+  </section>
+
+  <!-- Botón de cierre de sesión -->
+  <div class="acciones">
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+
+<div class="acciones">
+  <a href="Formulario SICOPAC (2)/Proyecto SICOPAC/MaquetacionFormulario.html">
+    <button>Formulario</button>
+  </a>
+</div>
+
+  <script src="mis-datos.js"></script>
+</body>
+</html>

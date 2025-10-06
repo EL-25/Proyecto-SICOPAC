@@ -1,0 +1,44 @@
+body.fondo-datos {
+  font-family: 'Segoe UI', sans-serif;
+  background: url('img/Alcaldia.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.formulario-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  max-width: 500px;
+  margin: 60px auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+h2 {
+  text-align: center;
+  color: #005baa;
+  margin-bottom: 20px;
+}
+
+form input, form select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  background-color: #005baa;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 15px;
+}
+
+form button:hover {
+  background-color: #003f7d;
+}

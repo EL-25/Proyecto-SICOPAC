@@ -1,0 +1,213 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    padding: 20px;
+}
+
+.logo {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    max-width: 150px;
+    height: auto;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 25px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    color: #1c5d99;
+}
+
+.encabezado {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+fieldset {
+    border: 2px solid #1c5d99;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+legend {
+    background: #1c5d99;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+label {
+    display: block;
+    margin: 5px 0;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"] {
+    width: 95%;
+    padding: 6px;
+    margin-top: 4px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #1c5d99;
+    box-shadow: 0 0 5px #1c5d99;
+    outline: none;
+}
+
+.botones {
+    text-align: center;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button[type="reset"] {
+    background: #bbb;
+    color: white;
+}
+
+button[type="submit"] {
+    background: #1c5d99;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+br {
+    color: rgb(13, 3, 102);
+    border-width: thick;
+}
+
+@media print {
+    /* Oculta botones al imprimir */
+    .botones {
+        display: none;
+    }
+    /* Centra el formulario en la hoja */
+    body {
+        background: white;
+    }
+    .container {
+        box-shadow: none;
+        border: none;
+        width: 100%;
+    }
+}
+
+@media print {
+    /* Oculta botones al imprimir */
+    .botones {
+        display: none;
+    }
+    /* Centra el formulario en la hoja */
+    body {
+        background: white;
+    }
+    .container {
+        box-shadow: none;
+        border: none;
+        width: 100%;
+    }
+    /* Forzar salto de página */
+    .salto-pagina {
+        page-break-before: always;
+        /* Para navegadores clásicos */
+        break-before: page;
+        /* Para navegadores modernos */
+    }
+}
+
+
+/* Agrega esto a styleform.css */
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.form-row label,
+.form-row input,
+.form-row select,
+.form-row span,
+.form-row strong {
+    margin-right: 10px;
+}
+
+.form-row input[type="text"],
+.form-row input[type="date"],
+.form-row input[type="time"],
+.form-row select {
+    min-width: 100px;
+}
+
+
+/* Firmas y texto legal */
+
+.firmas-section {
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.firmas-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 10px;
+    gap: 40px;
+}
+
+.firma-col {
+    flex: 1;
+    text-align: center;
+}
+
+.firma-col hr {
+    border: none;
+    border-top: 1.5px solid #333;
+    margin: 0 0 5px 0;
+    height: 1px;
+}
+
+.firma-label {
+    font-weight: bold;
+}
+
+.firma-desc {
+    font-size: 0.95em;
+}
+
+.texto-legal {
+    font-size: 0.95em;
+    margin-top: 10px;
+    text-align: justify;
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agregar Usuario</title>
+  <link rel="stylesheet" href="agregar-usuario.css" />
+</head>
+<body class="fondo-datos">
+  <div class="formulario-container">
+    <h2>Registro de Usuario Institucional</h2>
+    <form id="registroForm" enctype="multipart/form-data">
+      <input type="text" name="usuario" placeholder="Usuario" required />
+      <input type="text" name="primerNombre" placeholder="Primer nombre" required />
+      <input type="text" name="segundoNombre" placeholder="Segundo nombre" />
+      <input type="text" name="primerApellido" placeholder="Primer apellido" required />
+      <input type="text" name="segundoApellido" placeholder="Segundo apellido" />
+      <input type="text" name="tercerApellido" placeholder="Tercer apellido (De)" />
+      <input type="email" name="correo" placeholder="Correo institucional" required />
+      <label for="rol">Rol:</label>
+      <input type="text" id="rol" placeholder="Ej. Administrador, Gestor, Recepcionista" required />
+      <input type="hidden" name="fechaIngreso" id="fechaIngreso" />
+      <input type="hidden" name="horaIngreso" id="horaIngreso" />
+      <label>Firma digital:</label>
+      <input type="file" name="firma" accept="image/*" required />
+      <button type="submit">Guardar usuario</button>
+    </form>
+  </div>
+
+  <script src="agregar-usuario.js"></script>
+</body>
+</html>
