@@ -1,13 +1,15 @@
 {
   "name": "login-sicopac",
   "version": "1.0.0",
-  "description": "",
-  "main": "login.js",
+  "description": "Sistema de autenticación institucional para SICOPAC",
+  "main": "server.js",
   "scripts": {
+    "dev": "nodemon js/server.js",
+    "start": "node js/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Edwin Leiva y Cesar Melendez",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^2.2.0",

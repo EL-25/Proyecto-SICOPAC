@@ -43,3 +43,4 @@ ADD Firma VARCHAR(100);
 DELETE FROM Usuarios
 WHERE Id <> 1;
 
+DBCC CHECKIDENT ('Usuarios', RESEED, 1);

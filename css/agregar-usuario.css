@@ -1,6 +1,6 @@
 body.fondo-datos {
   font-family: 'Segoe UI', sans-serif;
-  background: url('img/Alcaldia.jpg') no-repeat center center fixed;
+  background: url('../img/Alcaldia.jpg') no-repeat center center fixed;
   background-size: cover;
 }
 
