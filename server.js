@@ -118,9 +118,9 @@ app.post('/api/agregar-usuario', async (req, res) => {
     firma
   } = req.body;
 
-  if (!usuario || !primerNombre || !primerApellido || !correo || !rol || !fechaIngreso || !horaIngreso || !firma) {
-    return res.status(400).send('Faltan campos obligatorios');
-  }
+ if (!usuario || !primerNombre || !primerApellido || !correo || !rol || !fechaIngreso || !horaIngreso) {
+  return res.status(400).send('Faltan campos obligatorios');
+}
 
   const nombreCompleto = `${primerNombre} ${segundoNombre || ''} ${primerApellido} ${segundoApellido || ''} ${tercerApellido || ''}`.trim();
   const fechaHora = `${fechaIngreso} ${horaIngreso}`;
@@ -156,3 +156,4 @@ app.post('/api/agregar-usuario', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+// --- Arreglando el codigo ---

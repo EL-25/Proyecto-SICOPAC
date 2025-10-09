@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Obtener solo el nombre del archivo de firma
     const firmaFile = formData.get("firma");
-    const firma = firmaFile.name;
+    const firma = firmaFile ? firmaFile.name : "";
 
     const payload = {
       usuario,
@@ -65,3 +65,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+// --- Arreglando el codigo ---
