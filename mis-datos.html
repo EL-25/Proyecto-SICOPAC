@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mis Datos - Alcaldía La Libertad Este</title>
-  <link rel="stylesheet" href="css/mis-datos.css" />
+  <link rel="stylesheet" href="mis-datos.css" />
 </head>
 <body class="fondo-datos">
 
@@ -26,7 +26,7 @@
     <div class="campo"><strong>Hora de ingreso:</strong> <span id="campo-hora">Cargando...</span></div>
     <div class="campo firma-digital">
       <strong>Firma digital:</strong><br />
-      <img src="img/Firma EL.png" alt="Firma de Edwin Leiva" class="firma-img" />
+      <img src="" alt="Firma Digital" class="firma-img" id="firma-img" />
     </div>
   </section>
 
@@ -35,12 +35,66 @@
     <button onclick="cerrarSesion()">Cerrar sesión</button>
   </div>
 
-<div class="acciones">
-  <a href="Formulario SICOPAC (2)/Proyecto SICOPAC/MaquetacionFormulario.html">
-    <button>Formulario</button>
-  </a>
-</div>
+  <!-- Botón para ir al formulario -->
+  <div class="acciones">
+    <a href="Formulario SICOPAC (2)/Proyecto SICOPAC/MaquetacionFormulario.html">
+      <button>Formulario</button>
+    </a>
+  </div>
 
-  <script src="js/mis-datos.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const usuario = localStorage.getItem("usuarioActivo");
+
+      if (!usuario) {
+        alert("No hay sesión activa. Por favor inicia sesión.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3000/api/mis-datos", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ usuario })
+        });
+
+        const data = await response.json();
+
+        document.getElementById("campo-usuario").textContent = data.usuario;
+        document.getElementById("campo-nombre").textContent = data.nombre;
+        document.getElementById("campo-correo").textContent = data.correo;
+        document.getElementById("campo-rol").textContent = data.rol;
+
+        // Interpretar fecha y hora correctamente
+        const fechaObj = new Date(data.fechaIngreso);
+        document.getElementById("campo-fecha").textContent = fechaObj.toLocaleDateString("es-SV");
+        document.getElementById("campo-hora").textContent = fechaObj.toLocaleTimeString("es-SV", {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+
+        // Mostrar firma digital si existe
+        if (data.Firma) {
+          const firmaImg = document.getElementById("firma-img");
+          firmaImg.src = `img/firma/${data.Firma}`;
+          firmaImg.alt = `Firma de ${data.nombre}`;
+          firmaImg.style.display = "block";
+        } else {
+          document.getElementById("firma-img").style.display = "none";
+        }
+      } catch (err) {
+        console.error("Error al cargar datos del usuario:", err);
+        alert("No se pudieron cargar los datos del usuario.");
+      }
+    });
+
+    function cerrarSesion() {
+      localStorage.removeItem("usuarioActivo");
+      window.location.href = "login.html";
+    }
+  </script>
 </body>
 </html>

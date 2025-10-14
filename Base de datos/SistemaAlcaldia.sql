@@ -40,6 +40,10 @@ WHERE Usuario = 'Edwin Leiva';
 ALTER TABLE Usuarios
 ADD Firma VARCHAR(100);
 
+UPDATE Usuarios
+SET Firma = 'Firma EL.png'
+WHERE Usuario = 'Edwin Leiva';
+
 DELETE FROM Usuarios
 WHERE Id <> 1;
 
