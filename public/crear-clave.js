@@ -31,12 +31,12 @@ async function crearClave() {
   const nuevaClave = document.getElementById("nuevaClave").value.trim();
 
   if (!usuario || !nuevaClave) {
-    alert("Por favor, completa ambos campos.");
+    mostrarModalErrorClave("Por favor, completa ambos campos.");
     return;
   }
 
   if (nuevaClave.length < 6) {
-    alert("La contraseña debe tener al menos 6 caracteres.");
+    mostrarModalErrorClave("La contraseña debe tener al menos 6 caracteres.");
     return;
   }
 
@@ -55,22 +55,68 @@ async function crearClave() {
     const mensaje = resultado.mensaje || "Contraseña creada exitosamente";
 
     if (response.ok) {
-      alert(mensaje);
-      setTimeout(() => {
-        window.location.href = "./login.html";
-      }, 150);
-
       // Sincronizar localStorage para el panel
       localStorage.setItem("usuarioCreado", usuario);
       localStorage.setItem("usuarioActivo", usuario);
+
+      // Mostrar modal de éxito
+      mostrarModalExitoClave(mensaje);
     } else {
-      alert("Error: " + mensaje);
+      mostrarModalErrorClave("Error: " + mensaje);
     }
   } catch (error) {
     console.error("Error de conexión:", error);
-    alert("No se pudo conectar con el servidor.");
+    mostrarModalErrorClave("No se pudo conectar con el servidor.");
   } finally {
     boton.disabled = false;
     boton.textContent = "Guardar contraseña";
   }
+}
+
+// Mostrar modal de error
+function mostrarModalErrorClave(mensaje) {
+  const modal = document.getElementById("modalErrorClave");
+  const texto = modal.querySelector("p");
+  texto.textContent = mensaje;
+  modal.style.display = "flex";
+}
+
+function cerrarModalError() {
+  document.getElementById("modalErrorClave").style.display = "none";
+}
+
+// Mostrar modal de éxito
+function mostrarModalExitoClave(mensaje) {
+  const modal = document.getElementById("modalExitoClave");
+  const texto = modal.querySelector("p");
+  texto.textContent = mensaje;
+  modal.style.display = "flex";
+}
+
+function cerrarModalExito() {
+  document.getElementById("modalExitoClave").style.display = "none";
+}
+
+// Mostrar modal de acceso autorizado
+function mostrarModalAccesoAutorizado(nombreUsuario) {
+  const modal = document.getElementById("modalAccesoAutorizado");
+  const mensaje = document.getElementById("mensajeBienvenida");
+  mensaje.textContent = `Bienvenido ${nombreUsuario}, en breve accederá al sistema institucional.`;
+  modal.style.display = "flex";
+
+  // Redirigir automáticamente después de 2.5 segundos
+  setTimeout(() => {
+    window.location.href = "login.html";
+  }, 2500);
+}
+
+// Activar acceso autorizado desde el botón del modal de éxito
+function continuarFlujoAcceso() {
+  cerrarModalExito();
+  const usuario = localStorage.getItem("usuarioActivo");
+  mostrarModalAccesoAutorizado(usuario);
+}
+
+function redirigirAlSistema() {
+  window.location.href = "login.html";
 }

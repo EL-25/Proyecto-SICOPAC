@@ -7,14 +7,16 @@ const path = require('path');
 
 // Configuración de conexión a SQL Server
 const dbConfig = {
-  user: 'UDBbasedatos',
-  password: 'Bunny&Sae20',
+  user: 'sa',
+  password: 'EdwinBD31',
   server: 'localhost',
   database: 'SistemaAlcaldia',
   options: {
     port: 1433,
     encrypt: false,
-    trustServerCertificate: true
+    trustServerCertificate: true,
+    connectionTimeout: 30000,
+    requestTimeout: 30000
   }
 };
 
@@ -26,6 +28,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/img/firma', express.static(path.join(__dirname, 'img/firma')));
+app.use('/img', express.static(path.join(__dirname, 'img')));
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuración de multer para guardar firmas
 const storage = multer.diskStorage({

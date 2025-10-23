@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <title>Agregar Usuario</title>
-  <link rel="stylesheet" href="agregar-usuario.css" />
+  <link rel="stylesheet" href="/agregar-usuario.css" />
+  <!--Font Awesome para íconos institucionales -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body class="fondo-datos">
   <div class="formulario-container">
@@ -24,7 +26,21 @@
     </form>
   </div>
 
-  <script src="agregar-usuario.js"></script>
+  <!-- Modal Institucional con Font Awesome -->
+  <div id="modalConfirmacion" class="modal-confirmacion" style="display: none;">
+    <div class="modal-contenido">
+      <div class="icono-exito">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h2>¡Usuario registrado exitosamente!</h2>
+      <p>¿Deseas crear la clave ahora?</p>
+      <div class="botones-modal">
+        <button onclick="redirigirCrearClave()" class="btn-aceptar">Sí, crear clave</button>
+        <button onclick="cerrarModal()" class="btn-cancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/agregar-usuario.js"></script>
 </body>
 </html>
-<!---Arreglando el codigo--->

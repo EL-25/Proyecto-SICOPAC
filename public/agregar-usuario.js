@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // 🕒 Generar fecha y hora actual en formato ISO completo
+    // Generar fecha y hora actual en formato ISO completo
     const ahora = new Date();
     const fechaHoraIngreso = ahora.toISOString();
     const formData = new FormData(form);
@@ -12,9 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const usuario = formData.get("usuario");
 
-    // 🔍 Validación previa: verificar si el usuario ya existe
+    // Validación previa: verificar si el usuario ya existe
     try {
-      const existeResponse = await fetch("http://localhost:3000/api/verificar-usuario", {
+      const existeResponse = await fetch("/api/verificar-usuario", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ usuario })
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // 📤 Verificar contenido del FormData antes de enviar
+    // Verificar contenido del FormData antes de enviar
     console.log("📤 Enviando datos al servidor...");
     for (let [key, value] of formData.entries()) {
       if (value instanceof File) {
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/agregar-usuario", {
+      const response = await fetch("/api/agregar-usuario", {
         method: "POST",
         body: formData
       });
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // ✅ Interpretar respuesta
+      // Interpretar respuesta
       let mensaje = "Usuario registrado exitosamente";
       try {
         const resultado = await response.json();
@@ -69,18 +69,30 @@ document.addEventListener("DOMContentLoaded", () => {
         console.warn("⚠️ No se pudo interpretar como JSON. Usando mensaje por defecto.");
       }
 
-      // 🧠 Guardar usuario en localStorage
+      // Guardar usuario en localStorage
       localStorage.setItem("usuarioPendiente", usuario);
       localStorage.setItem("usuarioActivo", usuario);
 
-      // 🚀 Mostrar mensaje y redirigir
-      setTimeout(() => {
-        alert(mensaje);
-        window.location.href = "./crear-clave.html";
-      }, 100);
+      // Mostrar modal institucional WOW
+      mostrarModalConfirmacion();
     } catch (err) {
       console.error("❌ Error en el registro:", err);
       alert("Error en el servidor");
     }
   });
 });
+
+//Funciones del modal
+function mostrarModalConfirmacion() {
+  const modal = document.getElementById("modalConfirmacion");
+  if (modal) modal.style.display = "flex";
+}
+
+function redirigirCrearClave() {
+  window.location.href = "/crear-clave.html";
+}
+
+function cerrarModal() {
+  const modal = document.getElementById("modalConfirmacion");
+  if (modal) modal.style.display = "none";
+}

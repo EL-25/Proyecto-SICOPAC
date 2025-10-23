@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <title>Login - Alcaldía La Libertad Este</title>
-  <link rel="stylesheet" href="login.css" />
+  <link rel="stylesheet" href="/login.css" />
 </head>
 <body class="fondo-alcaldia">
 
@@ -44,14 +44,14 @@
 
     <!-- Formulario de login (derecha) -->
     <div class="login-container">
-      <img src="img/LogoAlcaldia.png" alt="Logo Alcaldía" class="logo" />
+      <img src="/img/LogoAlcaldia.png" alt="Logo Alcaldía" class="logo" />
       <h2>Iniciar Sesión</h2>
       <form id="loginForm">
         <input type="text" id="username" placeholder="Usuario" required />
         <input type="password" id="password" placeholder="Contraseña" required />
         <button type="submit">Entrar</button>
         <div class="acciones-extra">
-           <button type="button" onclick="window.location.href='agregar-usuario.html'" class="boton-agregar">
+           <button type="button" onclick="window.location.href='/agregar-usuario.html'" class="boton-agregar">
             Agregar usuario
           </button>
         </div>
@@ -69,13 +69,6 @@
     </div>
   </div>
 
-  <script src="loginbs.js"></script>
-  <script>
-  const usuario = localStorage.getItem("usuarioCreado");
-  if (usuario) {
-    alert(`Bienvenido ${usuario}, acceso autorizado`);
-    localStorage.removeItem("usuarioCreado");
-  }
-</script>
+  <script src="/loginbs.js"></script>
 </body>
 </html>
