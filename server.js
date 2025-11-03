@@ -29,7 +29,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/img/firma', express.static(path.join(__dirname, 'img/firma')));
 app.use('/img', express.static(path.join(__dirname, 'img')));
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Redirección institucional desde raíz
@@ -70,7 +69,9 @@ app.post('/api/login', async (req, res) => {
 
   try {
     await sql.connect(dbConfig);
-    const result = await sql.query`SELECT * FROM Usuarios WHERE Usuario = ${usuario} AND Estado = 1`;
+    const result = await sql.query`
+      SELECT * FROM Usuarios WHERE Usuario = ${usuario} AND Estado = 1
+    `;
     const user = result.recordset[0];
 
     if (!user) return res.status(401).json({ error: 'Usuario no encontrado' });
@@ -197,4 +198,9 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
     console.error('❌ Error en /api/agregar-usuario:', err);
     res.status(500).json({ error: 'Error al registrar usuario' });
   }
+});
+
+// ✅ Iniciar servidor
+app.listen(PORT, () => {
+  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });
