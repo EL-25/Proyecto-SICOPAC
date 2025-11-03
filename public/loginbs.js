@@ -13,7 +13,15 @@ document.getElementById('loginForm').addEventListener('submit', async function (
       body: JSON.stringify({ usuario, clave })
     });
 
-    const resultado = await response.json();
+    let resultado;
+    try {
+      resultado = await response.json();
+    } catch (err) {
+      const textoPlano = await response.text();
+      alert(`Error inesperado: ${textoPlano}`);
+      console.warn("Respuesta no es JSON:", textoPlano);
+      return;
+    }
 
     if (response.ok) {
       // Guardar el usuario autenticado para uso posterior
@@ -23,7 +31,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
       // Mostrar el modal institucional con rol
       mostrarModal(resultado.rol);
     } else {
-      alert(`Error: ${resultado}`); // Usuario no encontrado o contraseña incorrecta
+      alert(`Error: ${resultado.error || 'Error desconocido'}`); // Usuario no encontrado o contraseña incorrecta
     }
   } catch (error) {
     alert('Error de conexión con el servidor');

@@ -60,7 +60,7 @@ app.post('/api/verificar-usuario', async (req, res) => {
     res.json({ existe: result.recordset[0].total > 0 });
   } catch (err) {
     console.error("Error en /api/verificar-usuario:", err);
-    res.status(500).send("Error en el servidor");
+    res.status(500).json({ error: "Error en el servidor" });
   }
 });
 
@@ -73,8 +73,8 @@ app.post('/api/login', async (req, res) => {
     const result = await sql.query`SELECT * FROM Usuarios WHERE Usuario = ${usuario} AND Estado = 1`;
     const user = result.recordset[0];
 
-    if (!user) return res.status(401).send('Usuario no encontrado');
-    if (user.Clave !== clave) return res.status(401).send('Contraseña incorrecta');
+    if (!user) return res.status(401).json({ error: 'Usuario no encontrado' });
+    if (user.Clave !== clave) return res.status(401).json({ error: 'Contraseña incorrecta' });
 
     res.status(200).json({
       nombre: user.NombreCompleto,
@@ -82,7 +82,7 @@ app.post('/api/login', async (req, res) => {
     });
   } catch (err) {
     console.error('Error en el login:', err);
-    res.status(500).send('Error en el servidor');
+    res.status(500).json({ error: 'Error en el servidor' });
   }
 });
 
@@ -91,7 +91,7 @@ app.post('/api/mis-datos', async (req, res) => {
   const { usuario } = req.body;
 
   if (!usuario) {
-    return res.status(400).send('Usuario no proporcionado');
+    return res.status(400).json({ error: 'Usuario no proporcionado' });
   }
 
   try {
@@ -103,13 +103,13 @@ app.post('/api/mis-datos', async (req, res) => {
     `;
 
     if (result.recordset.length === 0) {
-      return res.status(404).send('Usuario no encontrado');
+      return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
     res.json(result.recordset[0]);
   } catch (err) {
     console.error('Error en /api/mis-datos:', err);
-    res.status(500).send('Error en el servidor');
+    res.status(500).json({ error: 'Error en el servidor' });
   }
 });
 
@@ -118,7 +118,7 @@ app.post('/api/crear-clave', async (req, res) => {
   const { usuario, nuevaClave } = req.body;
 
   if (!usuario || !nuevaClave) {
-    return res.status(400).send('Datos incompletos');
+    return res.status(400).json({ error: 'Datos incompletos' });
   }
 
   try {
@@ -130,13 +130,13 @@ app.post('/api/crear-clave', async (req, res) => {
     `;
 
     if (result.rowsAffected[0] === 0) {
-      return res.status(400).send('Usuario no válido o ya tiene contraseña');
+      return res.status(400).json({ error: 'Usuario no válido o ya tiene contraseña' });
     }
 
     res.status(200).json({ mensaje: 'Contraseña creada exitosamente' });
   } catch (err) {
     console.error('Error en /api/crear-clave:', err);
-    res.status(500).send('Error en el servidor');
+    res.status(500).json({ error: 'Error en el servidor' });
   }
 });
 
@@ -155,17 +155,17 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
   } = req.body;
 
   if (!usuario || !primerNombre || !primerApellido || !correo || !rol || !fechaIngreso) {
-    return res.status(400).send('Faltan campos obligatorios');
+    return res.status(400).json({ error: 'Faltan campos obligatorios' });
   }
 
   if (!req.file) {
     console.error("No se recibió archivo de firma.");
-    return res.status(400).send("No se recibió archivo de firma.");
+    return res.status(400).json({ error: "No se recibió archivo de firma." });
   }
 
   const nombreCompleto = `${primerNombre} ${segundoNombre || ''} ${primerApellido} ${segundoApellido || ''} ${tercerApellido || ''}`.trim();
-  const fechaHora = new Date(fechaIngreso); // ← formato ISO
-  const firmaNombre = req.file.filename; // ← solo el nombre del archivo
+  const fechaHora = new Date(fechaIngreso);
+  const firmaNombre = req.file.filename;
 
   console.log("Datos recibidos para registro:", req.body);
   console.log("Nombre de firma:", firmaNombre);
@@ -188,18 +188,13 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
 
     if (resultado.rowsAffected[0] === 0) {
       console.warn("⚠️ El INSERT no afectó ninguna fila.");
-      return res.status(400).json({ mensaje: "No se pudo registrar el usuario. Verifica si ya existe." });
+      return res.status(400).json({ error: "No se pudo registrar el usuario. Verifica si ya existe." });
     }
 
     console.log("✅ Usuario registrado correctamente.");
     res.status(200).json({ mensaje: 'Usuario registrado exitosamente' });
   } catch (err) {
     console.error('❌ Error en /api/agregar-usuario:', err);
-    res.status(500).send('Error al registrar usuario');
+    res.status(500).json({ error: 'Error al registrar usuario' });
   }
-});
-
-// Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
