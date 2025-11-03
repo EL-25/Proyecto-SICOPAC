@@ -32,6 +32,11 @@ app.use('/img', express.static(path.join(__dirname, 'img')));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Redirección institucional desde raíz
+app.get("/", (req, res) => {
+  res.redirect("/login.html");
+});
+
 // Configuración de multer para guardar firmas
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
