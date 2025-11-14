@@ -45,7 +45,7 @@ function mostrarModal(rol) {
   const mensaje = document.getElementById("mensajeBienvenida");
 
   if (modal && mensaje) {
-    mensaje.textContent = `Acceso concedido\nBienvenido ${rol}`;
+    mensaje.textContent = `Bienvenido ${rol}`;
     modal.style.display = "flex";
   } else {
     console.warn("Modal o mensaje no encontrado en el DOM.");

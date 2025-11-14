@@ -19,20 +19,16 @@ body.fondo-datos::before {
 
 /* Encabezado institucional */
 .encabezado {
+  background-color: #0056b3;
+  color: white;
+  height: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6px 15px; /* reducido para hacerla más delgada */
-  background-color: #005baa;
-  color: white;
+  position: relative;
+  text-align: center;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  font-size: 0.9em;
-}
-
-.encabezado .logo {
-  width: 130px; /* ligeramente más compacto */
-  margin-bottom: 4px;
 }
 
 .encabezado h1 {
@@ -43,55 +39,68 @@ body.fondo-datos::before {
 .encabezado p {
   font-size: 0.85em;
   margin-top: 2px;
-  text-align: center;
 }
 
-/* Tarjeta de datos */
-.tarjeta-datos {
-  background: #f9f9f9;
+/* Botones institucionales */
+.cerrar-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  background-color: #c62828;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.perfil-btn {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  background-color: #ffffff;
+  color: #0056b3;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.formulario-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.formulario-btn button {
+  background-color: #007b5e;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Panel de perfil */
+.perfil-datos {
+  display: none;
+  background-color: white;
+  padding: 20px;
+  margin: 20px auto;
   max-width: 500px;
-  margin: 40px auto;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-  border: 1px solid #ddd;
-}
-
-.tarjeta-datos h2 {
-  color: #005baa;
-  margin-bottom: 20px;
-  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 .campo {
-  margin: 15px 0;
+  margin-bottom: 12px;
   font-size: 1em;
   color: #333;
 }
 
 .campo strong {
   color: #0077cc;
-}
-
-/* Botón de cierre de sesión */
-.acciones {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.acciones button {
-  background-color: #005baa;
-  color: white;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.acciones button:hover {
-  background-color: #003f7d;
 }
 
 .firma-img {
@@ -103,8 +112,8 @@ body.fondo-datos::before {
   border: 1px solid #ccc;
   padding: 5px;
   background-color: #f9f9f9;
-  margin: 10px auto; /* ← centrado horizontal */
-  display: block;    /* ← necesario para margin auto */
+  margin: 10px auto;
+  display: block;
 }
 
 @keyframes aparecerFirma {
@@ -113,7 +122,103 @@ body.fondo-datos::before {
     transform: translateY(0);
   }
 }
+
 .firma-digital {
   text-align: center;
   margin-top: 20px;
+}
+
+/* Card de registro de acciones */
+.registro-acciones {
+  background: #ffffff;
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border: 1px solid #ccc;
+  position: relative;
+}
+
+.registro-acciones h2 {
+  color: #005baa;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+#listaAcciones {
+  list-style: none;
+  padding: 0;
+}
+
+#listaAcciones li {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95em;
+}
+
+/* Botón de filtro */
+.filtrar-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Panel de filtros mejorado */
+.filtro-panel {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px 25px;
+  background: linear-gradient(to right, #eaf3ff, #f8f9fa);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid #cfd8dc;
+  transition: all 0.3s ease-in-out;
+}
+
+.filtro-panel label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #0056b3;
+  font-size: 0.95em;
+}
+
+.filtro-panel select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #ffffff;
+  font-size: 0.95em;
+  transition: border-color 0.2s ease;
+}
+
+.filtro-panel select:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
+.filtro-panel button {
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.filtro-panel button:hover {
+  background-color: #0056b3;
 }

@@ -32,13 +32,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const domicilioInput = document.getElementById("domicilioInput");
 
     const distritos = {
-
         "Antiguo Cuscatlán": "La Libertad Este",
         "Nuevo Cuscatlán": "La Libertad Este",
         "San José Villanueva": "La Libertad Este",
         "Zaragoza": "La Libertad Este",
         "Huizúcar": "La Libertad Este",
-
     };
 
     municipioSelect.addEventListener("change", () => {
@@ -85,15 +83,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // 🧾 Mostrar campos según tipo de documento (titular)
     const duiTitularRadio = document.getElementById("duiTitularRadio");
     const nuiTitularRadio = document.getElementById("nuiTitularRadio");
-    const otroTitularRadio = document.getElementById("otroTitularRadio");
 
     const campoDUI_Titular = document.getElementById("campoDUI_Titular");
     const campoNUI_Titular = document.getElementById("campoNUI_Titular");
-    const campoOtro_Titular = document.getElementById("campoOtro_Titular");
 
     const duiTitularInput = document.getElementById("duiTitularInput");
     const nuiTitularInput = document.getElementById("nuiTitularInput");
-    const otroTitularInput = document.getElementById("otroTitularInput");
 
     const radiosTitular = document.getElementsByName("docTitular");
 
@@ -101,19 +96,16 @@ document.addEventListener("DOMContentLoaded", () => {
         radio.addEventListener("change", () => {
             campoDUI_Titular.style.display = duiTitularRadio.checked ? "block" : "none";
             campoNUI_Titular.style.display = nuiTitularRadio.checked ? "block" : "none";
-            campoOtro_Titular.style.display = otroTitularRadio.checked ? "block" : "none";
 
             duiTitularInput.disabled = !duiTitularRadio.checked;
             nuiTitularInput.disabled = !nuiTitularRadio.checked;
-            otroTitularInput.disabled = !otroTitularRadio.checked;
 
             if (!duiTitularRadio.checked) duiTitularInput.value = "";
             if (!nuiTitularRadio.checked) nuiTitularInput.value = "";
-            if (!otroTitularRadio.checked) otroTitularInput.value = "";
         });
     });
 
-    // ✅ Validación al enviar
+    // ✅ Validación al enviar + Registro en bitácora
     document.getElementById("solicitudForm").addEventListener("submit", function(e) {
         let errores = [];
 
@@ -137,6 +129,35 @@ document.addEventListener("DOMContentLoaded", () => {
         if (errores.length > 0) {
             e.preventDefault();
             alert("Errores encontrados:\n\n" + errores.join("\n"));
+            return; // detener si hay errores
         }
+
+        // 🧾 Registro automático en la bitácora SICOPAC
+        const declaracionFieldset = Array.from(document.querySelectorAll("fieldset")).find(fs =>
+            fs.querySelector("legend")?.textContent?.includes("Declaración")
+        );
+
+        let tipoSeleccionado = "Documento";
+        if (declaracionFieldset) {
+            const checkboxes = declaracionFieldset.querySelectorAll("input[type='checkbox']");
+            const seleccionado = Array.from(checkboxes).find(cb => cb.checked);
+            if (seleccionado) {
+                tipoSeleccionado = seleccionado.parentElement.textContent.trim();
+            }
+        }
+
+        const municipio = document.getElementById("municipio").value;
+        const distritosValidos = ["Antiguo Cuscatlán", "Nuevo Cuscatlán", "San José Villanueva", "Zaragoza"];
+        const distrito = distritosValidos.includes(municipio) ? municipio : "Otro";
+
+        const fecha = new Date().toLocaleDateString("es-SV");
+        const hora = new Date().toLocaleTimeString("es-SV", { hour: "2-digit", minute: "2-digit" });
+
+        const nuevaAccion = { tipo: tipoSeleccionado, distrito, fecha, hora };
+        const acciones = JSON.parse(localStorage.getItem("accionesSICOPAC") || "[]");
+        acciones.push(nuevaAccion);
+        localStorage.setItem("accionesSICOPAC", JSON.stringify(acciones));
+
+        alert("Formulario enviado y acción registrada correctamente.");
     });
 });
