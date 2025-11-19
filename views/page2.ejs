@@ -18,6 +18,10 @@
         <% }) %>
       <% } %>
 
+      <!-- Campos ocultos adicionales para registrar acción -->
+      <input type="hidden" name="usuario" value="<%= page1Data.usuario %>">
+      <input type="hidden" name="fechaHoraLocal" id="fechaHoraLocal">
+
       <fieldset>
         <legend>Datos del titular del asiento</legend>
 
@@ -130,6 +134,12 @@
         nuiT: { radio: "nuiTitularRadio", contenedor: "campoNUI_Titular", input: "nuiTitularInput" },
         otroT: { radio: "otroTitularRadio", contenedor: "campoOtro_Titular", input: "otroTitularInput" }
       });
+
+      // Capturar hora local del navegador
+      const fechaHoraLocalInput = document.getElementById("fechaHoraLocal");
+      if (fechaHoraLocalInput) {
+        fechaHoraLocalInput.value = new Date().toLocaleString();
+      }
     });
   </script>
 </body>

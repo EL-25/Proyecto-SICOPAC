@@ -212,6 +212,35 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
   }
 });
 
+// Historial de acciones recientes
+app.post('/api/acciones', async (req, res) => {
+  const { usuario } = req.body;
+
+  if (!usuario) {
+    return res.status(400).json({ error: 'Usuario no proporcionado' });
+  }
+
+  try {
+    await sql.connect(dbConfig);
+    const result = await sql.query`
+      SELECT TOP 20
+        Usuario,
+        Declaracion,
+        CodigoFormulario,
+        Municipio,
+        Distrito,
+        FechaHoraLocal
+      FROM Acciones
+      WHERE Usuario = ${usuario}
+      ORDER BY Id DESC
+    `;
+    res.json(result.recordset);
+  } catch (err) {
+    console.error("❌ Error en /api/acciones:", err);
+    res.status(500).json({ error: "Error al obtener historial de acciones" });
+  }
+});
+
 // ==============================
 // FORMULARIO EJS
 // ==============================
@@ -227,7 +256,8 @@ function generarCodigoFormulario() {
 // Página 1 del formulario
 app.get("/formulario", (req, res) => {
   const codigo = generarCodigoFormulario();
-  res.render("index", { codigo });
+  const usuario = req.query.usuario || "Desconocido";
+  res.render("index", { codigo, usuario });
 });
 
 // Página 2 del formulario
@@ -251,7 +281,11 @@ app.post("/guardar", async (req, res) => {
   try {
     await sql.connect(dbConfig);
 
-    const resultado = await sql.query`
+    // Corregir campo usuario si viene como array
+    const usuario = Array.isArray(req.body.usuario) ? req.body.usuario[0] : req.body.usuario;
+
+    // Insertar en la tabla Formularios (solo columnas válidas)
+    await sql.query`
       INSERT INTO Formularios (
         NombreSolicitante,
         Municipio,
@@ -278,6 +312,28 @@ app.post("/guardar", async (req, res) => {
 
     // Usar el código generado previamente en la página 1
     const numeroFormulario = req.body.codigoFormulario;
+
+    // Registrar acción en la tabla Acciones
+    await sql.query`
+      INSERT INTO Acciones (
+        Usuario,
+        TipoAccion,
+        Declaracion,
+        CodigoFormulario,
+        Municipio,
+        Distrito,
+        FechaHoraLocal
+      )
+      VALUES (
+        ${usuario},
+        'Formulario enviado',
+        ${req.body.declaracion},
+        ${numeroFormulario},
+        ${req.body.municipio},
+        ${req.body.distrito},
+        ${req.body.fechaHoraLocal}
+      )
+    `;
 
     // Agregar el número al objeto de datos para la vista
     const datosConCodigo = {

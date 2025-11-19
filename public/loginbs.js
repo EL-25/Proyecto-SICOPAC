@@ -52,7 +52,7 @@ function mostrarModal(rol) {
   }
 }
 
-// Redirección al módulo de datos
+// Redirección al formulario con usuario activo
 function redirigir() {
   window.location.href = "mis-datos.html";
 }

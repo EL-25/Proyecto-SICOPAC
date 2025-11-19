@@ -37,13 +37,35 @@ CREATE TABLE Formularios (
 );
 GO
 
+-- 5. Crear tabla Acciones
+CREATE TABLE Acciones (
+  Id INT IDENTITY(1,1) PRIMARY KEY,
+  Usuario NVARCHAR(50) NOT NULL,
+  TipoAccion NVARCHAR(100) NOT NULL,
+  Declaracion NVARCHAR(100) NULL,
+  CodigoFormulario NVARCHAR(30) NULL,
+  Municipio NVARCHAR(100) NULL,
+  Distrito NVARCHAR(100) NULL,
+  FechaHoraServidor DATETIME NOT NULL DEFAULT GETDATE(),
+  FechaHoraLocal NVARCHAR(40) NULL
+);
 
--- 5. Insertar usuario inicial
+CREATE INDEX IX_Acciones_Usuario ON Acciones (Usuario);
+CREATE INDEX IX_Acciones_Declaracion ON Acciones (Declaracion);
+CREATE INDEX IX_Acciones_Municipio ON Acciones (Municipio);
+CREATE INDEX IX_Acciones_Distrito ON Acciones (Distrito);
+CREATE INDEX IX_Acciones_CodigoFormulario ON Acciones (CodigoFormulario);
+CREATE INDEX IX_Acciones_FechaHoraServidor ON Acciones (FechaHoraServidor);
+
+DELETE FROM Acciones;
+DBCC CHECKIDENT ('Acciones', RESEED, 0);
+
+-- . Insertar usuario inicial
 INSERT INTO Usuarios (Usuario, Clave, NombreCompleto, Rol, Estado)
 VALUES ('Edwin Leiva', 'Admin2421', 'Administrador de la Base de Datos', 'Administrador', 1);
 GO
 
--- 6. Crear login y usuario con permisos
+-- . Crear login y usuario con permisos
 CREATE LOGIN DATABASEUDBEDWIN WITH PASSWORD = 'EdwinBD31';
 GO
 
@@ -53,12 +75,12 @@ GO
 ALTER ROLE db_owner ADD MEMBER UDBbasedatos;
 GO
 
--- 7. Añadir columnas adicionales
+-- . Añadir columnas adicionales
 ALTER TABLE Usuarios ADD Correo NVARCHAR(100);
 ALTER TABLE Usuarios ADD Firma VARCHAR(100);
 GO
 
--- 8. Actualizar datos del usuario
+-- . Actualizar datos del usuario
 UPDATE Usuarios
 SET Correo = 'edwin.leiva@lalibertad.gob.sv',
     NombreCompleto = 'Edwin Daniel Leiva Barrera',
@@ -67,14 +89,14 @@ SET Correo = 'edwin.leiva@lalibertad.gob.sv',
 WHERE Usuario = 'Edwin Leiva';
 GO
 
--- 9. Limpiar tabla y reseed
+-- . Limpiar tabla y reseed
 DELETE FROM Usuarios WHERE Id <> 1;
 GO
 
 DBCC CHECKIDENT ('Usuarios', RESEED, 1);
 GO
 
---10. Limpiar tabla Formularios
+--. Limpiar tabla Formularios
 
 -- Elimina todos los registros
 DELETE FROM Formularios;

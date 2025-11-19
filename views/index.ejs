@@ -20,6 +20,7 @@
     <form action="/page2" method="post">
       <p>Código del formulario:
         <input type="text" name="codigoFormulario" value="<%= codigo %>" readonly>
+        <input type="hidden" name="usuario" value="<%= usuario %>">
       </p>
 
       <div class="encabezado">
@@ -186,5 +187,4 @@
     });
   </script>
 </body>
-
 </html>

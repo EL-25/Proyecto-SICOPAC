@@ -9,17 +9,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
+    // Obtener datos del usuario
     const response = await fetch("http://127.0.0.1:3000/api/mis-datos", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ usuario })
     });
 
-    if (!response.ok) {
-      throw new Error("No se pudo obtener los datos del usuario");
-    }
+    if (!response.ok) throw new Error("No se pudo obtener los datos del usuario");
 
     const datos = await response.json();
 
@@ -38,8 +35,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       firmaImg.style.display = "none";
     }
 
-    // Cargar historial de acciones
-    cargarAcciones();
+    // Cargar historial de acciones desde el backend
+    cargarAcciones(usuario);
 
   } catch (error) {
     console.error("Error al cargar los datos:", error);
@@ -70,12 +67,13 @@ function aplicarFiltro() {
   const tipo = document.getElementById("tipoFiltro").value;
   const distrito = document.getElementById("distritoFiltro").value;
   const lista = document.getElementById("listaAcciones");
+
+  const acciones = JSON.parse(localStorage.getItem("accionesBD") || "[]");
+
   lista.innerHTML = "";
 
-  const acciones = JSON.parse(localStorage.getItem("accionesSICOPAC") || "[]");
-
   const filtradas = acciones.filter(a => {
-    return (!tipo || a.tipo === tipo) && (!distrito || a.distrito === distrito);
+    return (!tipo || a.Declaracion === tipo) && (!distrito || a.Distrito === distrito);
   });
 
   if (filtradas.length === 0) {
@@ -85,43 +83,67 @@ function aplicarFiltro() {
 
   filtradas.forEach(a => {
     const item = document.createElement("li");
-    item.textContent = `${a.tipo} - ${a.distrito} - ${a.fecha} ${a.hora}`;
+    item.textContent = `${a.Usuario || "—"} - ${a.Declaracion || "—"} - ${a.Municipio || "—"} - ${a.FechaHoraLocal || "—"}`;
     lista.appendChild(item);
   });
 }
 
-// Función para cargar el historial completo
-function cargarAcciones() {
-  const lista = document.getElementById("listaAcciones");
-  const acciones = JSON.parse(localStorage.getItem("accionesSICOPAC") || "[]");
+// Función para cargar el historial completo desde el backend
+async function cargarAcciones(usuario) {
+  try {
+    const resp = await fetch("http://127.0.0.1:3000/api/acciones", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ usuario })
+    });
 
-  if (acciones.length === 0) {
-    lista.innerHTML = "<li>No hay acciones registradas aún.</li>";
+    if (!resp.ok) throw new Error("No se pudo obtener el historial de acciones");
+
+    const acciones = await resp.json();
+
+    // Guardar en localStorage para aplicar filtros sin volver a pedir al servidor
+    localStorage.setItem("accionesBD", JSON.stringify(acciones));
+
+    const lista = document.getElementById("listaAcciones");
+    lista.innerHTML = "";
+
+    if (acciones.length === 0) {
+      lista.innerHTML = "<li>No hay acciones registradas aún.</li>";
+      return;
+    }
+
+    acciones.forEach(a => {
+      const item = document.createElement("li");
+      item.textContent = `${a.Usuario || "—"} - ${a.Declaracion || "—"} - ${a.Municipio || "—"} - ${a.FechaHoraLocal || "—"}`;
+      lista.appendChild(item);
+    });
+  } catch (err) {
+    console.error("❌ Error cargando acciones:", err);
+  }
+}
+
+// ✅ Redirección al formulario con usuario activo
+function registrarAccesoFormulario() {
+  const usuario = localStorage.getItem("usuarioActivo");
+  if (!usuario) {
+    alert("No hay sesión activa.");
+    window.location.href = "login.html";
     return;
   }
 
-  acciones.forEach(a => {
-    const item = document.createElement("li");
-    item.textContent = `${a.tipo} - ${a.distrito} - ${a.fecha} ${a.hora}`;
-    lista.appendChild(item);
-  });
-}
-
-// Registrar acceso al formulario
-function registrarAccesoFormulario() {
-  const acciones = JSON.parse(localStorage.getItem("accionesSICOPAC") || "[]");
-
+  // Registrar acción en localStorage (opcional)
+  const acciones = JSON.parse(localStorage.getItem("accionesBD") || "[]");
   const ahora = new Date();
-  const fecha = ahora.toLocaleDateString("es-SV");
-  const hora = ahora.toLocaleTimeString("es-SV", { hour: '2-digit', minute: '2-digit' });
-
   const nuevaAccion = {
-    tipo: "Acceso a formulario",
-    distrito: "—",
-    fecha,
-    hora
+    Usuario: usuario,
+    Declaracion: "Acceso a formulario",
+    Municipio: "—",
+    Distrito: "—",
+    FechaHoraLocal: ahora.toLocaleString("es-SV")
   };
-
   acciones.push(nuevaAccion);
-  localStorage.setItem("accionesSICOPAC", JSON.stringify(acciones));
+  localStorage.setItem("accionesBD", JSON.stringify(acciones));
+
+  // Redirigir al formulario con el usuario como query param
+  window.location.href = `/formulario?usuario=${usuario}`;
 }
