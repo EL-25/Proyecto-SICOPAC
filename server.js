@@ -5,6 +5,17 @@ const sql = require('mssql');
 const multer = require('multer');
 const path = require('path');
 
+const app = express();
+const PORT = 3000;
+
+// ==============================
+// CONFIGURACIONES
+// ==============================
+
+// Motor de vistas EJS
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
 // Configuración de conexión a SQL Server
 const dbConfig = {
   user: 'sa',
@@ -19,9 +30,6 @@ const dbConfig = {
     requestTimeout: 30000
   }
 };
-
-const app = express();
-const PORT = 3000;
 
 // Middleware
 app.use(cors());
@@ -47,6 +55,10 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage });
+
+// ==============================
+// RUTAS API
+// ==============================
 
 // Verificar si el usuario ya existe
 app.post('/api/verificar-usuario', async (req, res) => {
@@ -200,7 +212,90 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
   }
 });
 
-// ✅ Iniciar servidor
+// ==============================
+// FORMULARIO EJS
+// ==============================
+
+// Generador de códigos de formularios
+let contadorFormularios = 1;
+function generarCodigoFormulario() {
+  const año = new Date().getFullYear();
+  const correlativo = String(contadorFormularios++).padStart(5, "0");
+  return `LLE-${año}-${correlativo}`;
+}
+
+// Página 1 del formulario
+app.get("/formulario", (req, res) => {
+  const codigo = generarCodigoFormulario();
+  res.render("index", { codigo });
+});
+
+// Página 2 del formulario
+app.post("/page2", (req, res) => {
+  res.render("page2", { page1Data: req.body });
+});
+
+// Vista previa / resumen final
+app.post("/preview", (req, res) => {
+  const allData = {
+    ...req.body,
+    ...req.body.page1Data
+  };
+  res.render("pdf-preview", { data: allData });
+});
+
+// Guardar datos finales y mostrar vista previa
+app.post("/guardar", async (req, res) => {
+  console.log("📥 Datos recibidos en /guardar:", req.body);
+
+  try {
+    await sql.connect(dbConfig);
+
+    const resultado = await sql.query`
+      INSERT INTO Formularios (
+        NombreSolicitante,
+        Municipio,
+        Distrito,
+        FechaPresentacion,
+        HoraPresentacion,
+        Telefono,
+        Correo,
+        Declaraciones,
+        DescripcionDocumentacion
+      )
+      VALUES (
+        ${req.body.nombreSolicitante},
+        ${req.body.municipio},
+        ${req.body.distrito},
+        ${req.body.fechaPresentacion},
+        ${req.body.horaPresentacion},
+        ${req.body.telefono},
+        ${req.body.correo},
+        ${req.body.declaracion},
+        ${[...(req.body.doc || []), ...(req.body.doc2 || [])].join(", ")}
+      )
+    `;
+
+    // Usar el código generado previamente en la página 1
+    const numeroFormulario = req.body.codigoFormulario;
+
+    // Agregar el número al objeto de datos para la vista
+    const datosConCodigo = {
+      ...req.body,
+      codigoFormulario: numeroFormulario
+    };
+
+    res.render("pdf-preview", { data: datosConCodigo });
+
+  } catch (err) {
+    console.error("❌ Error al guardar el formulario:", err);
+    res.status(500).send("Error al guardar el formulario");
+  }
+});
+
+// ==============================
+// INICIAR SERVIDOR
+// ==============================
 app.listen(PORT, () => {
   console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });

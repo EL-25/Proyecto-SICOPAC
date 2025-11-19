@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Vista previa del formulario</title>
+  <link rel="stylesheet" href="/styleform.css">
+  <style>
+    @media print {
+      body {
+        margin: 2cm;
+        font-size: 12pt;
+      }
+      .botones, .btn, button {
+        display: none;
+      }
+    }
+    h2, h3 {
+      text-align: center;
+      margin-top: 1em;
+    }
+    .seccion {
+      margin-bottom: 2em;
+    }
+    p {
+      margin: 0.3em 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo" style="text-align:center;">
+      <img src="/img/LogoAlcaldia.png" alt="Logo institucional" width="120">
+      <h2>ALCALDÍA MUNICIPAL LA LIBERTAD ESTE</h2>
+      <h3>FORMULARIO ÚNICO DE SOLICITUD</h3>
+    </div>
+
+    <p><strong>Código del formulario:</strong> <%= data.codigoFormulario %></p>
+    <p><strong>No. de Presentación REF/LLE:</strong> <%= data.refLLE %></p>
+
+    <div class="seccion">
+      <h3>Datos del solicitante</h3>
+      <p><strong>Nombre:</strong> <%= data.nombreSolicitante %></p>
+      <p><strong>Municipio:</strong> <%= data.municipio %></p>
+      <p><strong>Distrito:</strong> <%= data.distrito %></p>
+      <p><strong>Lugar de presentación:</strong> <%= data.lugarPresentacion %></p>
+      <p><strong>Fecha de presentación:</strong> <%= data.fechaPresentacion %></p>
+      <p><strong>Hora:</strong> <%= data.horaPresentacion %></p>
+      <p><strong>Contacto para consultar estado de trámite:</strong> <%= data.contacto %></p>
+      <p><strong>Plazo de respuesta:</strong> <%= data.plazo %></p>
+      <p><strong>Tipo de documento de identificación:</strong> <%= data.docTipo || '—' %></p>
+      <p><strong>Número de documento:</strong>
+        <% if (data.docTipo === 'DUI') { %>
+          <%= data.dui %>
+        <% } else if (data.docTipo === 'Pasaporte') { %>
+          <%= data.pasaporte %>
+        <% } else if (data.docTipo === 'Otro') { %>
+          <%= data.otroDoc %>
+        <% } else { %>
+          —
+        <% } %>
+      </p>
+      <p><strong>Domicilio:</strong> <%= data.domicilio %></p>
+      <p><strong>¿Es el mismo titular del asiento?:</strong> <%= data.titular || '—' %></p>
+      <p><strong>Carácter en que comparece:</strong> <%= data.caracter || '—' %></p>
+      <p><strong>Teléfono:</strong> <%= data.telefono %></p>
+      <p><strong>Correo electrónico:</strong> <%= data.correo %></p>
+    </div>
+
+    <div class="seccion">
+      <h3>Datos del titular del asiento</h3>
+      <p><strong>Nombre:</strong> <%= data.nombreTitular %></p>
+      <p><strong>Tipo de documento:</strong> <%= data.docTitular || '—' %></p>
+      <p><strong>Número de documento:</strong> <%= data.duiTitular || data.nuiTitular || data.otroTitular || '—' %></p>
+      <p><strong>Fecha del hecho o acto jurídico:</strong> <%= data.fechaHecho %></p>
+      <p><strong>Lugar del hecho o acto jurídico:</strong> <%= data.lugarHecho %></p>
+      <p><strong>Nombre de la madre:</strong> <%= data.madre %></p>
+      <p><strong>Nombre del padre:</strong> <%= data.padre %></p>
+    </div>
+
+    <div class="seccion">
+      <h3>Declaración solicitada</h3>
+      <p><%= data.declaracion || '—' %></p>
+    </div>
+
+    <div class="seccion">
+      <h3>Documentación presentada</h3>
+      <p><%= [...(data.doc || []), ...(data.doc2 || [])].join(', ') || '—' %></p>
+    </div>
+
+    <div class="botones" style="text-align:center;">
+      <button onclick="window.print()">🖨️ Imprimir</button>
+      <a href="/formulario" class="btn">Nuevo formulario</a>
+    </div>
+  </div>
+</body>
+</html>

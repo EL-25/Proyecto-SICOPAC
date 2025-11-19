@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario Único de Solicitud - Página 2</title>
+  <link rel="stylesheet" href="/styleform.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <form method="POST" action="/guardar">
+      <!-- Campos ocultos para datos de la página 1 -->
+      <% if (typeof page1Data !== 'undefined') { %>
+        <% Object.keys(page1Data).forEach(key => { %>
+          <input type="hidden" name="<%= key %>" value="<%= page1Data[key] %>">
+        <% }) %>
+      <% } %>
+
+      <fieldset>
+        <legend>Datos del titular del asiento</legend>
+
+        <label>Tipo de Documento de Identificación:</label>
+        <input type="radio" name="docTitular" value="DUI" id="duiTitularRadio"> DUI
+        <input type="radio" name="docTitular" value="NUI" id="nuiTitularRadio"> NIT
+        <input type="radio" name="docTitular" value="Otro" id="otroTitularRadio"> Otro
+        <br><br>
+
+        <div id="campoDUI_Titular" style="display:none;">
+          <label>Número de DUI:</label>
+          <input type="text" id="duiTitularInput" name="duiTitular" disabled>
+        </div>
+
+        <div id="campoNUI_Titular" style="display:none;">
+          <label>Número de NIT:</label>
+          <input type="text" id="nuiTitularInput" name="nuiTitular" disabled>
+        </div>
+
+        <div id="campoOtro_Titular" style="display:none;">
+          <label>Especifique otro documento:</label>
+          <input type="text" id="otroTitularInput" name="otroTitular" disabled>
+        </div>
+      </fieldset>
+
+      <label>Nombre:</label>
+      <input type="text" name="nombreTitular"><br><br>
+
+      <label>Fecha del hecho o acto jurídico:</label>
+      <input type="date" name="fechaHecho"><br><br>
+
+      <label>Lugar del hecho o acto jurídico:</label>
+      <input type="text" name="lugarHecho"><br><br>
+
+      <label>Nombre de la madre:</label>
+      <input type="text" name="madre"><br><br>
+
+      <label>Nombre del padre:</label>
+      <input type="text" name="padre">
+
+      <fieldset>
+        <legend>Declaración de la solicitud</legend>
+        <label><input type="checkbox" name="declaracion" value="Nacimiento"> Nacimiento</label><br>
+        <label><input type="checkbox" name="declaracion" value="Matrimonio"> Matrimonio</label><br>
+        <label><input type="checkbox" name="declaracion" value="Union"> Unión no matrimonial</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Descripción de la Documentación Presentada</legend>
+
+        <% const docItems = [
+          "Defunción en", "Registro de Defunción Fetal", "Estado Familiar adquirido en el extranjero",
+          "Nacimiento en el extranjero", "Reposición", "Anotaciones Marginales", "Cancelación",
+          "Modificaciones", "Acta de reconocimiento", "Resolución Sustitutiva del Régimen Patrimonial",
+          "Rectificaciones", "Subsanaciones", "Anotaciones a un asiento posterior", "Otros"
+        ]; %>
+
+        <% docItems.forEach(item => { %>
+          <label><input type="checkbox" name="doc[]" value="<%= item %>"> <%= item %></label>
+        <% }) %>
+
+        <hr>
+
+        <% const doc2Items = [
+          "Fecha Médica de Nacimiento", "Testimonio de Escritura Pública", "Certificación de Sentencia Ejecutoriada",
+          "Certificación de Línea Legal", "Certificado Médico de Defunción", "Autorización de juez",
+          "Hecho en extranjero", "Resolución Administrativa", "Resolución Judicial"
+        ]; %>
+
+        <% doc2Items.forEach(item => { %>
+          <label><input type="checkbox" name="doc2[]" value="<%= item %>"> <%= item %></label>
+        <% }) %>
+      </fieldset>
+
+      <div class="botones">
+        <a href="/" class="btn">← Regresar</a>
+        <button type="reset">Limpiar</button>
+        <button type="submit">Enviar</button>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const $ = (id) => document.getElementById(id);
+
+      function activarOpciones(radioName, map) {
+        const radios = document.getElementsByName(radioName);
+        radios.forEach(radio => {
+          radio.addEventListener("change", () => {
+            for (const key in map) {
+              const cfg = map[key];
+              const cont = $(cfg.contenedor);
+              const input = $(cfg.input);
+              const radioElem = $(cfg.radio);
+              if (cont && input && radioElem) {
+                const activo = radioElem.checked;
+                cont.style.display = activo ? "block" : "none";
+                input.disabled = !activo;
+                if (!activo) input.value = "";
+              }
+            }
+          });
+        });
+      }
+
+      activarOpciones("docTitular", {
+        duiT: { radio: "duiTitularRadio", contenedor: "campoDUI_Titular", input: "duiTitularInput" },
+        nuiT: { radio: "nuiTitularRadio", contenedor: "campoNUI_Titular", input: "nuiTitularInput" },
+        otroT: { radio: "otroTitularRadio", contenedor: "campoOtro_Titular", input: "otroTitularInput" }
+      });
+    });
+  </script>
+</body>
+
+</html>

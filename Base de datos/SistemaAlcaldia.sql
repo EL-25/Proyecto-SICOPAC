@@ -18,12 +18,32 @@ CREATE TABLE Usuarios (
 );
 GO
 
--- 4. Insertar usuario inicial
+-- 4. Crear tabla Formularios
+CREATE TABLE Formularios (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    NumeroFormulario AS (FORMAT(Id, '00000')),
+    
+    NombreSolicitante NVARCHAR(150) NOT NULL,
+    Municipio NVARCHAR(100) NOT NULL,
+    Distrito NVARCHAR(100) NOT NULL,
+    FechaPresentacion DATE NOT NULL,
+    HoraPresentacion TIME NULL,
+    Telefono NVARCHAR(20) NULL,
+    Correo NVARCHAR(120) NULL,
+    Declaraciones NVARCHAR(MAX) NULL,
+    DescripcionDocumentacion NVARCHAR(MAX) NULL,
+    
+    FechaRegistro DATETIME DEFAULT GETDATE()
+);
+GO
+
+
+-- 5. Insertar usuario inicial
 INSERT INTO Usuarios (Usuario, Clave, NombreCompleto, Rol, Estado)
 VALUES ('Edwin Leiva', 'Admin2421', 'Administrador de la Base de Datos', 'Administrador', 1);
 GO
 
--- 5. Crear login y usuario con permisos
+-- 6. Crear login y usuario con permisos
 CREATE LOGIN DATABASEUDBEDWIN WITH PASSWORD = 'EdwinBD31';
 GO
 
@@ -33,12 +53,12 @@ GO
 ALTER ROLE db_owner ADD MEMBER UDBbasedatos;
 GO
 
--- 6. Añadir columnas adicionales
+-- 7. Añadir columnas adicionales
 ALTER TABLE Usuarios ADD Correo NVARCHAR(100);
 ALTER TABLE Usuarios ADD Firma VARCHAR(100);
 GO
 
--- 7. Actualizar datos del usuario
+-- 8. Actualizar datos del usuario
 UPDATE Usuarios
 SET Correo = 'edwin.leiva@lalibertad.gob.sv',
     NombreCompleto = 'Edwin Daniel Leiva Barrera',
@@ -47,9 +67,17 @@ SET Correo = 'edwin.leiva@lalibertad.gob.sv',
 WHERE Usuario = 'Edwin Leiva';
 GO
 
--- 8. Limpiar tabla y reseed
+-- 9. Limpiar tabla y reseed
 DELETE FROM Usuarios WHERE Id <> 1;
 GO
 
 DBCC CHECKIDENT ('Usuarios', RESEED, 1);
 GO
+
+--10. Limpiar tabla Formularios
+
+-- Elimina todos los registros
+DELETE FROM Formularios;
+
+-- Reinicia el contador de identidad (Id) a 1
+DBCC CHECKIDENT ('Formularios', RESEED, 0);

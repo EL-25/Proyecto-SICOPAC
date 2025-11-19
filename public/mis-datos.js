@@ -106,3 +106,22 @@ function cargarAcciones() {
     lista.appendChild(item);
   });
 }
+
+// Registrar acceso al formulario
+function registrarAccesoFormulario() {
+  const acciones = JSON.parse(localStorage.getItem("accionesSICOPAC") || "[]");
+
+  const ahora = new Date();
+  const fecha = ahora.toLocaleDateString("es-SV");
+  const hora = ahora.toLocaleTimeString("es-SV", { hour: '2-digit', minute: '2-digit' });
+
+  const nuevaAccion = {
+    tipo: "Acceso a formulario",
+    distrito: "—",
+    fecha,
+    hora
+  };
+
+  acciones.push(nuevaAccion);
+  localStorage.setItem("accionesSICOPAC", JSON.stringify(acciones));
+}

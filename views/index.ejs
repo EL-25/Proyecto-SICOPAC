@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario Único de Solicitud - Página 1</title>
+  <link rel="stylesheet" href="/styleform.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="logo">
+      <img src="/img/LogoAlcaldia.png" alt="Logo institucional" width="150">
+    </div>
+
+    <h2>FORMULARIO ÚNICO DE SOLICITUD</h2>
+    <br><br>
+
+    <form action="/page2" method="post">
+      <p>Código del formulario:
+        <input type="text" name="codigoFormulario" value="<%= codigo %>" readonly>
+      </p>
+
+      <div class="encabezado">
+        <p>No. de Presentación REF/LLE: <input type="date" id="refLLE" name="refLLE"></p>
+
+        <label for="municipio">Municipio:</label>
+        <select id="municipio" name="municipio" required>
+          <option value="Antiguo Cuscatlán">Antiguo Cuscatlán</option>
+          <option value="Nuevo Cuscatlán">Nuevo Cuscatlán</option>
+          <option value="San José Villanueva">San José Villanueva</option>
+          <option value="Zaragoza">Zaragoza</option>
+          <option value="Huizúcar">Huizúcar</option>
+        </select>
+
+        <p><strong>Distrito:</strong> <span id="distritoResultado">—</span></p>
+        <input type="hidden" name="distrito" id="distritoInput">
+
+        <p>Lugar de presentación: <input type="text" id="lugarPresentacion" name="lugarPresentacion"></p>
+
+        <p>
+          Fecha de presentación: <input type="date" id="fechaPresentacion" name="fechaPresentacion">
+          Hora: <input type="time" id="horaPresentacion" name="horaPresentacion">
+        </p>
+
+        <p>Contacto para consultar estado de trámite:
+          <input type="text" name="contacto">
+        </p>
+
+        <p>Plazo de respuesta: <input type="text" name="plazo"></p>
+      </div>
+
+      <hr><br>
+
+      <label>Tipo de Documento de Identificación:</label>
+      <input type="radio" name="docTipo" value="DUI" id="duiRadio"> DUI
+      <input type="radio" name="docTipo" value="Pasaporte" id="pasaporteRadio"> Pasaporte
+      <input type="radio" name="docTipo" value="Otro" id="otroRadio"> Otro
+
+      <div id="campoDUI" style="display:none;">
+        <label>Número de DUI:</label>
+        <input type="text" id="duiInput" name="dui" disabled>
+      </div>
+
+      <div id="campoPasaporte" style="display:none;">
+        <label>Número de Pasaporte:</label>
+        <input type="text" id="pasaporteInput" name="pasaporte" disabled>
+      </div>
+
+      <div id="campoOtro" style="display:none;">
+        <label>Especifique otro documento:</label>
+        <input type="text" id="otroInput" name="otroDoc" disabled>
+      </div>
+
+      <br><br>
+
+      <label>Nombre:</label>
+      <input type="text" name="nombreSolicitante" required><br>
+
+      <p>Domicilio: <input type="text" id="domicilioInput" name="domicilio" readonly></p>
+
+      <label>¿Es el mismo titular del asiento?</label>
+      <input type="radio" name="titular" value="Sí"> Sí
+      <input type="radio" name="titular" value="No"> No
+      <br><br>
+
+      <label>Carácter en que comparece:</label>
+      <input type="checkbox" name="caracter" value="Informante"> Informante
+      <input type="checkbox" name="caracter" value="Padre"> Padre
+      <input type="checkbox" name="caracter" value="Madre"> Madre
+      <input type="checkbox" name="caracter" value="Responsable"> Responsable
+      <br><br>
+
+      <label>Teléfono:</label>
+      <input type="tel" name="telefono" pattern="[0-9]{8}" placeholder="00000000"><br><br>
+
+      <label>Correo electrónico:</label>
+      <input type="email" name="correo" required>
+
+      <br><br>
+
+      <button type="submit">Siguiente →</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const $ = (id) => document.getElementById(id);
+
+      const fechaInput = $("fechaPresentacion");
+      const horaInput = $("horaPresentacion");
+      const refLLEInput = $("refLLE");
+
+      function setFechaHora() {
+        const ahora = new Date();
+        const año = ahora.getFullYear();
+        const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+        const dia = String(ahora.getDate()).padStart(2, '0');
+        const fechaStr = `${año}-${mes}-${dia}`;
+        if (fechaInput) fechaInput.value = fechaStr;
+        if (refLLEInput) refLLEInput.value = fechaStr;
+        actualizarHora();
+      }
+
+      function actualizarHora() {
+        const ahora = new Date();
+        const h = String(ahora.getHours()).padStart(2, '0');
+        const m = String(ahora.getMinutes()).padStart(2, '0');
+        if (horaInput) horaInput.value = `${h}:${m}`;
+      }
+
+      setFechaHora();
+      setInterval(actualizarHora, 60000);
+
+      const municipioSelect = $("municipio");
+      const distritoSpan = $("distritoResultado");
+      const distritoInput = $("distritoInput");
+      const lugarInput = $("lugarPresentacion");
+      const domicilioInput = $("domicilioInput");
+
+      const distritos = {
+        "Antiguo Cuscatlán": "La Libertad Este",
+        "Nuevo Cuscatlán": "La Libertad Este",
+        "San José Villanueva": "La Libertad Este",
+        "Zaragoza": "La Libertad Este",
+        "Huizúcar": "La Libertad Este",
+      };
+
+      if (municipioSelect) {
+        municipioSelect.addEventListener("change", () => {
+          const municipio = municipioSelect.value;
+          const distrito = distritos[municipio] || "—";
+          if (distritoSpan) distritoSpan.textContent = distrito;
+          if (distritoInput) distritoInput.value = distrito;
+          if (lugarInput) lugarInput.value = `${municipio} - ${distrito}`;
+          if (domicilioInput) domicilioInput.value = `${municipio} - ${distrito}`;
+        });
+      }
+
+      function activarOpciones(radioName, map) {
+        const radios = document.getElementsByName(radioName);
+        radios.forEach(radio => {
+          radio.addEventListener("change", () => {
+            for (const key in map) {
+              const cfg = map[key];
+              const cont = $(cfg.contenedor);
+              const input = $(cfg.input);
+              const radioElem = $(cfg.radio);
+              if (cont && input && radioElem) {
+                const activo = radioElem.checked;
+                cont.style.display = activo ? "block" : "none";
+                input.disabled = !activo;
+                if (!activo) input.value = "";
+              }
+            }
+          });
+        });
+      }
+
+      activarOpciones("docTipo", {
+        dui: { radio: "duiRadio", contenedor: "campoDUI", input: "duiInput" },
+        pas: { radio: "pasaporteRadio", contenedor: "campoPasaporte", input: "pasaporteInput" },
+        otro: { radio: "otroRadio", contenedor: "campoOtro", input: "otroInput" }
+      });
+    });
+  </script>
+</body>
+
+</html>
