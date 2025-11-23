@@ -35,6 +35,24 @@ CREATE TABLE Formularios (
     
     FechaRegistro DATETIME DEFAULT GETDATE()
 );
+-- Eliminar el campo anterior
+ALTER TABLE Formularios
+DROP COLUMN NombreSolicitante;
+
+-- Agregar los nuevos campos desglosados
+ALTER TABLE Formularios
+ADD PrimerNombre NVARCHAR(50) NOT NULL,
+    SegundoNombre NVARCHAR(50) NULL,
+    PrimerApellido NVARCHAR(50) NOT NULL,
+    SegundoApellido NVARCHAR(50) NULL,
+    TercerApellido NVARCHAR(50) NULL;
+
+    ALTER TABLE Formularios
+ADD Canton NVARCHAR(100) NULL,
+    Colonia NVARCHAR(100) NULL,
+    Calle NVARCHAR(150) NULL,
+    NumeroCasa NVARCHAR(20) NULL;
+
 GO
 
 -- 5. Crear tabla Acciones
@@ -57,15 +75,17 @@ CREATE INDEX IX_Acciones_Distrito ON Acciones (Distrito);
 CREATE INDEX IX_Acciones_CodigoFormulario ON Acciones (CodigoFormulario);
 CREATE INDEX IX_Acciones_FechaHoraServidor ON Acciones (FechaHoraServidor);
 
+---- Elimina todos los registros
 DELETE FROM Acciones;
+-- Reinicia el contador de identidad (Id) a 1
 DBCC CHECKIDENT ('Acciones', RESEED, 0);
 
--- . Insertar usuario inicial
+-- 6. Insertar usuario inicial
 INSERT INTO Usuarios (Usuario, Clave, NombreCompleto, Rol, Estado)
 VALUES ('Edwin Leiva', 'Admin2421', 'Administrador de la Base de Datos', 'Administrador', 1);
 GO
 
--- . Crear login y usuario con permisos
+-- 7. Crear login y usuario con permisos
 CREATE LOGIN DATABASEUDBEDWIN WITH PASSWORD = 'EdwinBD31';
 GO
 
@@ -75,12 +95,12 @@ GO
 ALTER ROLE db_owner ADD MEMBER UDBbasedatos;
 GO
 
--- . Añadir columnas adicionales
+-- 8. Añadir columnas adicionales
 ALTER TABLE Usuarios ADD Correo NVARCHAR(100);
 ALTER TABLE Usuarios ADD Firma VARCHAR(100);
 GO
 
--- . Actualizar datos del usuario
+-- 9. Actualizar datos del usuario
 UPDATE Usuarios
 SET Correo = 'edwin.leiva@lalibertad.gob.sv',
     NombreCompleto = 'Edwin Daniel Leiva Barrera',
@@ -89,14 +109,14 @@ SET Correo = 'edwin.leiva@lalibertad.gob.sv',
 WHERE Usuario = 'Edwin Leiva';
 GO
 
--- . Limpiar tabla y reseed
+-- 10. Limpiar tabla y reseed
 DELETE FROM Usuarios WHERE Id <> 1;
 GO
 
 DBCC CHECKIDENT ('Usuarios', RESEED, 1);
 GO
 
---. Limpiar tabla Formularios
+-- 11. Limpiar tabla Formularios
 
 -- Elimina todos los registros
 DELETE FROM Formularios;

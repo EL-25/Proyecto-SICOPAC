@@ -77,9 +77,56 @@
       <br><br>
 
       <label>Nombre:</label>
-      <input type="text" name="nombreSolicitante" required><br>
+      <div style="display: flex; flex-wrap: wrap; gap: 2em; margin-bottom: 1em;">
+        <div>
+          <label for="primerNombre">Primer Nombre:</label>
+          <input type="text" name="primerNombre" id="primerNombre" required>
+          
+          <label for="primerApellido">Primer Apellido:</label>
+          <input type="text" name="primerApellido" id="primerApellido" required>
+        </div>
+        
+        <div>
+          <label for="segundoNombre">Segundo Nombre:</label>
+          <input type="text" name="segundoNombre" id="segundoNombre">
+          
+          <label for="segundoApellido">Segundo Apellido:</label>
+          <input type="text" name="segundoApellido" id="segundoApellido">    
+      </div>
+    </div>
 
-      <p>Domicilio: <input type="text" id="domicilioInput" name="domicilio" readonly></p>
+    <div style="text-align: left; margin-bottom: 1em;">
+  <button type="button" onclick="document.getElementById('tercerApellidoContainer').style.display='block'; this.style.display='none';">
+    + Añadir Tercer Apellido
+  </button>
+</div>
+
+<div id="tercerApellidoContainer" style="display: none; text-align: center; margin-bottom: 1em;">
+  <label for="tercerApellido">Tercer Apellido (solo si aplica):</label><br>
+  <input type="text" name="tercerApellido" id="tercerApellido">
+</div>
+
+<label>Domicilio:</label>
+<div style="display: flex; flex-wrap: wrap; gap: 2em; margin-bottom: 1em;">
+  <div>
+    <label for="canton">Cantón:</label>
+    <select name="canton" id="canton">
+      <option value="">Seleccione</option>
+      <!-- Opciones dinámicas según municipio -->
+    </select>
+
+    <label for="colonia">Colonia / Barrio:</label>
+    <input type="text" name="colonia" id="colonia" placeholder="Ej. Santa Marta">
+  </div>
+
+  <div>
+    <label for="calle">Calle o Pasaje:</label>
+    <input type="text" name="calle" id="calle" placeholder="Ej. Pasaje El Triunfo">
+
+    <label for="numeroCasa">Número de casa:</label>
+    <input type="text" name="numeroCasa" id="numeroCasa" placeholder="Ej. #23">
+  </div>
+</div>
 
       <label>¿Es el mismo titular del asiento?</label>
       <input type="radio" name="titular" value="Sí"> Sí
@@ -94,7 +141,8 @@
       <br><br>
 
       <label>Teléfono:</label>
-      <input type="tel" name="telefono" pattern="[0-9]{8}" placeholder="00000000"><br><br>
+      <input type="tel" id="telefono" name="telefono" maxlength="9" placeholder="0000-0000" required>
+      <br><br>
 
       <label>Correo electrónico:</label>
       <input type="email" name="correo" required>
@@ -186,5 +234,100 @@
       });
     });
   </script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const municipioSelect = document.getElementById("municipio");
+    const cantonSelect = document.getElementById("canton");
+    const coloniaInput = document.getElementById("colonia");
+
+    // Datos por municipio
+    const opciones = {
+      "Antiguo Cuscatlán": {
+        cantones: ["Ojos de Agua", "Jiñuco", "Madrecacao", "La Palma", "Los Naranjos", "El Carrizal", "Cujuapa"],
+        colonias: ["San Juan", "San José", "Santa Lucía", "Concepción", "San Nicolás", "El Calvario", "El Centro"]
+      },
+      "Nuevo Cuscatlán": {
+        cantones: [],
+        colonias: ["San Juan", "San José", "Santa Lucía", "Concepción", "San Nicolás", "El Calvario", "El Centro"]
+      },
+      "San José Villanueva": {
+        cantones: ["Las Dispensas", "El Palomar", "El Espíritu", "Tula", "El Matazano"],
+        colonias: [] // Aquí luego se cargan los 15 caseríos
+      },
+      "Zaragoza": {
+        cantones: ["El Barillo", "Guadalupe", "San Francisco", "San Sebastián"],
+        colonias: []
+      },
+      "Huizúcar": {
+        cantones: ["Analquito", "La Lima", "Nazareth", "Ojos de Agua", "San Juan Buenavista", "Tilaza"],
+        colonias: []
+      }
+    };
+
+    function actualizarOpciones() {
+      const municipio = municipioSelect.value;
+      const data = opciones[municipio] || { cantones: [], colonias: [] };
+
+      // Limpiar cantones
+      cantonSelect.innerHTML = "<option value=''>Seleccione</option>";
+      data.cantones.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.textContent = c;
+        cantonSelect.appendChild(opt);
+      });
+
+      // Autocompletar colonias/barrios si existen
+      if (data.colonias.length > 0) {
+        coloniaInput.setAttribute("list", "coloniasList");
+        let datalist = document.getElementById("coloniasList");
+        if (!datalist) {
+          datalist = document.createElement("datalist");
+          datalist.id = "coloniasList";
+          document.body.appendChild(datalist);
+        }
+        datalist.innerHTML = "";
+        data.colonias.forEach(col => {
+          const opt = document.createElement("option");
+          opt.value = col;
+          datalist.appendChild(opt);
+        });
+      } else {
+        coloniaInput.removeAttribute("list");
+      }
+    }
+
+    municipioSelect.addEventListener("change", actualizarOpciones);
+    actualizarOpciones(); // Inicializar al cargar
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const telefonoInput = document.getElementById("telefono");
+    const form = document.querySelector("form");
+
+    // Máscara de entrada
+    telefonoInput.addEventListener("input", (e) => {
+      let valor = e.target.value.replace(/\D/g, ""); // quitar todo lo que no sea número
+      if (valor.length > 4) {
+        valor = valor.slice(0, 4) + "-" + valor.slice(4, 8);
+      }
+      e.target.value = valor;
+    });
+
+    // Validación al enviar el formulario
+    form.addEventListener("submit", (e) => {
+      const regex = /^\d{4}-\d{4}$/;
+      if (!regex.test(telefonoInput.value)) {
+        e.preventDefault(); // detener envío
+        alert("El teléfono debe tener el formato 0000-0000");
+        telefonoInput.focus();
+      }
+    });
+  });
+</script>
+
 </body>
 </html>

@@ -286,30 +286,45 @@ app.post("/guardar", async (req, res) => {
 
     // Insertar en la tabla Formularios (solo columnas válidas)
     await sql.query`
-      INSERT INTO Formularios (
-        NombreSolicitante,
-        Municipio,
-        Distrito,
-        FechaPresentacion,
-        HoraPresentacion,
-        Telefono,
-        Correo,
-        Declaraciones,
-        DescripcionDocumentacion
-      )
-      VALUES (
-        ${req.body.nombreSolicitante},
-        ${req.body.municipio},
-        ${req.body.distrito},
-        ${req.body.fechaPresentacion},
-        ${req.body.horaPresentacion},
-        ${req.body.telefono},
-        ${req.body.correo},
-        ${req.body.declaracion},
-        ${[...(req.body.doc || []), ...(req.body.doc2 || [])].join(", ")}
-      )
-    `;
-
+  INSERT INTO Formularios (
+    PrimerNombre,
+    SegundoNombre,
+    PrimerApellido,
+    SegundoApellido,
+    TercerApellido,
+    Municipio,
+    Distrito,
+    Canton,
+    Colonia,
+    Calle,
+    NumeroCasa,
+    FechaPresentacion,
+    HoraPresentacion,
+    Telefono,
+    Correo,
+    Declaraciones,
+    DescripcionDocumentacion
+  )
+  VALUES (
+    ${req.body.primerNombre},
+    ${req.body.segundoNombre || null},
+    ${req.body.primerApellido},
+    ${req.body.segundoApellido || null},
+    ${req.body.tercerApellido || null},
+    ${req.body.municipio},
+    ${req.body.distrito},
+    ${req.body.canton || null},
+    ${req.body.colonia || null},
+    ${req.body.calle || null},
+    ${req.body.numeroCasa || null},
+    ${req.body.fechaPresentacion},
+    ${req.body.horaPresentacion},
+    ${req.body.telefono},
+    ${req.body.correo},
+    ${req.body.declaracion},
+    ${[...(req.body.doc || []), ...(req.body.doc2 || [])].join(", ")}
+  )
+`;
     // Usar el código generado previamente en la página 1
     const numeroFormulario = req.body.codigoFormulario;
 
