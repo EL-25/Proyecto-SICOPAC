@@ -53,6 +53,31 @@ ADD Canton NVARCHAR(100) NULL,
     Calle NVARCHAR(150) NULL,
     NumeroCasa NVARCHAR(20) NULL;
 
+    ALTER TABLE Formularios
+ADD PrimerNombreTitular NVARCHAR(50) NOT NULL,
+    SegundoNombreTitular NVARCHAR(50) NULL,
+    PrimerApellidoTitular NVARCHAR(50) NOT NULL,
+    SegundoApellidoTitular NVARCHAR(50) NULL,
+    TercerApellidoTitular NVARCHAR(50) NULL;
+
+    ALTER TABLE Formularios
+ADD LugarHecho NVARCHAR(200) NULL;
+
+-- Agregar campos para el nombre del padre
+ALTER TABLE Formularios
+ADD PrimerNombrePadre NVARCHAR(50) NOT NULL,
+    SegundoNombrePadre NVARCHAR(50) NULL,
+    PrimerApellidoPadre NVARCHAR(50) NOT NULL,
+    SegundoApellidoPadre NVARCHAR(50) NULL;
+
+-- Agregar campos para el nombre de la madre
+ALTER TABLE Formularios
+ADD PrimerNombreMadre NVARCHAR(50) NOT NULL,
+    SegundoNombreMadre NVARCHAR(50) NULL,
+    PrimerApellidoMadre NVARCHAR(50) NOT NULL,
+    SegundoApellidoMadre NVARCHAR(50) NULL,
+    TercerApellidoMadre NVARCHAR(50) NULL;
+
 GO
 
 -- 5. Crear tabla Acciones

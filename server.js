@@ -240,6 +240,53 @@ app.post('/api/acciones', async (req, res) => {
     res.status(500).json({ error: "Error al obtener historial de acciones" });
   }
 });
+// Filtrar formularios
+app.post("/api/filtrar", async (req, res) => {
+  const {
+    numeroFormulario,
+    declaracion,
+    distrito,
+    municipio,
+    primerApellidoPadre,
+    primerApellidoMadre,
+    fechaInicio,
+    fechaFin
+  } = req.body;
+
+  try {
+    await sql.connect(dbConfig);
+
+    let query = "SELECT * FROM Formularios WHERE 1=1";
+
+    if (numeroFormulario) {
+      query += ` AND NumeroFormulario = '${numeroFormulario}'`;
+    }
+    if (declaracion) {
+      query += ` AND Declaraciones = '${declaracion}'`;
+    }
+    if (distrito) {
+      query += ` AND Distrito = '${distrito}'`;
+    }
+    if (municipio) {
+      query += ` AND Municipio = '${municipio}'`;
+    }
+    if (primerApellidoPadre) {
+      query += ` AND PrimerApellidoPadre LIKE '%${primerApellidoPadre}%'`;
+    }
+    if (primerApellidoMadre) {
+      query += ` AND PrimerApellidoMadre LIKE '%${primerApellidoMadre}%'`;
+    }
+    if (fechaInicio && fechaFin) {
+      query += ` AND FechaPresentacion BETWEEN '${fechaInicio}' AND '${fechaFin}'`;
+    }
+
+    const result = await sql.query(query);
+    res.json(result.recordset);
+  } catch (err) {
+    console.error("❌ Error en /api/filtrar:", err);
+    res.status(500).json({ error: "Error al filtrar formularios" });
+  }
+});
 
 // ==============================
 // FORMULARIO EJS
@@ -284,7 +331,6 @@ app.post("/guardar", async (req, res) => {
     // Corregir campo usuario si viene como array
     const usuario = Array.isArray(req.body.usuario) ? req.body.usuario[0] : req.body.usuario;
 
-    // Insertar en la tabla Formularios (solo columnas válidas)
     await sql.query`
   INSERT INTO Formularios (
     PrimerNombre,
@@ -292,12 +338,27 @@ app.post("/guardar", async (req, res) => {
     PrimerApellido,
     SegundoApellido,
     TercerApellido,
+    PrimerNombreTitular,
+    SegundoNombreTitular,
+    PrimerApellidoTitular,
+    SegundoApellidoTitular,
+    TercerApellidoTitular,
+    PrimerNombrePadre,
+    SegundoNombrePadre,
+    PrimerApellidoPadre,
+    SegundoApellidoPadre,
+    PrimerNombreMadre,
+    SegundoNombreMadre,
+    PrimerApellidoMadre,
+    SegundoApellidoMadre,
+    TercerApellidoMadre,
     Municipio,
     Distrito,
     Canton,
     Colonia,
     Calle,
     NumeroCasa,
+    LugarHecho,
     FechaPresentacion,
     HoraPresentacion,
     Telefono,
@@ -311,12 +372,27 @@ app.post("/guardar", async (req, res) => {
     ${req.body.primerApellido},
     ${req.body.segundoApellido || null},
     ${req.body.tercerApellido || null},
+    ${req.body.primerNombreTitular},
+    ${req.body.segundoNombreTitular || null},
+    ${req.body.primerApellidoTitular},
+    ${req.body.segundoApellidoTitular || null},
+    ${req.body.tercerApellidoTitular || null},
+    ${req.body.primerNombrePadre},
+    ${req.body.segundoNombrePadre || null},
+    ${req.body.primerApellidoPadre},
+    ${req.body.segundoApellidoPadre || null},
+    ${req.body.primerNombreMadre},
+    ${req.body.segundoNombreMadre || null},
+    ${req.body.primerApellidoMadre},
+    ${req.body.segundoApellidoMadre || null},
+    ${req.body.tercerApellidoMadre || null},
     ${req.body.municipio},
     ${req.body.distrito},
     ${req.body.canton || null},
     ${req.body.colonia || null},
     ${req.body.calle || null},
     ${req.body.numeroCasa || null},
+    ${req.body.lugarHecho || null},
     ${req.body.fechaPresentacion},
     ${req.body.horaPresentacion},
     ${req.body.telefono},

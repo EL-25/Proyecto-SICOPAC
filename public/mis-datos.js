@@ -62,30 +62,49 @@ function mostrarFiltro() {
   panel.style.display = panel.style.display === "none" ? "block" : "none";
 }
 
-// Función para aplicar filtros al historial
-function aplicarFiltro() {
-  const tipo = document.getElementById("tipoFiltro").value;
-  const distrito = document.getElementById("distritoFiltro").value;
+// ✅ Función para aplicar filtros usando el backend
+async function aplicarFiltro() {
+  const filtros = {
+    numeroFormulario: document.getElementById("numeroFormularioFiltro")?.value || "",
+    declaracion: document.getElementById("tipoFiltro")?.value || "",
+    municipio: document.getElementById("municipioFiltro")?.value || "",
+    distrito: document.getElementById("distritoFiltro")?.value || "",
+    primerApellidoPadre: document.getElementById("apellidoPadreFiltro")?.value || "",
+    primerApellidoMadre: document.getElementById("apellidoMadreFiltro")?.value || "",
+    fechaInicio: document.getElementById("fechaInicioFiltro")?.value || "",
+    fechaFin: document.getElementById("fechaFinFiltro")?.value || ""
+  };
+
   const lista = document.getElementById("listaAcciones");
+  lista.innerHTML = "<li>Buscando...</li>";
 
-  const acciones = JSON.parse(localStorage.getItem("accionesBD") || "[]");
+  try {
+    const resp = await fetch("http://127.0.0.1:3000/api/filtrar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(filtros)
+    });
 
-  lista.innerHTML = "";
+    if (!resp.ok) throw new Error("Error al aplicar filtro");
 
-  const filtradas = acciones.filter(a => {
-    return (!tipo || a.Declaracion === tipo) && (!distrito || a.Distrito === distrito);
-  });
+    const resultados = await resp.json();
+    lista.innerHTML = "";
 
-  if (filtradas.length === 0) {
-    lista.innerHTML = "<li>No hay registros que coincidan con el filtro.</li>";
-    return;
+    if (resultados.length === 0) {
+      lista.innerHTML = "<li>No hay registros que coincidan con el filtro.</li>";
+      return;
+    }
+
+    resultados.forEach(f => {
+      const li = document.createElement("li");
+     const fecha = f.FechaPresentacion ? new Date(f.FechaPresentacion).toLocaleDateString("es-SV") : "—";
+     li.textContent = `Formulario ${f.NumeroFormulario || "—"} - ${f.Declaraciones || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"} - Fecha: ${fecha}`;
+      lista.appendChild(li);
+    });
+  } catch (err) {
+    console.error("❌ Error aplicando filtro:", err);
+    lista.innerHTML = "<li>Error al aplicar filtro.</li>";
   }
-
-  filtradas.forEach(a => {
-    const item = document.createElement("li");
-    item.textContent = `${a.Usuario || "—"} - ${a.Declaracion || "—"} - ${a.Municipio || "—"} - ${a.FechaHoraLocal || "—"}`;
-    lista.appendChild(item);
-  });
 }
 
 // Función para cargar el historial completo desde el backend
@@ -101,7 +120,7 @@ async function cargarAcciones(usuario) {
 
     const acciones = await resp.json();
 
-    // Guardar en localStorage para aplicar filtros sin volver a pedir al servidor
+    // Guardar en localStorage para referencia rápida
     localStorage.setItem("accionesBD", JSON.stringify(acciones));
 
     const lista = document.getElementById("listaAcciones");

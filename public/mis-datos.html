@@ -16,10 +16,10 @@
     <button class="perfil-btn" onclick="mostrarPerfil()">Mi Perfil</button>
   </header>
 
- <!-- Botón Formulario -->
-<div class="formulario-btn">
-  <button onclick="registrarAccesoFormulario()">Formulario</button>
-</div>
+  <!-- Botón Formulario -->
+  <div class="formulario-btn">
+    <button onclick="registrarAccesoFormulario()">Formulario</button>
+  </div>
 
   <!-- Datos del perfil ocultos -->
   <section class="perfil-datos" id="perfilDatos">
@@ -39,25 +39,46 @@
     <button class="filtrar-btn" onclick="mostrarFiltro()">Filtrar</button>
   </section>
 
-  <!-- Panel de filtros -->
+  <!-- Panel de filtros ampliado -->
   <div class="filtro-panel" id="filtroPanel" style="display:none;">
-    <label for="tipoFiltro">Tipo de documento:</label>
+    <h3>Filtros de búsqueda</h3>
+
+    <label for="numeroFormularioFiltro">Número de formulario:</label>
+    <input type="text" id="numeroFormularioFiltro" placeholder="Ej. 00015">
+
+    <label for="tipoFiltro">Declaración:</label>
     <select id="tipoFiltro">
       <option value="">Todos</option>
       <option value="Nacimiento">Nacimiento</option>
       <option value="Matrimonio">Matrimonio</option>
-      <option value="Defunción">Defunción</option>
-      <option value="Divorcio">Divorcio</option>
+      <option value="Union">Unión no matrimonial</option>
+    </select>
+
+    <label for="municipioFiltro">Municipio:</label>
+    <select id="municipioFiltro">
+      <option value="">Todos</option>
+      <option value="Antiguo Cuscatlán">Antiguo Cuscatlán</option>
+      <option value="Nuevo Cuscatlán">Nuevo Cuscatlán</option>
+      <option value="San José Villanueva">San José Villanueva</option>
+      <option value="Zaragoza">Zaragoza</option>
+      <option value="Huizúcar">Huizúcar</option>
     </select>
 
     <label for="distritoFiltro">Distrito:</label>
     <select id="distritoFiltro">
       <option value="">Todos</option>
-      <option value="Nuevo Cuscatlán">Nuevo Cuscatlán</option>
-      <option value="Antiguo Cuscatlán">Antiguo Cuscatlán</option>
-      <option value="Zaragoza">Zaragoza</option>
-      <option value="San José Villanueva">San José Villanueva</option>
+      <option value="La Libertad Este">La Libertad Este</option>
     </select>
+
+    <label for="apellidoPadreFiltro">Apellido del padre:</label>
+    <input type="text" id="apellidoPadreFiltro" placeholder="Ej. Ramírez">
+
+    <label for="apellidoMadreFiltro">Apellido de la madre:</label>
+    <input type="text" id="apellidoMadreFiltro" placeholder="Ej. González">
+
+    <label>Fecha de presentación:</label>
+    <input type="date" id="fechaInicioFiltro"> a 
+    <input type="date" id="fechaFinFiltro">
 
     <button onclick="aplicarFiltro()">Aplicar filtro</button>
   </div>

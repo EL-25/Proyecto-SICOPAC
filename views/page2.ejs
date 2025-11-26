@@ -47,26 +47,43 @@
         </div>
       </fieldset>
 
-      <label>Nombre:</label>
-      <input type="text" name="nombreTitular"><br><br>
+      <label>Nombre:</label><br>
+      <input type="text" name="primerNombreTitular" placeholder="Primer Nombre">
+      <input type="text" name="segundoNombreTitular" placeholder="Segundo Nombre">
+      <input type="text" name="primerApellidoTitular" placeholder="Primer Apellido">
+      <input type="text" name="segundoApellidoTitular" placeholder="Segundo Apellido">
+      <button type="button" id="btnTercerApellidoTitular">+ Añadir Tercer Apellido</button>
+      <input type="text" name="tercerApellidoTitular" id="tercerApellidoTitular" placeholder="Tercer Apellido" style="display:none;">
+      <br><br>
 
       <label>Fecha del hecho o acto jurídico:</label>
       <input type="date" name="fechaHecho"><br><br>
 
       <label>Lugar del hecho o acto jurídico:</label>
-      <input type="text" name="lugarHecho"><br><br>
+      <input type="text" name="lugarHecho" id="lugarHecho" placeholder="Seleccione primero una declaración de la solicitud"><br><br>
 
-      <label>Nombre de la madre:</label>
-      <input type="text" name="madre"><br><br>
-
-      <label>Nombre del padre:</label>
-      <input type="text" name="padre">
+      <fieldset>
+        <legend>Nombre de la madre</legend>
+        <input type="text" name="primerNombreMadre" placeholder="Primer Nombre">
+        <input type="text" name="segundoNombreMadre" placeholder="Segundo Nombre">
+        <input type="text" name="primerApellidoMadre" placeholder="Primer Apellido">
+        <input type="text" name="segundoApellidoMadre" placeholder="Segundo Apellido">
+        <input type="text" name="tercerApellidoMadre" placeholder="Tercer Apellido (opcional)">
+      </fieldset>
+      
+      <fieldset>
+        <legend>Nombre del padre</legend>
+        <input type="text" name="primerNombrePadre" placeholder="Primer Nombre">
+        <input type="text" name="segundoNombrePadre" placeholder="Segundo Nombre">
+        <input type="text" name="primerApellidoPadre" placeholder="Primer Apellido">
+        <input type="text" name="segundoApellidoPadre" placeholder="Segundo Apellido">
+      </fieldset>
 
       <fieldset>
         <legend>Declaración de la solicitud</legend>
-        <label><input type="checkbox" name="declaracion" value="Nacimiento"> Nacimiento</label><br>
-        <label><input type="checkbox" name="declaracion" value="Matrimonio"> Matrimonio</label><br>
-        <label><input type="checkbox" name="declaracion" value="Union"> Unión no matrimonial</label>
+        <label><input type="radio" name="declaracion" value="Nacimiento"> Nacimiento</label><br>
+        <label><input type="radio" name="declaracion" value="Matrimonio"> Matrimonio</label><br>
+        <label><input type="radio" name="declaracion" value="Union"> Unión no matrimonial</label>
       </fieldset>
 
       <fieldset>
@@ -140,8 +157,56 @@
       if (fechaHoraLocalInput) {
         fechaHoraLocalInput.value = new Date().toLocaleString();
       }
-    });
+
+      // Mostrar campo de tercer apellido del titular
+      const btnTercerApellidoTitular = document.getElementById("btnTercerApellidoTitular");
+      const tercerApellidoTitular = document.getElementById("tercerApellidoTitular");
+      
+      if (btnTercerApellidoTitular && tercerApellidoTitular) {
+        btnTercerApellidoTitular.addEventListener("click", () => {
+          tercerApellidoTitular.style.display = "inline-block";
+          btnTercerApellidoTitular.style.display = "none";
+        });
+      }
+
+      // Validación manual al enviar
+      const form = document.querySelector("form");
+      form.addEventListener("submit", (e) => {
+        const nombre = document.querySelector("[name='primerNombreTitular']");
+        const apellido = document.querySelector("[name='primerApellidoTitular']");
+        
+        if (!nombre.value.trim() || !apellido.value.trim()) {
+          e.preventDefault();
+          alert("Debe completar al menos el primer nombre y primer apellido del titular.");
+          nombre.focus();
+        }
+      
+      });
+
+      // Autocompletar lugar según la declaración seleccionada
+      const lugarHechoInput = document.getElementById("lugarHecho");
+      const declaracionCheckboxes = document.querySelectorAll("input[name='declaracion']");
+      
+      declaracionCheckboxes.forEach(chk => {
+        chk.addEventListener("change", () => {
+          if (chk.checked) {
+            switch (chk.value) {
+              case "Nacimiento":
+                lugarHechoInput.value = "Hospital / Clínica / Domicilio";
+                break;
+                case "Matrimonio":
+                  lugarHechoInput.value = "Alcaldía / Iglesia / Juzgado / Notaría";
+                  break;
+                  case "Union":
+                    lugarHechoInput.value = "Alcaldía / Juzgado";
+                    break;
+                    default:
+                      lugarHechoInput.value = "";
+                    }
+                  }
+                });
+              });            
+});
   </script>
 </body>
-
 </html>
