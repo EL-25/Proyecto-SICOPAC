@@ -386,7 +386,7 @@ app.post("/guardar", async (req, res) => {
     ${req.body.primerApellidoMadre},
     ${req.body.segundoApellidoMadre || null},
     ${req.body.tercerApellidoMadre || null},
-    ${req.body.municipio},
+    'La Libertad Este',
     ${req.body.distrito},
     ${req.body.canton || null},
     ${req.body.colonia || null},
@@ -420,7 +420,7 @@ app.post("/guardar", async (req, res) => {
         'Formulario enviado',
         ${req.body.declaracion},
         ${numeroFormulario},
-        ${req.body.municipio},
+        'La Libertad Este',
         ${req.body.distrito},
         ${req.body.fechaHoraLocal}
       )
@@ -437,6 +437,108 @@ app.post("/guardar", async (req, res) => {
   } catch (err) {
     console.error("❌ Error al guardar el formulario:", err);
     res.status(500).send("Error al guardar el formulario");
+  }
+});
+
+// Editar formulario existente (cargar index.ejs con datos)
+app.get("/editar-formulario", async (req, res) => {
+  const { codigo } = req.query;
+
+  try {
+    await sql.connect(dbConfig);
+    const result = await sql.query`
+      SELECT * FROM Formularios WHERE NumeroFormulario = ${codigo}
+    `;
+
+    if (result.recordset.length === 0) {
+      return res.status(404).send("Formulario no encontrado");
+    }
+
+    const f = result.recordset[0];
+
+    // Renderizar index.ejs con datos cargados (mapeo explícito)
+    res.render("index", {
+      codigoFormulario: f.NumeroFormulario,
+      usuario: f.Usuario,
+      refLLE: f.RefLLE,
+      municipio: f.Municipio,
+      distrito: f.Distrito,
+      lugarPresentacion: f.LugarPresentacion,
+      fechaPresentacion: f.FechaPresentacion,
+      horaPresentacion: f.HoraPresentacion,
+      contacto: f.Contacto,
+      plazo: f.Plazo,
+      docTipo: f.DocTipo,
+      dui: f.DUI,
+      pasaporte: f.Pasaporte,
+      otroDoc: f.OtroDoc,
+      primerNombre: f.PrimerNombre,
+      segundoNombre: f.SegundoNombre,
+      primerApellido: f.PrimerApellido,
+      segundoApellido: f.SegundoApellido,
+      tercerApellido: f.TercerApellido,
+      canton: f.Canton,
+      colonia: f.Colonia,
+      calle: f.Calle,
+      numeroCasa: f.NumeroCasa,
+      titular: f.Titular,
+      caracter: f.Caracter ? f.Caracter.split(",") : [],
+      telefono: f.Telefono,
+      correo: f.Correo
+    });
+  } catch (err) {
+    console.error("❌ Error en /editar-formulario:", err);
+    res.status(500).send("Error al cargar el formulario para edición");
+  }
+});
+
+// Actualizar formulario existente
+app.post("/actualizar", async (req, res) => {
+  try {
+    await sql.connect(dbConfig);
+
+    await sql.query`
+      UPDATE Formularios
+      SET
+        PrimerNombre = ${req.body.primerNombre},
+        SegundoNombre = ${req.body.segundoNombre || null},
+        PrimerApellido = ${req.body.primerApellido},
+        SegundoApellido = ${req.body.segundoApellido || null},
+        TercerApellido = ${req.body.tercerApellido || null},
+        PrimerNombreTitular = ${req.body.primerNombreTitular},
+        SegundoNombreTitular = ${req.body.segundoNombreTitular || null},
+        PrimerApellidoTitular = ${req.body.primerApellidoTitular},
+        SegundoApellidoTitular = ${req.body.segundoApellidoTitular || null},
+        TercerApellidoTitular = ${req.body.tercerApellidoTitular || null},
+        PrimerNombrePadre = ${req.body.primerNombrePadre},
+        SegundoNombrePadre = ${req.body.segundoNombrePadre || null},
+        PrimerApellidoPadre = ${req.body.primerApellidoPadre},
+        SegundoApellidoPadre = ${req.body.segundoApellidoPadre || null},
+        PrimerNombreMadre = ${req.body.primerNombreMadre},
+        SegundoNombreMadre = ${req.body.segundoNombreMadre || null},
+        PrimerApellidoMadre = ${req.body.primerApellidoMadre},
+        SegundoApellidoMadre = ${req.body.segundoApellidoMadre || null},
+        TercerApellidoMadre = ${req.body.tercerApellidoMadre || null},
+        Distrito = ${req.body.distrito},
+        Canton = ${req.body.canton || null},
+        Colonia = ${req.body.colonia || null},
+        Calle = ${req.body.calle || null},
+        NumeroCasa = ${req.body.numeroCasa || null},
+        LugarHecho = ${req.body.lugarHecho || null},
+        FechaPresentacion = ${req.body.fechaPresentacion},
+        HoraPresentacion = ${req.body.horaPresentacion},
+        Telefono = ${req.body.telefono},
+        Correo = ${req.body.correo},
+        Declaraciones = ${req.body.declaracion},
+        DescripcionDocumentacion = ${[...(req.body.doc || []), ...(req.body.doc2 || [])].join(", ")}
+      WHERE CodigoFormulario = ${req.body.codigoFormulario}
+    `;
+
+    // Renderizar nuevamente la vista previa con datos actualizados
+    res.render("pdf-preview", { data: req.body });
+  } catch (err) {
+    console.error("❌ Error en /actualizar:", err);
+    res.status(500).send("Error al actualizar el formulario");
   }
 });
 

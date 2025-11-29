@@ -3,26 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mis Datos - Alcaldía La Libertad Este</title>
+  <title>Panel de Usuario - Alcaldía La Libertad Este</title>
   <link rel="stylesheet" href="mis-datos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .home-wrapper {
+      padding: 1.5em 1em 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2em;
+      max-width: 900px;
+    }
+
+    .card-box {
+      width: 200px;
+      height: 200px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      text-align: center;
+    }
+
+    .card-box i {
+      font-size: 2.5em;
+      margin-bottom: 0.5em;
+    }
+
+    .card-box:hover {
+      transform: scale(1.05);
+    }
+
+    .perfil-card { background-color: #0074D9; }
+    .formulario-card { background-color: #2ECC40; }
+    .reportes-card { background-color: #FF851B; }
+    .cerrar-card { background-color: #FF4136; }
+
+    .seccion {
+      display: none;
+      background-color: rgba(255,255,255,0.95);
+      padding: 1.5em;
+      margin: 1em auto 0.5em;
+      max-width: 700px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .seccion.activa { display: block; }
+
+    .campo {
+      margin: 0.5em 0;
+    }
+
+    .firma-img {
+      max-width: 200px;
+      margin-top: 0.5em;
+    }
+  </style>
 </head>
 <body class="fondo-datos">
-
-  <!-- Encabezado comprimido -->
   <header class="encabezado">
     <h1>Panel de Usuario</h1>
     <p>Bienvenido al módulo de consulta personal</p>
-    <button class="cerrar-btn" onclick="cerrarSesion()">Cerrar sesión</button>
-    <button class="perfil-btn" onclick="mostrarPerfil()">Mi Perfil</button>
   </header>
 
-  <!-- Botón Formulario -->
-  <div class="formulario-btn">
-    <button onclick="registrarAccesoFormulario()">Formulario</button>
-  </div>
+  <!-- Cards elevadas -->
+  <main class="home-wrapper">
+    <div class="card-container">
+      <div class="card-box perfil-card" onclick="abrirSeccion('perfilDatos')">
+        <i class="fas fa-user"></i>
+        Perfil
+      </div>
+      <div class="card-box formulario-card" onclick="registrarAccesoFormulario()">
+        <i class="fas fa-file-alt"></i>
+        Formulario
+      </div>
+      <div class="card-box reportes-card" onclick="registrarAccesoReportes()">
+        <i class="fas fa-chart-bar"></i>
+        Reportes
+      </div>
+      <div class="card-box cerrar-card" onclick="cerrarSesion()">
+        <i class="fas fa-sign-out-alt"></i>
+        Cerrar sesión
+      </div>
+    </div>
+  </main>
 
-  <!-- Datos del perfil ocultos -->
-  <section class="perfil-datos" id="perfilDatos">
+  <!-- Sección Perfil -->
+  <section class="seccion" id="perfilDatos">
     <div class="campo"><strong>Usuario:</strong> <span id="campo-usuario">Cargando...</span></div>
     <div class="campo"><strong>Correo institucional:</strong> <span id="campo-correo">Cargando...</span></div>
     <div class="campo"><strong>Rol:</strong> <span id="campo-rol">Cargando...</span></div>
@@ -32,57 +113,37 @@
     </div>
   </section>
 
-  <!-- Card de registro de acciones -->
-  <section class="registro-acciones" id="registroAcciones">
-    <h2>Registro de acciones recientes</h2>
-    <ul id="listaAcciones"></ul>
-    <button class="filtrar-btn" onclick="mostrarFiltro()">Filtrar</button>
-  </section>
-
-  <!-- Panel de filtros ampliado -->
-  <div class="filtro-panel" id="filtroPanel" style="display:none;">
-    <h3>Filtros de búsqueda</h3>
-
-    <label for="numeroFormularioFiltro">Número de formulario:</label>
-    <input type="text" id="numeroFormularioFiltro" placeholder="Ej. 00015">
-
-    <label for="tipoFiltro">Declaración:</label>
-    <select id="tipoFiltro">
-      <option value="">Todos</option>
-      <option value="Nacimiento">Nacimiento</option>
-      <option value="Matrimonio">Matrimonio</option>
-      <option value="Union">Unión no matrimonial</option>
-    </select>
-
-    <label for="municipioFiltro">Municipio:</label>
-    <select id="municipioFiltro">
-      <option value="">Todos</option>
-      <option value="Antiguo Cuscatlán">Antiguo Cuscatlán</option>
-      <option value="Nuevo Cuscatlán">Nuevo Cuscatlán</option>
-      <option value="San José Villanueva">San José Villanueva</option>
-      <option value="Zaragoza">Zaragoza</option>
-      <option value="Huizúcar">Huizúcar</option>
-    </select>
-
-    <label for="distritoFiltro">Distrito:</label>
-    <select id="distritoFiltro">
-      <option value="">Todos</option>
-      <option value="La Libertad Este">La Libertad Este</option>
-    </select>
-
-    <label for="apellidoPadreFiltro">Apellido del padre:</label>
-    <input type="text" id="apellidoPadreFiltro" placeholder="Ej. Ramírez">
-
-    <label for="apellidoMadreFiltro">Apellido de la madre:</label>
-    <input type="text" id="apellidoMadreFiltro" placeholder="Ej. González">
-
-    <label>Fecha de presentación:</label>
-    <input type="date" id="fechaInicioFiltro"> a 
-    <input type="date" id="fechaFinFiltro">
-
-    <button onclick="aplicarFiltro()">Aplicar filtro</button>
-  </div>
-
+  <!-- Scripts -->
   <script src="mis-datos.js"></script>
+  <script>
+    function abrirSeccion(id) {
+      const target = document.getElementById(id);
+      const isVisible = target.classList.contains('activa');
+
+      document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
+
+      if (!isVisible) {
+        target.classList.add('activa');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // No se abre ninguna sección automáticamente
+    });
+
+    function cerrarSesion() {
+      localStorage.removeItem("usuarioActivo");
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <!-- Overlay emergente -->
+<div id="overlay" class="overlay">
+  <div class="overlay-box">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Dirigiendo al Formulario Único de Solicitud…</p>
+  </div>
+</div>
+
 </body>
 </html>

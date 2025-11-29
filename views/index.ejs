@@ -18,141 +18,168 @@
     <br><br>
 
     <form action="/page2" method="post">
-      <p>Código del formulario:
-        <input type="text" name="codigoFormulario" value="<%= codigo %>" readonly>
-        <input type="hidden" name="usuario" value="<%= usuario %>">
-      </p>
+  <p>Código del formulario:
+    <input type="text" name="codigoFormulario" value="<%= typeof codigoFormulario !== 'undefined' ? codigoFormulario : (typeof codigo !== 'undefined' ? codigo : '') %>" readonly>
+    <input type="hidden" name="usuario" value="<%= typeof usuario !== 'undefined' ? usuario : '' %>">
+  </p>
 
-      <div class="encabezado">
-        <p>No. de Presentación REF/LLE: <input type="date" id="refLLE" name="refLLE"></p>
+  <div class="encabezado">
+    <p>No. de Presentación REF/LLE:
+      <input type="date" id="refLLE" name="refLLE" value="<%= typeof refLLE !== 'undefined' ? refLLE : '' %>">
+    </p>
 
-        <label for="municipio">Municipio:</label>
-        <select id="municipio" name="municipio" required>
-          <option value="Antiguo Cuscatlán">Antiguo Cuscatlán</option>
-          <option value="Nuevo Cuscatlán">Nuevo Cuscatlán</option>
-          <option value="San José Villanueva">San José Villanueva</option>
-          <option value="Zaragoza">Zaragoza</option>
-          <option value="Huizúcar">Huizúcar</option>
-        </select>
+    <label for="municipio">Municipio:</label>
+    <input type="text" id="municipio" name="municipio" value="La Libertad Este" readonly>
 
-        <p><strong>Distrito:</strong> <span id="distritoResultado">—</span></p>
-        <input type="hidden" name="distrito" id="distritoInput">
+    <label for="distrito">Distrito:</label>
+    <select id="distrito" name="distrito" required>
+      <% const distritoVal = typeof distrito !== 'undefined' ? distrito : ''; %>
+      <option value="Antiguo Cuscatlán" <%= distritoVal === 'Antiguo Cuscatlán' ? 'selected' : '' %>>Antiguo Cuscatlán</option>
+      <option value="Nuevo Cuscatlán" <%= distritoVal === 'Nuevo Cuscatlán' ? 'selected' : '' %>>Nuevo Cuscatlán</option>
+      <option value="San José Villanueva" <%= distritoVal === 'San José Villanueva' ? 'selected' : '' %>>San José Villanueva</option>
+      <option value="Huizúcar" <%= distritoVal === 'Huizúcar' ? 'selected' : '' %>>Huizúcar</option>
+      <option value="Zaragoza" <%= distritoVal === 'Zaragoza' ? 'selected' : '' %>>Zaragoza</option>
+    </select>
 
-        <p>Lugar de presentación: <input type="text" id="lugarPresentacion" name="lugarPresentacion"></p>
+    <p>Lugar de presentación:
+      <input type="text" id="lugarPresentacion" name="lugarPresentacion" value="<%= typeof lugarPresentacion !== 'undefined' ? lugarPresentacion : '' %>">
+    </p>
 
-        <p>
-          Fecha de presentación: <input type="date" id="fechaPresentacion" name="fechaPresentacion">
-          Hora: <input type="time" id="horaPresentacion" name="horaPresentacion">
-        </p>
+    <p>
+      Fecha de presentación:
+      <input type="date" id="fechaPresentacion" name="fechaPresentacion" value="<%= typeof fechaPresentacion !== 'undefined' ? fechaPresentacion : '' %>">
+      Hora:
+      <input type="time" id="horaPresentacion" name="horaPresentacion" value="<%= typeof horaPresentacion !== 'undefined' ? horaPresentacion : '' %>">
+    </p>
 
-        <p>Contacto para consultar estado de trámite:
-          <input type="text" name="contacto">
-        </p>
+    <p>Contacto para consultar estado de trámite:
+      <input type="text" name="contacto" value="<%= typeof contacto !== 'undefined' ? contacto : '' %>">
+    </p>
 
-        <p>Plazo de respuesta: <input type="text" name="plazo"></p>
-      </div>
+    <p>Plazo de respuesta:
+      <input type="text" name="plazo" value="<%= typeof plazo !== 'undefined' ? plazo : '' %>">
+    </p>
+  </div>
 
-      <hr><br>
+  <hr><br>
 
-      <label>Tipo de Documento de Identificación:</label>
-      <input type="radio" name="docTipo" value="DUI" id="duiRadio"> DUI
-      <input type="radio" name="docTipo" value="Pasaporte" id="pasaporteRadio"> Pasaporte
-      <input type="radio" name="docTipo" value="Otro" id="otroRadio"> Otro
+  <label>Tipo de Documento de Identificación:</label>
+  <% const docTipoVal = typeof docTipo !== 'undefined' ? docTipo : ''; %>
+  <input type="radio" name="docTipo" value="DUI" id="duiRadio" <%= docTipoVal === 'DUI' ? 'checked' : '' %>> DUI
+  <input type="radio" name="docTipo" value="Pasaporte" id="pasaporteRadio" <%= docTipoVal === 'Pasaporte' ? 'checked' : '' %>> Pasaporte
+  <input type="radio" name="docTipo" value="Otro" id="otroRadio" <%= docTipoVal === 'Otro' ? 'checked' : '' %>> Otro
 
-      <div id="campoDUI" style="display:none;">
-        <label>Número de DUI:</label>
-        <input type="text" id="duiInput" name="dui" disabled>
-      </div>
+  <div id="campoDUI" style="display:none;">
+    <label>Número de DUI:</label>
+    <input type="text" id="duiInput" name="dui" value="<%= typeof dui !== 'undefined' ? dui : '' %>" disabled>
+  </div>
 
-      <div id="campoPasaporte" style="display:none;">
-        <label>Número de Pasaporte:</label>
-        <input type="text" id="pasaporteInput" name="pasaporte" disabled>
-      </div>
+  <div id="campoPasaporte" style="display:none;">
+    <label>Número de Pasaporte:</label>
+    <input type="text" id="pasaporteInput" name="pasaporte" value="<%= typeof pasaporte !== 'undefined' ? pasaporte : '' %>" disabled>
+  </div>
 
-      <div id="campoOtro" style="display:none;">
-        <label>Especifique otro documento:</label>
-        <input type="text" id="otroInput" name="otroDoc" disabled>
-      </div>
+  <div id="campoOtro" style="display:none;">
+    <label>Especifique otro documento:</label>
+    <input type="text" id="otroInput" name="otroDoc" value="<%= typeof otroDoc !== 'undefined' ? otroDoc : '' %>" disabled>
+  </div>
 
-      <br><br>
+  <br><br>
 
-      <label>Nombre:</label>
-      <div style="display: flex; flex-wrap: wrap; gap: 2em; margin-bottom: 1em;">
-        <div>
-          <label for="primerNombre">Primer Nombre:</label>
-          <input type="text" name="primerNombre" id="primerNombre" required>
-          
-          <label for="primerApellido">Primer Apellido:</label>
-          <input type="text" name="primerApellido" id="primerApellido" required>
-        </div>
-        
-        <div>
-          <label for="segundoNombre">Segundo Nombre:</label>
-          <input type="text" name="segundoNombre" id="segundoNombre">
-          
-          <label for="segundoApellido">Segundo Apellido:</label>
-          <input type="text" name="segundoApellido" id="segundoApellido">    
-      </div>
+  <label>Nombre:</label>
+  <div style="display: flex; flex-wrap: wrap; gap: 2em; margin-bottom: 1em;">
+    <div>
+      <label for="primerNombre">Primer Nombre:</label>
+      <input type="text" name="primerNombre" id="primerNombre" value="<%= typeof primerNombre !== 'undefined' ? primerNombre : '' %>" required>
+      
+      <label for="primerApellido">Primer Apellido:</label>
+      <input type="text" name="primerApellido" id="primerApellido" value="<%= typeof primerApellido !== 'undefined' ? primerApellido : '' %>" required>
+    </div>
+    
+    <div>
+      <label for="segundoNombre">Segundo Nombre:</label>
+      <input type="text" name="segundoNombre" id="segundoNombre" value="<%= typeof segundoNombre !== 'undefined' ? segundoNombre : '' %>">
+      
+      <label for="segundoApellido">Segundo Apellido:</label>
+      <input type="text" name="segundoApellido" id="segundoApellido" value="<%= typeof segundoApellido !== 'undefined' ? segundoApellido : '' %>">    
+    </div>
+  </div>
+
+  <div style="text-align: left; margin-bottom: 1em;">
+    <button type="button" onclick="document.getElementById('tercerApellidoContainer').style.display='block'; this.style.display='none';">
+      + Añadir Tercer Apellido
+    </button>
+  </div>
+
+  <div id="tercerApellidoContainer" style="display: none; text-align: center; margin-bottom: 1em;">
+    <label for="tercerApellido">Tercer Apellido (solo si aplica):</label><br>
+    <input type="text" name="tercerApellido" id="tercerApellido" value="<%= typeof tercerApellido !== 'undefined' ? tercerApellido : '' %>">
+  </div>
+
+  <label>Domicilio:</label>
+  <div style="display: flex; flex-wrap: wrap; gap: 2em; margin-bottom: 1em;">
+    <div>
+      <label for="canton">Cantón:</label>
+      <% const cantonVal = typeof canton !== 'undefined' ? canton : ''; %>
+      <select name="canton" id="canton">
+        <option value="">Seleccione</option>
+        <option value="Ojos de Agua" <%= cantonVal === 'Ojos de Agua' ? 'selected' : '' %>>Ojos de Agua</option>
+        <option value="Jiñuco" <%= cantonVal === 'Jiñuco' ? 'selected' : '' %>>Jiñuco</option>
+        <option value="Madrecacao" <%= cantonVal === 'Madrecacao' ? 'selected' : '' %>>Madrecacao</option>
+        <option value="La Palma" <%= cantonVal === 'La Palma' ? 'selected' : '' %>>La Palma</option>
+        <option value="Los Naranjos" <%= cantonVal === 'Los Naranjos' ? 'selected' : '' %>>Los Naranjos</option>
+        <option value="El Carrizal" <%= cantonVal === 'El Carrizal' ? 'selected' : '' %>>El Carrizal</option>
+        <option value="Cujuapa" <%= cantonVal === 'Cujuapa' ? 'selected' : '' %>>Cujuapa</option>
+      </select>
+
+      <label for="colonia">Colonia / Barrio:</label>
+      <input type="text" name="colonia" id="colonia" value="<%= typeof colonia !== 'undefined' ? colonia : '' %>" placeholder="Ej. Santa Marta">
     </div>
 
-    <div style="text-align: left; margin-bottom: 1em;">
-  <button type="button" onclick="document.getElementById('tercerApellidoContainer').style.display='block'; this.style.display='none';">
-    + Añadir Tercer Apellido
+    <div>
+      <label for="calle">Calle o Pasaje:</label>
+      <input type="text" name="calle" id="calle" value="<%= typeof calle !== 'undefined' ? calle : '' %>" placeholder="Ej. Pasaje El Triunfo">
+
+      <label for="numeroCasa">Número de casa:</label>
+      <input type="text" name="numeroCasa" id="numeroCasa" value="<%= typeof numeroCasa !== 'undefined' ? numeroCasa : '' %>" placeholder="Ej. #23">
+    </div>
+  </div>
+
+      <label>¿Es el mismo titular del asiento?</label>
+<% const titularVal = typeof titular !== 'undefined' ? titular : ''; %>
+<input type="radio" name="titular" value="Sí" <%= titularVal === 'Sí' ? 'checked' : '' %>> Sí
+<input type="radio" name="titular" value="No" <%= titularVal === 'No' ? 'checked' : '' %>> No
+<br><br>
+
+<label>Carácter en que comparece:</label>
+<% const caracterVal = typeof caracter !== 'undefined' ? caracter : []; %>
+<input type="checkbox" name="caracter" value="Informante" <%= caracterVal.includes('Informante') ? 'checked' : '' %>> Informante
+<input type="checkbox" name="caracter" value="Padre" <%= caracterVal.includes('Padre') ? 'checked' : '' %>> Padre
+<input type="checkbox" name="caracter" value="Madre" <%= caracterVal.includes('Madre') ? 'checked' : '' %>> Madre
+<input type="checkbox" name="caracter" value="Responsable" <%= caracterVal.includes('Responsable') ? 'checked' : '' %>> Responsable
+<br><br>
+
+<label>Teléfono:</label>
+<input type="tel" id="telefono" name="telefono" value="<%= typeof telefono !== 'undefined' ? telefono : '' %>" maxlength="9" placeholder="0000-0000" required>
+<br><br>
+
+<label>Correo electrónico:</label>
+<input type="email" name="correo" value="<%= typeof correo !== 'undefined' ? correo : '' %>" required>
+<br><br>
+
+<div style="display:flex; gap:1em; justify-content:flex-end; margin-top:1em;">
+  <!-- Botón Siguiente -->
+  <button type="submit">Siguiente →</button>
+  
+  <!-- Botón Home -->
+  <button type="button" 
+    onclick="window.location.href='mis-datos.html'" 
+    style="background-color:#c62828; color:white; border:none; padding:0.5em 1.2em; border-radius:6px; cursor:pointer;">
+    Home
   </button>
 </div>
 
-<div id="tercerApellidoContainer" style="display: none; text-align: center; margin-bottom: 1em;">
-  <label for="tercerApellido">Tercer Apellido (solo si aplica):</label><br>
-  <input type="text" name="tercerApellido" id="tercerApellido">
-</div>
-
-<label>Domicilio:</label>
-<div style="display: flex; flex-wrap: wrap; gap: 2em; margin-bottom: 1em;">
-  <div>
-    <label for="canton">Cantón:</label>
-    <select name="canton" id="canton">
-      <option value="">Seleccione</option>
-      <!-- Opciones dinámicas según municipio -->
-    </select>
-
-    <label for="colonia">Colonia / Barrio:</label>
-    <input type="text" name="colonia" id="colonia" placeholder="Ej. Santa Marta">
-  </div>
-
-  <div>
-    <label for="calle">Calle o Pasaje:</label>
-    <input type="text" name="calle" id="calle" placeholder="Ej. Pasaje El Triunfo">
-
-    <label for="numeroCasa">Número de casa:</label>
-    <input type="text" name="numeroCasa" id="numeroCasa" placeholder="Ej. #23">
-  </div>
-</div>
-
-      <label>¿Es el mismo titular del asiento?</label>
-      <input type="radio" name="titular" value="Sí"> Sí
-      <input type="radio" name="titular" value="No"> No
-      <br><br>
-
-      <label>Carácter en que comparece:</label>
-      <input type="checkbox" name="caracter" value="Informante"> Informante
-      <input type="checkbox" name="caracter" value="Padre"> Padre
-      <input type="checkbox" name="caracter" value="Madre"> Madre
-      <input type="checkbox" name="caracter" value="Responsable"> Responsable
-      <br><br>
-
-      <label>Teléfono:</label>
-      <input type="tel" id="telefono" name="telefono" maxlength="9" placeholder="0000-0000" required>
-      <br><br>
-
-      <label>Correo electrónico:</label>
-      <input type="email" name="correo" required>
-
-      <br><br>
-
-      <button type="submit">Siguiente →</button>
-    </form>
-  </div>
-
+  <!-- Scripts originales (no modificados en lógica) -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const $ = (id) => document.getElementById(id);
@@ -167,8 +194,8 @@
         const mes = String(ahora.getMonth() + 1).padStart(2, '0');
         const dia = String(ahora.getDate()).padStart(2, '0');
         const fechaStr = `${año}-${mes}-${dia}`;
-        if (fechaInput) fechaInput.value = fechaStr;
-        if (refLLEInput) refLLEInput.value = fechaStr;
+        if (fechaInput && !fechaInput.value) fechaInput.value = fechaStr;
+        if (refLLEInput && !refLLEInput.value) refLLEInput.value = fechaStr;
         actualizarHora();
       }
 
@@ -176,34 +203,23 @@
         const ahora = new Date();
         const h = String(ahora.getHours()).padStart(2, '0');
         const m = String(ahora.getMinutes()).padStart(2, '0');
-        if (horaInput) horaInput.value = `${h}:${m}`;
+        if (horaInput && !horaInput.value) horaInput.value = `${h}:${m}`;
       }
 
       setFechaHora();
       setInterval(actualizarHora, 60000);
 
-      const municipioSelect = $("municipio");
-      const distritoSpan = $("distritoResultado");
-      const distritoInput = $("distritoInput");
+      const distritoSelect = $("distrito");
       const lugarInput = $("lugarPresentacion");
-      const domicilioInput = $("domicilioInput");
 
-      const distritos = {
-        "Antiguo Cuscatlán": "La Libertad Este",
-        "Nuevo Cuscatlán": "La Libertad Este",
-        "San José Villanueva": "La Libertad Este",
-        "Zaragoza": "La Libertad Este",
-        "Huizúcar": "La Libertad Este",
-      };
-
-      if (municipioSelect) {
-        municipioSelect.addEventListener("change", () => {
-          const municipio = municipioSelect.value;
-          const distrito = distritos[municipio] || "—";
-          if (distritoSpan) distritoSpan.textContent = distrito;
-          if (distritoInput) distritoInput.value = distrito;
-          if (lugarInput) lugarInput.value = `${municipio} - ${distrito}`;
-          if (domicilioInput) domicilioInput.value = `${municipio} - ${distrito}`;
+      if (distritoSelect && lugarInput) {
+        // Inicializar al cargar (respeta valor si viene de edición)
+        if (!lugarInput.value) {
+          lugarInput.value = `${distritoSelect.value} - La Libertad Este`;
+        }
+        distritoSelect.addEventListener("change", () => {
+          const distrito = distritoSelect.value;
+          lugarInput.value = `${distrito} - La Libertad Este`;
         });
       }
 
@@ -236,12 +252,13 @@
   </script>
 
   <script>
+  const cantonSeleccionado = "<%= typeof canton !== 'undefined' ? canton : '' %>";
+
   document.addEventListener("DOMContentLoaded", () => {
-    const municipioSelect = document.getElementById("municipio");
+    const distritoSelect = document.getElementById("distrito");
     const cantonSelect = document.getElementById("canton");
     const coloniaInput = document.getElementById("colonia");
 
-    // Datos por municipio
     const opciones = {
       "Antiguo Cuscatlán": {
         cantones: ["Ojos de Agua", "Jiñuco", "Madrecacao", "La Palma", "Los Naranjos", "El Carrizal", "Cujuapa"],
@@ -253,7 +270,7 @@
       },
       "San José Villanueva": {
         cantones: ["Las Dispensas", "El Palomar", "El Espíritu", "Tula", "El Matazano"],
-        colonias: [] // Aquí luego se cargan los 15 caseríos
+        colonias: []
       },
       "Zaragoza": {
         cantones: ["El Barillo", "Guadalupe", "San Francisco", "San Sebastián"],
@@ -266,8 +283,8 @@
     };
 
     function actualizarOpciones() {
-      const municipio = municipioSelect.value;
-      const data = opciones[municipio] || { cantones: [], colonias: [] };
+      const distrito = distritoSelect.value;
+      const data = opciones[distrito] || { cantones: [], colonias: [] };
 
       // Limpiar cantones
       cantonSelect.innerHTML = "<option value=''>Seleccione</option>";
@@ -275,6 +292,7 @@
         const opt = document.createElement("option");
         opt.value = c;
         opt.textContent = c;
+        if (cantonSeleccionado === c) opt.selected = true;
         cantonSelect.appendChild(opt);
       });
 
@@ -298,36 +316,37 @@
       }
     }
 
-    municipioSelect.addEventListener("change", actualizarOpciones);
+    distritoSelect.addEventListener("change", actualizarOpciones);
     actualizarOpciones(); // Inicializar al cargar
   });
 </script>
+  </script>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const telefonoInput = document.getElementById("telefono");
-    const form = document.querySelector("form");
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const telefonoInput = document.getElementById("telefono");
+      const form = document.querySelector("form");
 
-    // Máscara de entrada
-    telefonoInput.addEventListener("input", (e) => {
-      let valor = e.target.value.replace(/\D/g, ""); // quitar todo lo que no sea número
-      if (valor.length > 4) {
-        valor = valor.slice(0, 4) + "-" + valor.slice(4, 8);
-      }
-      e.target.value = valor;
+      // Máscara de entrada
+      telefonoInput.addEventListener("input", (e) => {
+        let valor = e.target.value.replace(/\D/g, "");
+        if (valor.length > 4) {
+          valor = valor.slice(0, 4) + "-" + valor.slice(4, 8);
+        }
+        e.target.value = valor;
+      });
+
+      // Validación al enviar el formulario
+      form.addEventListener("submit", (e) => {
+        const regex = /^\d{4}-\d{4}$/;
+        if (!regex.test(telefonoInput.value)) {
+          e.preventDefault();
+          alert("El teléfono debe tener el formato 0000-0000");
+          telefonoInput.focus();
+        }
+      });
     });
-
-    // Validación al enviar el formulario
-    form.addEventListener("submit", (e) => {
-      const regex = /^\d{4}-\d{4}$/;
-      if (!regex.test(telefonoInput.value)) {
-        e.preventDefault(); // detener envío
-        alert("El teléfono debe tener el formato 0000-0000");
-        telefonoInput.focus();
-      }
-    });
-  });
-</script>
+  </script>
 
 </body>
 </html>

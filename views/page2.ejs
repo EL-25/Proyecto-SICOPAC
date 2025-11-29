@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <title>Formulario Único de Solicitud - Página 2</title>
   <link rel="stylesheet" href="/styleform.css">
 </head>
-
 <body>
   <div class="container">
 
@@ -19,71 +17,73 @@
       <% } %>
 
       <!-- Campos ocultos adicionales para registrar acción -->
-      <input type="hidden" name="usuario" value="<%= page1Data.usuario %>">
+      <input type="hidden" name="usuario" value="<%= typeof page1Data !== 'undefined' && typeof page1Data.usuario !== 'undefined' ? page1Data.usuario : '' %>">
       <input type="hidden" name="fechaHoraLocal" id="fechaHoraLocal">
 
       <fieldset>
         <legend>Datos del titular del asiento</legend>
 
         <label>Tipo de Documento de Identificación:</label>
-        <input type="radio" name="docTitular" value="DUI" id="duiTitularRadio"> DUI
-        <input type="radio" name="docTitular" value="NUI" id="nuiTitularRadio"> NIT
-        <input type="radio" name="docTitular" value="Otro" id="otroTitularRadio"> Otro
+        <% const docTitularVal = typeof docTitular !== 'undefined' ? docTitular : ''; %>
+        <input type="radio" name="docTitular" value="DUI" id="duiTitularRadio" <%= docTitularVal === 'DUI' ? 'checked' : '' %>> DUI
+        <input type="radio" name="docTitular" value="NUI" id="nuiTitularRadio" <%= docTitularVal === 'NUI' ? 'checked' : '' %>> NUI
+        <input type="radio" name="docTitular" value="Otro" id="otroTitularRadio" <%= docTitularVal === 'Otro' ? 'checked' : '' %>> Otro
         <br><br>
 
         <div id="campoDUI_Titular" style="display:none;">
           <label>Número de DUI:</label>
-          <input type="text" id="duiTitularInput" name="duiTitular" disabled>
+          <input type="text" id="duiTitularInput" name="duiTitular" value="<%= typeof duiTitular !== 'undefined' ? duiTitular : '' %>" disabled>
         </div>
 
         <div id="campoNUI_Titular" style="display:none;">
-          <label>Número de NIT:</label>
-          <input type="text" id="nuiTitularInput" name="nuiTitular" disabled>
+          <label>Número de NUI:</label>
+          <input type="text" id="nuiTitularInput" name="nuiTitular" value="<%= typeof nuiTitular !== 'undefined' ? nuiTitular : '' %>" disabled>
         </div>
 
         <div id="campoOtro_Titular" style="display:none;">
           <label>Especifique otro documento:</label>
-          <input type="text" id="otroTitularInput" name="otroTitular" disabled>
+          <input type="text" id="otroTitularInput" name="otroTitular" value="<%= typeof otroTitular !== 'undefined' ? otroTitular : '' %>" disabled>
         </div>
       </fieldset>
 
       <label>Nombre:</label><br>
-      <input type="text" name="primerNombreTitular" placeholder="Primer Nombre">
-      <input type="text" name="segundoNombreTitular" placeholder="Segundo Nombre">
-      <input type="text" name="primerApellidoTitular" placeholder="Primer Apellido">
-      <input type="text" name="segundoApellidoTitular" placeholder="Segundo Apellido">
+      <input type="text" name="primerNombreTitular" value="<%= typeof primerNombreTitular !== 'undefined' ? primerNombreTitular : '' %>" placeholder="Primer Nombre">
+      <input type="text" name="segundoNombreTitular" value="<%= typeof segundoNombreTitular !== 'undefined' ? segundoNombreTitular : '' %>" placeholder="Segundo Nombre">
+      <input type="text" name="primerApellidoTitular" value="<%= typeof primerApellidoTitular !== 'undefined' ? primerApellidoTitular : '' %>" placeholder="Primer Apellido">
+      <input type="text" name="segundoApellidoTitular" value="<%= typeof segundoApellidoTitular !== 'undefined' ? segundoApellidoTitular : '' %>" placeholder="Segundo Apellido">
       <button type="button" id="btnTercerApellidoTitular">+ Añadir Tercer Apellido</button>
-      <input type="text" name="tercerApellidoTitular" id="tercerApellidoTitular" placeholder="Tercer Apellido" style="display:none;">
+      <input type="text" name="tercerApellidoTitular" id="tercerApellidoTitular" value="<%= typeof tercerApellidoTitular !== 'undefined' ? tercerApellidoTitular : '' %>" placeholder="Tercer Apellido" style="display:none;">
       <br><br>
 
       <label>Fecha del hecho o acto jurídico:</label>
-      <input type="date" name="fechaHecho"><br><br>
+      <input type="date" name="fechaHecho" value="<%= typeof fechaHecho !== 'undefined' ? fechaHecho : '' %>"><br><br>
 
       <label>Lugar del hecho o acto jurídico:</label>
-      <input type="text" name="lugarHecho" id="lugarHecho" placeholder="Seleccione primero una declaración de la solicitud"><br><br>
+      <input type="text" name="lugarHecho" id="lugarHecho" value="<%= typeof lugarHecho !== 'undefined' ? lugarHecho : '' %>" placeholder="Seleccione primero una declaración de la solicitud"><br><br>
 
       <fieldset>
         <legend>Nombre de la madre</legend>
-        <input type="text" name="primerNombreMadre" placeholder="Primer Nombre">
-        <input type="text" name="segundoNombreMadre" placeholder="Segundo Nombre">
-        <input type="text" name="primerApellidoMadre" placeholder="Primer Apellido">
-        <input type="text" name="segundoApellidoMadre" placeholder="Segundo Apellido">
-        <input type="text" name="tercerApellidoMadre" placeholder="Tercer Apellido (opcional)">
+        <input type="text" name="primerNombreMadre" value="<%= typeof primerNombreMadre !== 'undefined' ? primerNombreMadre : '' %>" placeholder="Primer Nombre">
+        <input type="text" name="segundoNombreMadre" value="<%= typeof segundoNombreMadre !== 'undefined' ? segundoNombreMadre : '' %>" placeholder="Segundo Nombre">
+        <input type="text" name="primerApellidoMadre" value="<%= typeof primerApellidoMadre !== 'undefined' ? primerApellidoMadre : '' %>" placeholder="Primer Apellido">
+        <input type="text" name="segundoApellidoMadre" value="<%= typeof segundoApellidoMadre !== 'undefined' ? segundoApellidoMadre : '' %>" placeholder="Segundo Apellido">
+        <input type="text" name="tercerApellidoMadre" value="<%= typeof tercerApellidoMadre !== 'undefined' ? tercerApellidoMadre : '' %>" placeholder="Tercer Apellido (opcional)">
       </fieldset>
       
       <fieldset>
         <legend>Nombre del padre</legend>
-        <input type="text" name="primerNombrePadre" placeholder="Primer Nombre">
-        <input type="text" name="segundoNombrePadre" placeholder="Segundo Nombre">
-        <input type="text" name="primerApellidoPadre" placeholder="Primer Apellido">
-        <input type="text" name="segundoApellidoPadre" placeholder="Segundo Apellido">
+        <input type="text" name="primerNombrePadre" value="<%= typeof primerNombrePadre !== 'undefined' ? primerNombrePadre : '' %>" placeholder="Primer Nombre">
+        <input type="text" name="segundoNombrePadre" value="<%= typeof segundoNombrePadre !== 'undefined' ? segundoNombrePadre : '' %>" placeholder="Segundo Nombre">
+        <input type="text" name="primerApellidoPadre" value="<%= typeof primerApellidoPadre !== 'undefined' ? primerApellidoPadre : '' %>" placeholder="Primer Apellido">
+        <input type="text" name="segundoApellidoPadre" value="<%= typeof segundoApellidoPadre !== 'undefined' ? segundoApellidoPadre : '' %>" placeholder="Segundo Apellido">
       </fieldset>
 
       <fieldset>
         <legend>Declaración de la solicitud</legend>
-        <label><input type="radio" name="declaracion" value="Nacimiento"> Nacimiento</label><br>
-        <label><input type="radio" name="declaracion" value="Matrimonio"> Matrimonio</label><br>
-        <label><input type="radio" name="declaracion" value="Union"> Unión no matrimonial</label>
+        <% const declaracionVal = typeof declaracion !== 'undefined' ? declaracion : ''; %>
+        <label><input type="radio" name="declaracion" value="Nacimiento" <%= declaracionVal === 'Nacimiento' ? 'checked' : '' %>> Nacimiento</label><br>
+        <label><input type="radio" name="declaracion" value="Matrimonio" <%= declaracionVal === 'Matrimonio' ? 'checked' : '' %>> Matrimonio</label><br>
+        <label><input type="radio" name="declaracion" value="Union" <%= declaracionVal === 'Union' ? 'checked' : '' %>> Unión no matrimonial</label>
       </fieldset>
 
       <fieldset>
@@ -96,8 +96,9 @@
           "Rectificaciones", "Subsanaciones", "Anotaciones a un asiento posterior", "Otros"
         ]; %>
 
+        <% const docVal = typeof doc !== 'undefined' ? doc : []; %>
         <% docItems.forEach(item => { %>
-          <label><input type="checkbox" name="doc[]" value="<%= item %>"> <%= item %></label>
+          <label><input type="checkbox" name="doc[]" value="<%= item %>" <%= docVal.includes(item) ? 'checked' : '' %>> <%= item %></label>
         <% }) %>
 
         <hr>
@@ -108,17 +109,24 @@
           "Hecho en extranjero", "Resolución Administrativa", "Resolución Judicial"
         ]; %>
 
+        <% const doc2Val = typeof doc2 !== 'undefined' ? doc2 : []; %>
         <% doc2Items.forEach(item => { %>
-          <label><input type="checkbox" name="doc2[]" value="<%= item %>"> <%= item %></label>
+          <label><input type="checkbox" name="doc2[]" value="<%= item %>" <%= doc2Val.includes(item) ? 'checked' : '' %>> <%= item %></label>
         <% }) %>
       </fieldset>
 
       <div class="botones">
         <a href="/" class="btn">← Regresar</a>
-        <button type="reset">Limpiar</button>
+
+        <!-- Botón Guardar cambios -->
+        <button type="submit" formaction="/actualizar" 
+          style="background-color:#2e7d32; color:white; border:none; padding:0.5em 1.2em; border-radius:6px; cursor:pointer;">
+          Guardar cambios
+        </button>
+
+        <!-- Botón Enviar -->
         <button type="submit">Enviar</button>
       </div>
-
     </form>
   </div>
 

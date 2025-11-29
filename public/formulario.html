@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formularios Registrados - Alcaldía La Libertad Este</title>
+  <link rel="stylesheet" href="formulario.css" />
+</head>
+<body class="fondo-datos">
+  <!-- Encabezado institucional -->
+  <header class="encabezado">
+    <h1>Formularios Registrados</h1>
+    <p>Consulta tus formularios recientes</p>
+    <button class="perfil-btn" onclick="window.location.href='mis-datos.html'">Home</button>
+  </header>
+
+  <!-- Lista de formularios -->
+  <section class="registro-acciones" id="registroFormularios">
+    <h2>Formularios recientes</h2>
+    <ul id="listaFormularios"></ul>
+    <button class="filtrar-btn" onclick="mostrarFiltro()">Filtrar</button>
+  </section>
+
+  <!-- Panel de filtros -->
+  <div class="filtro-panel" id="filtroPanel" style="display:none;">
+    <h3>Filtros de búsqueda</h3>
+    <label for="numeroFormularioFiltro">Número de formulario:</label>
+    <input type="text" id="numeroFormularioFiltro" placeholder="Ej. LLE-2025-00015">
+
+    <label for="tipoFiltro">Declaración:</label>
+    <select id="tipoFiltro">
+      <option value="">Todos</option>
+      <option value="Nacimiento">Nacimiento</option>
+      <option value="Matrimonio">Matrimonio</option>
+      <option value="Union">Unión no matrimonial</option>
+    </select>
+
+    <label for="municipioFiltro">Municipio:</label>
+    <select id="municipioFiltro">
+      <option value="">Todos</option>
+      <option value="Antiguo Cuscatlán">Antiguo Cuscatlán</option>
+      <option value="Nuevo Cuscatlán">Nuevo Cuscatlán</option>
+      <option value="San José Villanueva">San José Villanueva</option>
+      <option value="Zaragoza">Zaragoza</option>
+      <option value="Huizúcar">Huizúcar</option>
+    </select>
+
+    <label for="distritoFiltro">Distrito:</label>
+    <select id="distritoFiltro">
+      <option value="">Todos</option>
+      <option value="La Libertad Este">La Libertad Este</option>
+    </select>
+
+    <label for="apellidoPadreFiltro">Apellido del padre:</label>
+    <input type="text" id="apellidoPadreFiltro" placeholder="Ej. Ramírez">
+
+    <label for="apellidoMadreFiltro">Apellido de la madre:</label>
+    <input type="text" id="apellidoMadreFiltro" placeholder="Ej. González">
+
+    <label>Fecha de presentación:</label>
+    <input type="date" id="fechaInicioFiltro"> a 
+    <input type="date" id="fechaFinFiltro">
+
+    <button onclick="aplicarFiltro()">Aplicar filtro</button>
+  </div>
+
+  <script src="formulario.js"></script>
+</body>
+</html>

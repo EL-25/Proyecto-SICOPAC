@@ -35,9 +35,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       firmaImg.style.display = "none";
     }
 
-    // Cargar historial de acciones desde el backend
-    cargarAcciones(usuario);
-
   } catch (error) {
     console.error("Error al cargar los datos:", error);
     alert("Error al cargar los datos del usuario");
@@ -56,92 +53,7 @@ function mostrarPerfil() {
   perfil.style.display = perfil.style.display === "none" ? "block" : "none";
 }
 
-// Función para mostrar/ocultar el panel de filtros
-function mostrarFiltro() {
-  const panel = document.getElementById("filtroPanel");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
-}
-
-// ✅ Función para aplicar filtros usando el backend
-async function aplicarFiltro() {
-  const filtros = {
-    numeroFormulario: document.getElementById("numeroFormularioFiltro")?.value || "",
-    declaracion: document.getElementById("tipoFiltro")?.value || "",
-    municipio: document.getElementById("municipioFiltro")?.value || "",
-    distrito: document.getElementById("distritoFiltro")?.value || "",
-    primerApellidoPadre: document.getElementById("apellidoPadreFiltro")?.value || "",
-    primerApellidoMadre: document.getElementById("apellidoMadreFiltro")?.value || "",
-    fechaInicio: document.getElementById("fechaInicioFiltro")?.value || "",
-    fechaFin: document.getElementById("fechaFinFiltro")?.value || ""
-  };
-
-  const lista = document.getElementById("listaAcciones");
-  lista.innerHTML = "<li>Buscando...</li>";
-
-  try {
-    const resp = await fetch("http://127.0.0.1:3000/api/filtrar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(filtros)
-    });
-
-    if (!resp.ok) throw new Error("Error al aplicar filtro");
-
-    const resultados = await resp.json();
-    lista.innerHTML = "";
-
-    if (resultados.length === 0) {
-      lista.innerHTML = "<li>No hay registros que coincidan con el filtro.</li>";
-      return;
-    }
-
-    resultados.forEach(f => {
-      const li = document.createElement("li");
-     const fecha = f.FechaPresentacion ? new Date(f.FechaPresentacion).toLocaleDateString("es-SV") : "—";
-     li.textContent = `Formulario ${f.NumeroFormulario || "—"} - ${f.Declaraciones || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"} - Fecha: ${fecha}`;
-      lista.appendChild(li);
-    });
-  } catch (err) {
-    console.error("❌ Error aplicando filtro:", err);
-    lista.innerHTML = "<li>Error al aplicar filtro.</li>";
-  }
-}
-
-// Función para cargar el historial completo desde el backend
-async function cargarAcciones(usuario) {
-  try {
-    const resp = await fetch("http://127.0.0.1:3000/api/acciones", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ usuario })
-    });
-
-    if (!resp.ok) throw new Error("No se pudo obtener el historial de acciones");
-
-    const acciones = await resp.json();
-
-    // Guardar en localStorage para referencia rápida
-    localStorage.setItem("accionesBD", JSON.stringify(acciones));
-
-    const lista = document.getElementById("listaAcciones");
-    lista.innerHTML = "";
-
-    if (acciones.length === 0) {
-      lista.innerHTML = "<li>No hay acciones registradas aún.</li>";
-      return;
-    }
-
-    acciones.forEach(a => {
-      const item = document.createElement("li");
-      item.textContent = `${a.Usuario || "—"} - ${a.Declaracion || "—"} - ${a.Municipio || "—"} - ${a.FechaHoraLocal || "—"}`;
-      lista.appendChild(item);
-    });
-  } catch (err) {
-    console.error("❌ Error cargando acciones:", err);
-  }
-}
-
-// ✅ Redirección al formulario con usuario activo
+// ✅ Redirección al formulario con overlay emergente
 function registrarAccesoFormulario() {
   const usuario = localStorage.getItem("usuarioActivo");
   if (!usuario) {
@@ -150,19 +62,37 @@ function registrarAccesoFormulario() {
     return;
   }
 
-  // Registrar acción en localStorage (opcional)
-  const acciones = JSON.parse(localStorage.getItem("accionesBD") || "[]");
-  const ahora = new Date();
-  const nuevaAccion = {
-    Usuario: usuario,
-    Declaracion: "Acceso a formulario",
-    Municipio: "—",
-    Distrito: "—",
-    FechaHoraLocal: ahora.toLocaleString("es-SV")
-  };
-  acciones.push(nuevaAccion);
-  localStorage.setItem("accionesBD", JSON.stringify(acciones));
+  // Mostrar overlay emergente con texto para formulario
+  const overlay = document.getElementById("overlay");
+  if (overlay) {
+    overlay.querySelector("p").textContent = "Dirigiendo al Formulario Único de Solicitud…";
+    overlay.style.display = "flex";
+  }
 
-  // Redirigir al formulario con el usuario como query param
-  window.location.href = `/formulario?usuario=${usuario}`;
+  // Redirigir al formulario después de 1.5 segundos
+  setTimeout(() => {
+    window.location.href = `/formulario?usuario=${usuario}`;
+  }, 1500);
+}
+
+// ✅ Redirección a reportes con overlay emergente
+function registrarAccesoReportes() {
+  const usuario = localStorage.getItem("usuarioActivo");
+  if (!usuario) {
+    alert("No hay sesión activa.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  // Mostrar overlay emergente con texto para reportes
+  const overlay = document.getElementById("overlay");
+  if (overlay) {
+    overlay.querySelector("p").textContent = "Cargando formularios recientes…";
+    overlay.style.display = "flex";
+  }
+
+  // Redirigir a la nueva página de reportes después de 1.5 segundos
+  setTimeout(() => {
+    window.location.href = "formulario.html";
+  }, 1500);
 }

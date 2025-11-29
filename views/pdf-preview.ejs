@@ -162,9 +162,12 @@
     <div class="botones">
       <button onclick="window.print()">🖨️ Imprimir</button>
       <a href="/formulario" class="btn">Nuevo formulario</a>
-      <a href="/mis-datos.html" class="btn">Revisar mis datos</a>
+      <a href="/editar-formulario?codigo=<%= data.codigoFormulario.replace('LLE-2025-', '') %>" 
+        class="btn" 
+        style="background-color:#2e7d32; color:white; padding:0.5em 1.2em; border-radius:6px;">
+        Editar
+      </a>
     </div>
-
     <div class="pie-firma">
       <div class="firmas">
         <div class="firma-bloque">

@@ -32,13 +32,13 @@ body.fondo-datos::before {
 }
 
 .encabezado h1 {
-  font-size: 1.3em;
+  font-size: 1.4em;
   margin: 0;
 }
 
 .encabezado p {
-  font-size: 0.85em;
-  margin-top: 2px;
+  font-size: 0.9em;
+  margin-top: 4px;
 }
 
 /* Botones institucionales */
@@ -67,75 +67,14 @@ body.fondo-datos::before {
   font-weight: bold;
 }
 
-.formulario-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-}
-
-.formulario-btn button {
-  background-color: #007b5e;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* Panel de perfil */
-.perfil-datos {
-  display: none;
-  background-color: white;
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 500px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.campo {
-  margin-bottom: 12px;
-  font-size: 1em;
-  color: #333;
-}
-
-.campo strong {
-  color: #0077cc;
-}
-
-.firma-img {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: aparecerFirma 1s ease-out forwards;
-  max-width: 250px;
-  height: auto;
-  border: 1px solid #ccc;
-  padding: 5px;
-  background-color: #f9f9f9;
-  margin: 10px auto;
-  display: block;
-}
-
-@keyframes aparecerFirma {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.firma-digital {
-  text-align: center;
-  margin-top: 20px;
-}
-
-/* Card de registro de acciones */
+/* Panel de formularios registrados */
 .registro-acciones {
   background: #ffffff;
-  max-width: 700px;
+  max-width: 800px;
   margin: 40px auto;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
   border: 1px solid #ccc;
   position: relative;
 }
@@ -146,15 +85,17 @@ body.fondo-datos::before {
   text-align: center;
 }
 
-#listaAcciones {
+#listaFormularios {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-#listaAcciones li {
-  padding: 8px;
+#listaFormularios li {
+  padding: 10px;
   border-bottom: 1px solid #eee;
   font-size: 0.95em;
+  color: #333;
 }
 
 /* Botón de filtro */
@@ -165,14 +106,19 @@ body.fondo-datos::before {
   background-color: #0077cc;
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 8px 14px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
 }
 
-/* Panel de filtros mejorado */
+.filtrar-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Panel de filtros */
 .filtro-panel {
-  max-width: 700px;
+  max-width: 800px;
   margin: 30px auto;
   padding: 20px 25px;
   background: linear-gradient(to right, #eaf3ff, #f8f9fa);
@@ -180,6 +126,12 @@ body.fondo-datos::before {
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   border: 1px solid #cfd8dc;
   transition: all 0.3s ease-in-out;
+}
+
+.filtro-panel h3 {
+  text-align: center;
+  color: #0056b3;
+  margin-bottom: 15px;
 }
 
 .filtro-panel label {
@@ -190,6 +142,7 @@ body.fondo-datos::before {
   font-size: 0.95em;
 }
 
+.filtro-panel input,
 .filtro-panel select {
   width: 100%;
   padding: 10px;
@@ -202,6 +155,7 @@ body.fondo-datos::before {
   transition: border-color 0.2s ease;
 }
 
+.filtro-panel input:focus,
 .filtro-panel select:focus {
   border-color: #0077cc;
   outline: none;
@@ -221,37 +175,4 @@ body.fondo-datos::before {
 
 .filtro-panel button:hover {
   background-color: #0056b3;
-}
-
-/* Overlay emergente */
-.overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.4);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.overlay-box {
-  background: #ffffff;
-  padding: 2em 3em;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  animation: fadeInScale 0.4s ease forwards;
-}
-
-.overlay-box p {
-  font-size: 1.1em;
-  font-weight: bold;
-  color: #0056b3;
-  margin-top: 1em;
-}
-
-@keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
 }
