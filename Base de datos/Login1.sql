@@ -7,7 +7,7 @@ GO
 CREATE TABLE Usuarios (
   Id INT PRIMARY KEY IDENTITY(1,1),
   Usuario NVARCHAR(50) NOT NULL UNIQUE,
-  Clave NVARCHAR(255) NOT NULL, -- Contraseña cifrada
+  Clave NVARCHAR(255) NOT NULL, -- Contraseï¿½a cifrada
   NombreCompleto NVARCHAR(100) NOT NULL,
   Rol NVARCHAR(50) DEFAULT 'Administrador',
   Estado BIT DEFAULT 1, -- 1 = activo, 0 = inactivo
@@ -38,7 +38,7 @@ SET Rol = 'Administrador de la Base de Datos'
 WHERE Usuario = 'Edwin Leiva';
 
 INSERT INTO Usuarios (Usuario, Clave, NombreCompleto, Rol, Estado, Correo)
-VALUES ('Cesar_M', '', 'César Meléndez', 'Diseñador', 1, 'cesar.melendez@lalibertad.gob.sv');
+VALUES ('Cesar_M', '', 'Cï¿½sar Melï¿½ndez', 'Diseï¿½ador', 1, 'cesar.melendez@lalibertad.gob.sv');
 
 UPDATE Usuarios
 SET Clave = ''
