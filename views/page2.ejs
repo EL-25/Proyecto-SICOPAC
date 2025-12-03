@@ -20,6 +20,30 @@
       <input type="hidden" name="usuario" value="<%= typeof page1Data !== 'undefined' && typeof page1Data.usuario !== 'undefined' ? page1Data.usuario : '' %>">
       <input type="hidden" name="fechaHoraLocal" id="fechaHoraLocal">
 
+<!-- Hidden inputs para datos del solicitante -->
+<input type="hidden" name="codigoFormulario" value="<%= typeof codigoFormulario !== 'undefined' ? codigoFormulario : '' %>">
+<input type="hidden" name="refLLE" value="<%= typeof refLLE !== 'undefined' ? refLLE : '' %>">
+<input type="hidden" name="primerNombre" value="<%= typeof primerNombre !== 'undefined' ? primerNombre : '' %>">
+<input type="hidden" name="segundoNombre" value="<%= typeof segundoNombre !== 'undefined' ? segundoNombre : '' %>">
+<input type="hidden" name="primerApellido" value="<%= typeof primerApellido !== 'undefined' ? primerApellido : '' %>">
+<input type="hidden" name="segundoApellido" value="<%= typeof segundoApellido !== 'undefined' ? segundoApellido : '' %>">
+<input type="hidden" name="tercerApellido" value="<%= typeof tercerApellido !== 'undefined' ? tercerApellido : '' %>">
+<input type="hidden" name="municipio" value="<%= typeof municipio !== 'undefined' ? municipio : '' %>">
+<input type="hidden" name="distrito" value="<%= typeof distrito !== 'undefined' ? distrito : '' %>">
+<input type="hidden" name="lugarPresentacion" value="<%= typeof lugarPresentacion !== 'undefined' ? lugarPresentacion : '' %>">
+<input type="hidden" name="fechaPresentacion" value="<%= typeof fechaPresentacion !== 'undefined' ? fechaPresentacion : '' %>">
+<input type="hidden" name="horaPresentacion" value="<%= typeof horaPresentacion !== 'undefined' ? horaPresentacion : '' %>">
+<input type="hidden" name="contacto" value="<%= typeof contacto !== 'undefined' ? contacto : '' %>">
+<input type="hidden" name="plazo" value="<%= typeof plazo !== 'undefined' ? plazo : '' %>">
+<input type="hidden" name="docTipo" value="<%= typeof docTipo !== 'undefined' ? docTipo : '' %>">
+<input type="hidden" name="dui" value="<%= typeof dui !== 'undefined' ? dui : '' %>">
+<input type="hidden" name="pasaporte" value="<%= typeof pasaporte !== 'undefined' ? pasaporte : '' %>">
+<input type="hidden" name="otroDoc" value="<%= typeof otroDoc !== 'undefined' ? otroDoc : '' %>">
+<input type="hidden" name="titular" value="<%= typeof titular !== 'undefined' ? titular : '' %>">
+<input type="hidden" name="caracter" value="<%= typeof caracter !== 'undefined' ? caracter : '' %>">
+<input type="hidden" name="telefono" value="<%= typeof telefono !== 'undefined' ? telefono : '' %>">
+<input type="hidden" name="correo" value="<%= typeof correo !== 'undefined' ? correo : '' %>">
+
       <fieldset>
         <legend>Datos del titular del asiento</legend>
 
@@ -116,7 +140,7 @@
       </fieldset>
 
       <div class="botones">
-        <a href="/" class="btn">← Regresar</a>
+        <a href="/formulario" class="btn">← Regresar</a>
 
         <!-- Botón Guardar cambios -->
         <button type="submit" formaction="/actualizar" 

@@ -78,6 +78,52 @@ ADD PrimerNombreMadre NVARCHAR(50) NOT NULL,
     SegundoApellidoMadre NVARCHAR(50) NULL,
     TercerApellidoMadre NVARCHAR(50) NULL;
 
+-- Agregar campos faltantes
+ALTER TABLE Formularios
+ADD RefLLE DATE NULL,
+    LugarPresentacion NVARCHAR(200) NULL,
+    Contacto NVARCHAR(100) NULL,
+    Plazo NVARCHAR(50) NULL,
+    DocTipo NVARCHAR(20) NULL,
+    DUI NVARCHAR(20) NULL,
+    Pasaporte NVARCHAR(20) NULL,
+    OtroDoc NVARCHAR(100) NULL,
+    Titular NVARCHAR(10) NULL,
+    Caracter NVARCHAR(100) NULL,
+    DocTitular NVARCHAR(20) NULL,
+    DuiTitular NVARCHAR(20) NULL,
+    NuiTitular NVARCHAR(20) NULL,
+    OtroTitular NVARCHAR(100) NULL,
+    FechaHecho DATE NULL;
+
+-- Ajustando la columna NumeroFormulario
+
+-- 1. Eliminar la columna calculada
+ALTER TABLE Formularios DROP COLUMN NumeroFormulario;
+
+-- 2. Agregarla como columna normal NVARCHAR
+ALTER TABLE Formularios
+ADD NumeroFormulario NVARCHAR(50) NOT NULL;
+
+-- Ajustando columna
+
+-- Cambiar RefLLE de DATE a NVARCHAR(50)
+ALTER TABLE Formularios
+ALTER COLUMN RefLLE NVARCHAR(50) NULL;
+
+--Ajustando columnas
+ALTER TABLE Formularios
+ALTER COLUMN FechaPresentacion NVARCHAR(10) NULL;
+
+ALTER TABLE Formularios
+ALTER COLUMN HoraPresentacion NVARCHAR(10) NULL;
+
+ALTER TABLE Formularios
+ALTER COLUMN FechaHecho NVARCHAR(10) NULL;
+
+ALTER TABLE Formularios
+ALTER COLUMN RefLLE NVARCHAR(50) NULL;
+
 GO
 
 -- 5. Crear tabla Acciones
