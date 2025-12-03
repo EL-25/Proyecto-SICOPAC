@@ -17,23 +17,32 @@
     <h2>FORMULARIO ÚNICO DE SOLICITUD</h2>
     <br><br>
 
-    <form action="/page2" method="post">
-  <p>Código del formulario:
-    <input type="text" name="codigoFormulario" value="<%= typeof codigoFormulario !== 'undefined' ? codigoFormulario : (typeof codigo !== 'undefined' ? codigo : '') %>" readonly>
-    <input type="hidden" name="usuario" value="<%= typeof usuario !== 'undefined' ? usuario : '' %>">
+    <form method="post"> 
+      <!-- Campos ocultos para datos de la página 2 -->
+       <% if (typeof data !== 'undefined') { %>
+        <% Object.keys(data).forEach(key => {
+          if (key !== 'codigoFormulario') { %>
+            <input type="hidden" name="<%= key %>" value="<%= data[key] %>">
+            <% } }) %>
+            <% } %>
+  
+          <p>Código del formulario:
+    <input type="text" name="codigoFormulario" value="<%= data.codigoFormulario || '' %>" readonly>
+
+    <input type="hidden" name="usuario" value="<%= data.usuario || '' %>">
   </p>
 
   <div class="encabezado">
     <p>No. de Presentación REF/LLE:
-      <input type="date" id="refLLE" name="refLLE" value="<%= typeof refLLE !== 'undefined' ? refLLE : '' %>">
+      <input type="date" id="refLLE" name="refLLE" value="<%= data.refLLE || '' %>">
     </p>
 
     <label for="municipio">Municipio:</label>
-    <input type="text" id="municipio" name="municipio" value="La Libertad Este" readonly>
+    <input type="text" id="municipio" name="municipio" value="<%= data.municipio || 'La Libertad Este' %>" readonly>
 
     <label for="distrito">Distrito:</label>
+    <% const distritoVal = data.distrito || ''; %>
     <select id="distrito" name="distrito" required>
-      <% const distritoVal = typeof distrito !== 'undefined' ? distrito : ''; %>
       <option value="Antiguo Cuscatlán" <%= distritoVal === 'Antiguo Cuscatlán' ? 'selected' : '' %>>Antiguo Cuscatlán</option>
       <option value="Nuevo Cuscatlán" <%= distritoVal === 'Nuevo Cuscatlán' ? 'selected' : '' %>>Nuevo Cuscatlán</option>
       <option value="San José Villanueva" <%= distritoVal === 'San José Villanueva' ? 'selected' : '' %>>San José Villanueva</option>
@@ -42,147 +51,146 @@
     </select>
 
     <p>Lugar de presentación:
-      <input type="text" id="lugarPresentacion" name="lugarPresentacion" value="<%= typeof lugarPresentacion !== 'undefined' ? lugarPresentacion : '' %>">
+      <input type="text" id="lugarPresentacion" name="lugarPresentacion" value="<%= data.lugarPresentacion || '' %>">
     </p>
 
     <p>
       Fecha de presentación:
-      <input type="date" id="fechaPresentacion" name="fechaPresentacion" value="<%= typeof fechaPresentacion !== 'undefined' ? fechaPresentacion : '' %>">
+      <input type="date" id="fechaPresentacion" name="fechaPresentacion" value="<%= data.fechaPresentacion || '' %>">
       Hora:
-      <input type="time" id="horaPresentacion" name="horaPresentacion" value="<%= typeof horaPresentacion !== 'undefined' ? horaPresentacion : '' %>">
+      <input type="time" id="horaPresentacion" name="horaPresentacion" value="<%= data.horaPresentacion || '' %>">
     </p>
 
     <p>Contacto para consultar estado de trámite:
-      <input type="text" name="contacto" value="<%= typeof contacto !== 'undefined' ? contacto : '' %>">
+      <input type="text" name="contacto" value="<%= data.contacto || '' %>">
     </p>
 
     <p>Plazo de respuesta:
-      <input type="text" name="plazo" value="<%= typeof plazo !== 'undefined' ? plazo : '' %>">
+      <input type="text" name="plazo" value="<%= data.plazo || '' %>">
     </p>
   </div>
 
   <hr><br>
 
   <label>Tipo de Documento de Identificación:</label>
-<% const docTipoVal = typeof docTipo !== 'undefined' ? docTipo : ''; %>
-<input type="radio" name="docTipo" value="DUI" id="duiRadio" <%= docTipoVal === 'DUI' ? 'checked' : '' %>> DUI
-<input type="radio" name="docTipo" value="Pasaporte" id="pasaporteRadio" <%= docTipoVal === 'Pasaporte' ? 'checked' : '' %>> Pasaporte
-<input type="radio" name="docTipo" value="Otro" id="otroRadio" <%= docTipoVal === 'Otro' ? 'checked' : '' %>> Otro
+  <% const docTipoVal = data.docTipo || ''; %>
+  <input type="radio" name="docTipo" value="DUI" id="duiRadio" <%= docTipoVal === 'DUI' ? 'checked' : '' %>> DUI
+  <input type="radio" name="docTipo" value="Pasaporte" id="pasaporteRadio" <%= docTipoVal === 'Pasaporte' ? 'checked' : '' %>> Pasaporte
+  <input type="radio" name="docTipo" value="Otro" id="otroRadio" <%= docTipoVal === 'Otro' ? 'checked' : '' %>> Otro
 
-<div id="campoDUI" style="display:none;">
-  <label>Número de DUI:</label>
-  <input type="text" id="duiInput" name="dui" value="<%= typeof dui !== 'undefined' ? dui : '' %>">
-</div>
+  <div id="campoDUI" style="display:none;">
+    <label>Número de DUI:</label>
+    <input type="text" id="duiInput" name="dui" value="<%= data.dui || '' %>">
+  </div>
 
-<div id="campoPasaporte" style="display:none;">
-  <label>Número de Pasaporte:</label>
-  <input type="text" id="pasaporteInput" name="pasaporte" value="<%= typeof pasaporte !== 'undefined' ? pasaporte : '' %>">
-</div>
+  <div id="campoPasaporte" style="display:none;">
+    <label>Número de Pasaporte:</label>
+    <input type="text" id="pasaporteInput" name="pasaporte" value="<%= data.pasaporte || '' %>">
+  </div>
 
-<div id="campoOtro" style="display:none;">
-  <label>Especifique otro documento:</label>
-  <input type="text" id="otroInput" name="otroDoc" value="<%= typeof otroDoc !== 'undefined' ? otroDoc : '' %>">
-</div>
+  <div id="campoOtro" style="display:none;">
+    <label>Especifique otro documento:</label>
+    <input type="text" id="otroInput" name="otroDoc" value="<%= data.otroDoc || '' %>">
+  </div>
 
-<br><br>
+  <br><br>
 
-<label>Nombre:</label>
-<div style="display: flex; flex-wrap: wrap; gap: 2em; margin-bottom: 1em;">
-  <div>
-    <label for="primerNombre">Primer Nombre:</label>
-    <input type="text" name="primerNombre" id="primerNombre" value="<%= typeof primerNombre !== 'undefined' ? primerNombre : '' %>" required>
+  <label>Nombre:</label>
+  <div style="display: flex; flex-wrap: wrap; gap: 2em; margin-bottom: 1em;">
+    <div>
+      <label for="primerNombre">Primer Nombre:</label>
+      <input type="text" name="primerNombre" id="primerNombre" value="<%= data.primerNombre || '' %>" required>
+      
+      <label for="primerApellido">Primer Apellido:</label>
+      <input type="text" name="primerApellido" id="primerApellido" value="<%= data.primerApellido || '' %>" required>
+    </div>
     
-    <label for="primerApellido">Primer Apellido:</label>
-    <input type="text" name="primerApellido" id="primerApellido" value="<%= typeof primerApellido !== 'undefined' ? primerApellido : '' %>" required>
-  </div>
-  
-  <div>
-    <label for="segundoNombre">Segundo Nombre:</label>
-    <input type="text" name="segundoNombre" id="segundoNombre" value="<%= typeof segundoNombre !== 'undefined' ? segundoNombre : '' %>">
-    
-    <label for="segundoApellido">Segundo Apellido:</label>
-    <input type="text" name="segundoApellido" id="segundoApellido" value="<%= typeof segundoApellido !== 'undefined' ? segundoApellido : '' %>">    
-  </div>
-</div>
-
-<div style="text-align: left; margin-bottom: 1em;">
-  <button type="button" onclick="document.getElementById('tercerApellidoContainer').style.display='block'; this.style.display='none';">
-    + Añadir Tercer Apellido
-  </button>
-</div>
-
-<div id="tercerApellidoContainer" style="display: none; text-align: center; margin-bottom: 1em;">
-  <label for="tercerApellido">Tercer Apellido (solo si aplica):</label><br>
-  <input type="text" name="tercerApellido" id="tercerApellido" value="<%= typeof tercerApellido !== 'undefined' ? tercerApellido : '' %>">
-</div>
-
-<label>Domicilio:</label>
-<div style="display: flex; flex-wrap: wrap; gap: 2em; margin-bottom: 1em;">
-  <div>
-    <label for="canton">Cantón:</label>
-    <% const cantonVal = typeof canton !== 'undefined' ? canton : ''; %>
-    <select name="canton" id="canton">
-      <option value="">Seleccione</option>
-      <option value="Ojos de Agua" <%= cantonVal === 'Ojos de Agua' ? 'selected' : '' %>>Ojos de Agua</option>
-      <option value="Jiñuco" <%= cantonVal === 'Jiñuco' ? 'selected' : '' %>>Jiñuco</option>
-      <option value="Madrecacao" <%= cantonVal === 'Madrecacao' ? 'selected' : '' %>>Madrecacao</option>
-      <option value="La Palma" <%= cantonVal === 'La Palma' ? 'selected' : '' %>>La Palma</option>
-      <option value="Los Naranjos" <%= cantonVal === 'Los Naranjos' ? 'selected' : '' %>>Los Naranjos</option>
-      <option value="El Carrizal" <%= cantonVal === 'El Carrizal' ? 'selected' : '' %>>El Carrizal</option>
-      <option value="Cujuapa" <%= cantonVal === 'Cujuapa' ? 'selected' : '' %>>Cujuapa</option>
-    </select>
-
-    <label for="colonia">Colonia / Barrio:</label>
-    <input type="text" name="colonia" id="colonia" value="<%= typeof colonia !== 'undefined' ? colonia : '' %>" placeholder="Ej. Santa Marta">
+    <div>
+      <label for="segundoNombre">Segundo Nombre:</label>
+      <input type="text" name="segundoNombre" id="segundoNombre" value="<%= data.segundoNombre || '' %>">
+      
+      <label for="segundoApellido">Segundo Apellido:</label>
+      <input type="text" name="segundoApellido" id="segundoApellido" value="<%= data.segundoApellido || '' %>">    
+    </div>
   </div>
 
-  <div>
-    <label for="calle">Calle o Pasaje:</label>
-    <input type="text" name="calle" id="calle" value="<%= typeof calle !== 'undefined' ? calle : '' %>" placeholder="Ej. Pasaje El Triunfo">
-
-    <label for="numeroCasa">Número de casa:</label>
-    <input type="text" name="numeroCasa" id="numeroCasa" value="<%= typeof numeroCasa !== 'undefined' ? numeroCasa : '' %>" placeholder="Ej. #23">
+  <div style="text-align: left; margin-bottom: 1em;">
+    <button type="button" onclick="document.getElementById('tercerApellidoContainer').style.display='block'; this.style.display='none';">
+      + Añadir Tercer Apellido
+    </button>
   </div>
-</div>
 
-<label>¿Es el mismo titular del asiento?</label>
-<% const titularVal = typeof titular !== 'undefined' ? titular : ''; %>
-<input type="radio" name="titular" value="Sí" <%= titularVal === 'Sí' ? 'checked' : '' %>> Sí
-<input type="radio" name="titular" value="No" <%= titularVal === 'No' ? 'checked' : '' %>> No
-<br><br>
+  <div id="tercerApellidoContainer" style="display: none; text-align: center; margin-bottom: 1em;">
+    <label for="tercerApellido">Tercer Apellido (solo si aplica):</label><br>
+    <input type="text" name="tercerApellido" id="tercerApellido" value="<%= data.tercerApellido || '' %>">
+  </div>
 
-<label>Carácter en que comparece:</label>
-<% const caracterVal = typeof caracter !== 'undefined' ? caracter : []; %>
-<input type="checkbox" name="caracter" value="Informante" <%= caracterVal.includes('Informante') ? 'checked' : '' %>> Informante
-<input type="checkbox" name="caracter" value="Padre" <%= caracterVal.includes('Padre') ? 'checked' : '' %>> Padre
-<input type="checkbox" name="caracter" value="Madre" <%= caracterVal.includes('Madre') ? 'checked' : '' %>> Madre
-<input type="checkbox" name="caracter" value="Responsable" <%= caracterVal.includes('Responsable') ? 'checked' : '' %>> Responsable
-<br><br>
+  <label>Domicilio:</label>
+  <% const cantonVal = data.canton || ''; %>
+  <div style="display: flex; flex-wrap: wrap; gap: 2em; margin-bottom: 1em;">
+    <div>
+      <label for="canton">Cantón:</label>
+      <select name="canton" id="canton">
+        <option value="">Seleccione</option>
+        <option value="Ojos de Agua" <%= cantonVal === 'Ojos de Agua' ? 'selected' : '' %>>Ojos de Agua</option>
+        <option value="Jiñuco" <%= cantonVal === 'Jiñuco' ? 'selected' : '' %>>Jiñuco</option>
+        <option value="Madrecacao" <%= cantonVal === 'Madrecacao' ? 'selected' : '' %>>Madrecacao</option>
+        <option value="La Palma" <%= cantonVal === 'La Palma' ? 'selected' : '' %>>La Palma</option>
+        <option value="Los Naranjos" <%= cantonVal === 'Los Naranjos' ? 'selected' : '' %>>Los Naranjos</option>
+        <option value="El Carrizal" <%= cantonVal === 'El Carrizal' ? 'selected' : '' %>>El Carrizal</option>
+        <option value="Cujuapa" <%= cantonVal === 'Cujuapa' ? 'selected' : '' %>>Cujuapa</option>
+      </select>
 
-<label>Teléfono:</label>
-<input type="tel" id="telefono" name="telefono" value="<%= typeof telefono !== 'undefined' ? telefono : '' %>" maxlength="9" placeholder="0000-0000" required>
-<br><br>
+      <label for="colonia">Colonia / Barrio:</label>
+      <input type="text" name="colonia" id="colonia" value="<%= data.colonia || '' %>" placeholder="Ej. Santa Marta">
+    </div>
 
-<label>Correo electrónico:</label>
-<input type="email" name="correo" value="<%= typeof correo !== 'undefined' ? correo : '' %>" required>
-<br><br>
+    <div>
+      <label for="calle">Calle o Pasaje:</label>
+      <input type="text" name="calle" id="calle" value="<%= data.calle || '' %>" placeholder="Ej. Pasaje El Triunfo">
 
-<div style="display:flex; gap:1em; justify-content:flex-end; margin-top:1em;">
-  <% if (modo === "editar") { %>
-    <!-- En edición, envía los datos vía POST -->
-    <button type="submit" formaction="/editar-formulario-p2">Siguiente →</button>
-  <% } else { %>
-    <!-- En nuevo, envía los datos vía POST -->
-    <button type="submit">Siguiente →</button>
-  <% } %>
-</div>
+      <label for="numeroCasa">Número de casa:</label>
+      <input type="text" name="numeroCasa" id="numeroCasa" value="<%= data.numeroCasa || '' %>" placeholder="Ej. #23">
+    </div>
+  </div>
+
+  <label>¿Es el mismo titular del asiento?</label>
+  <% const titularVal = data.titular || ''; %>
+  <input type="radio" name="titular" value="Sí" <%= titularVal === 'Sí' ? 'checked' : '' %>> Sí
+  <input type="radio" name="titular" value="No" <%= titularVal === 'No' ? 'checked' : '' %>> No
+  <br><br>
+
+  <label>Carácter en que comparece:</label>
+  <% const caracterVal = Array.isArray(data.caracter) ? data.caracter : (typeof data.caracter === 'string' ? data.caracter.split(',') : []); %>
+  <input type="checkbox" name="caracter" value="Informante" <%= caracterVal.includes('Informante') ? 'checked' : '' %>> Informante
+  <input type="checkbox" name="caracter" value="Padre" <%= caracterVal.includes('Padre') ? 'checked' : '' %>> Padre
+  <input type="checkbox" name="caracter" value="Madre" <%= caracterVal.includes('Madre') ? 'checked' : '' %>> Madre
+  <input type="checkbox" name="caracter" value="Responsable" <%= caracterVal.includes('Responsable') ? 'checked' : '' %>> Responsable
+  <br><br>
+
+  <label>Teléfono:</label>
+  <input type="tel" id="telefono" name="telefono" value="<%= data.telefono || '' %>" maxlength="9" placeholder="0000-0000" required>
+  <br><br>
+
+  <label>Correo electrónico:</label>
+  <input type="email" name="correo" value="<%= data.correo || '' %>" required>
+  <br><br>
+
+  <div style="display:flex; gap:1em; justify-content:flex-end; margin-top:1em;">
+    <% if (modo === "editar") { %>
+      <button type="submit" formaction="/editar-formulario-p2">Siguiente →</button>
+    <% } else { %>
+      <button type="submit" formaction="/page2">Siguiente →</button>
+    <% } %>
+  </div>
+
   <!-- Botón Home -->
   <button type="button" 
     onclick="window.location.href='mis-datos.html'" 
     style="background-color:#c62828; color:white; border:none; padding:0.5em 1.2em; border-radius:6px; cursor:pointer;">
     Home
   </button>
-</div>
+</form>
 
   <!-- Scripts originales (no modificados en lógica) -->
   <script>
@@ -325,7 +333,6 @@
     actualizarOpciones(); // Inicializar al cargar
   });
 </script>
-  </script>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
