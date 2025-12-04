@@ -75,6 +75,7 @@ app.post('/api/verificar-usuario', async (req, res) => {
 // ==============================
 app.post('/api/login', async (req, res) => {
   const { Usuario, Clave } = req.body;
+  console.log('📥 Datos recibidos en login:', req.body);
 
   try {
     const result = await pool.query(
@@ -87,15 +88,21 @@ app.post('/api/login', async (req, res) => {
       [Usuario]
     );
 
+    console.log('📤 Resultado de consulta:', result.rows);
+
     const user = result.rows[0];
 
     if (!user) {
+      console.warn('⚠️ Usuario no encontrado');
       return res.status(401).json({ error: 'Usuario no encontrado' });
     }
+
     if (user.clave !== Clave) {
+      console.warn(`⚠️ Contraseña incorrecta: esperada "${user.clave}", recibida "${Clave}"`);
       return res.status(401).json({ error: 'Contraseña incorrecta' });
     }
 
+    console.log('✅ Login exitoso:', user.usuario);
     res.status(200).json({
       nombre: user.nombrecompleto,
       rol: user.rol
