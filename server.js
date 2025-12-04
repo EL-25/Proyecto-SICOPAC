@@ -70,25 +70,38 @@ app.post('/api/verificar-usuario', async (req, res) => {
   }
 });
 
+// ==============================
 // Login
+// ==============================
 app.post('/api/login', async (req, res) => {
-  const { usuario, clave } = req.body;
+  const { Usuario, Clave } = req.body;
+
   try {
     const result = await pool.query(
-      'SELECT * FROM "Usuarios" WHERE "Usuario" = $1 AND "Estado" = true',
-      [usuario]
+      `SELECT "Usuario" AS usuario,
+              "Clave" AS clave,
+              "NombreCompleto" AS nombrecompleto,
+              "Rol" AS rol
+       FROM "Usuarios"
+       WHERE "Usuario" = $1 AND "Estado" = true`,
+      [Usuario]
     );
+
     const user = result.rows[0];
 
-    if (!user) return res.status(401).json({ error: 'Usuario no encontrado' });
-    if (user.clave !== clave) return res.status(401).json({ error: 'Contraseña incorrecta' });
+    if (!user) {
+      return res.status(401).json({ error: 'Usuario no encontrado' });
+    }
+    if (user.clave !== Clave) {
+      return res.status(401).json({ error: 'Contraseña incorrecta' });
+    }
 
     res.status(200).json({
       nombre: user.nombrecompleto,
       rol: user.rol
     });
   } catch (err) {
-    console.error('Error en el login:', err);
+    console.error('❌ Error en el login:', err);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });

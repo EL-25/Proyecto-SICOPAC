@@ -1,16 +1,18 @@
 document.getElementById('loginForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const usuario = document.getElementById('username').value;
-  const clave = document.getElementById('password').value;
+  // Capturar valores del formulario
+  const Usuario = document.getElementById('username').value;
+  const Clave = document.getElementById('password').value;
 
   try {
+    // Enviar datos al backend
     const response = await fetch('/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ usuario, clave })
+      body: JSON.stringify({ Usuario, Clave })
     });
 
     let resultado;
@@ -24,14 +26,14 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     }
 
     if (response.ok) {
-      // Guardar el usuario autenticado para uso posterior
-      localStorage.setItem("usuarioActivo", usuario);
+      // Guardar usuario y rol en localStorage
+      localStorage.setItem("usuarioActivo", Usuario);
       localStorage.setItem("rolActivo", resultado.rol);
 
-      // Mostrar el modal institucional con rol
+      // Mostrar modal institucional con rol
       mostrarModal(resultado.rol);
     } else {
-      alert(`Error: ${resultado.error || 'Error desconocido'}`); // Usuario no encontrado o contraseña incorrecta
+      alert(`Error: ${resultado.error || 'Usuario o contraseña incorrectos'}`);
     }
   } catch (error) {
     alert('Error de conexión con el servidor');
