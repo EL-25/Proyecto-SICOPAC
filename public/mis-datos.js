@@ -27,13 +27,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Mostrar firma digital si existe
     const firmaImg = document.getElementById("firma-img");
-    if (datos.Firma) {
-      firmaImg.src = `img/firma/${datos.Firma}`;
-      firmaImg.alt = `Firma de ${datos.usuario}`;
-      firmaImg.style.display = "block";
-    } else {
-      firmaImg.style.display = "none";
-    }
+    if (datos.firma) {
+  firmaImg.src = `img/firma/${datos.firma}`;
+  firmaImg.alt = `Firma de ${datos.usuario}`;
+  firmaImg.style.display = "block";
+} else {
+  firmaImg.style.display = "none";
+}
 
   } catch (error) {
     console.error("Error al cargar los datos:", error);

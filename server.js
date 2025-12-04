@@ -1,12 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const sql = require('mssql');
+const { Pool } = require('pg');   // ← usamos pg en lugar de mssql
 const multer = require('multer');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // ==============================
 // CONFIGURACIONES
@@ -16,20 +16,15 @@ const PORT = 3000;
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Configuración de conexión a SQL Server
-const dbConfig = {
-  user: 'sa',
-  password: 'EdwinBD31',
-  server: 'localhost',
-  database: 'SistemaAlcaldia',
-  options: {
-    port: 1433,
-    encrypt: false,
-    trustServerCertificate: true,
-    connectionTimeout: 30000,
-    requestTimeout: 30000
-  }
-};
+// Configuración de conexión a PostgreSQL (Railway)
+const pool = new Pool({
+  host: process.env.PGHOST,
+  port: process.env.PGPORT,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
+  ssl: { rejectUnauthorized: false }
+});
 
 // Middleware
 app.use(cors());
@@ -64,11 +59,11 @@ const upload = multer({ storage });
 app.post('/api/verificar-usuario', async (req, res) => {
   const { usuario } = req.body;
   try {
-    await sql.connect(dbConfig);
-    const result = await sql.query`
-      SELECT COUNT(*) AS total FROM Usuarios WHERE Usuario = ${usuario}
-    `;
-    res.json({ existe: result.recordset[0].total > 0 });
+    const result = await pool.query(
+      'SELECT COUNT(*) AS total FROM "Usuarios" WHERE "Usuario" = $1',
+      [usuario]
+    );
+    res.json({ existe: parseInt(result.rows[0].total) > 0 });
   } catch (err) {
     console.error("Error en /api/verificar-usuario:", err);
     res.status(500).json({ error: "Error en el servidor" });
@@ -78,20 +73,19 @@ app.post('/api/verificar-usuario', async (req, res) => {
 // Login
 app.post('/api/login', async (req, res) => {
   const { usuario, clave } = req.body;
-
   try {
-    await sql.connect(dbConfig);
-    const result = await sql.query`
-      SELECT * FROM Usuarios WHERE Usuario = ${usuario} AND Estado = 1
-    `;
-    const user = result.recordset[0];
+    const result = await pool.query(
+      'SELECT * FROM "Usuarios" WHERE "Usuario" = $1 AND "Estado" = true',
+      [usuario]
+    );
+    const user = result.rows[0];
 
     if (!user) return res.status(401).json({ error: 'Usuario no encontrado' });
-    if (user.Clave !== clave) return res.status(401).json({ error: 'Contraseña incorrecta' });
+    if (user.clave !== clave) return res.status(401).json({ error: 'Contraseña incorrecta' });
 
     res.status(200).json({
-      nombre: user.NombreCompleto,
-      rol: user.Rol
+      nombre: user.nombrecompleto,
+      rol: user.rol
     });
   } catch (err) {
     console.error('Error en el login:', err);
@@ -102,24 +96,22 @@ app.post('/api/login', async (req, res) => {
 // Datos del usuario autenticado
 app.post('/api/mis-datos', async (req, res) => {
   const { usuario } = req.body;
-
-  if (!usuario) {
-    return res.status(400).json({ error: 'Usuario no proporcionado' });
-  }
+  if (!usuario) return res.status(400).json({ error: 'Usuario no proporcionado' });
 
   try {
-    await sql.connect(dbConfig);
-    const result = await sql.query`
-      SELECT Usuario AS usuario, NombreCompleto AS nombre, Correo AS correo, Rol AS rol, FechaRegistro AS fechaIngreso, Firma
-      FROM Usuarios
-      WHERE Usuario = ${usuario} AND Estado = 1
-    `;
+    const result = await pool.query(
+      `SELECT "Usuario" AS usuario, "NombreCompleto" AS nombre, "Correo" AS correo, 
+              "Rol" AS rol, "FechaRegistro" AS fechaIngreso, "Firma"
+       FROM "Usuarios"
+       WHERE "Usuario" = $1 AND "Estado" = true`,
+      [usuario]
+    );
 
-    if (result.recordset.length === 0) {
+    if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    res.json(result.recordset[0]);
+    res.json(result.rows[0]);
   } catch (err) {
     console.error('Error en /api/mis-datos:', err);
     res.status(500).json({ error: 'Error en el servidor' });
@@ -129,20 +121,17 @@ app.post('/api/mis-datos', async (req, res) => {
 // Crear contraseña por primera vez
 app.post('/api/crear-clave', async (req, res) => {
   const { usuario, nuevaClave } = req.body;
-
-  if (!usuario || !nuevaClave) {
-    return res.status(400).json({ error: 'Datos incompletos' });
-  }
+  if (!usuario || !nuevaClave) return res.status(400).json({ error: 'Datos incompletos' });
 
   try {
-    await sql.connect(dbConfig);
-    const result = await sql.query`
-      UPDATE Usuarios
-      SET Clave = ${nuevaClave}
-      WHERE Usuario = ${usuario} AND Clave = '' AND Estado = 1
-    `;
+    const result = await pool.query(
+      `UPDATE "Usuarios"
+       SET "Clave" = $2
+       WHERE "Usuario" = $1 AND "Clave" = '' AND "Estado" = true`,
+      [usuario, nuevaClave]
+    );
 
-    if (result.rowsAffected[0] === 0) {
+    if (result.rowCount === 0) {
       return res.status(400).json({ error: 'Usuario no válido o ya tiene contraseña' });
     }
 
@@ -170,41 +159,18 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
   if (!usuario || !primerNombre || !primerApellido || !correo || !rol || !fechaIngreso) {
     return res.status(400).json({ error: 'Faltan campos obligatorios' });
   }
-
-  if (!req.file) {
-    console.error("No se recibió archivo de firma.");
-    return res.status(400).json({ error: "No se recibió archivo de firma." });
-  }
+  if (!req.file) return res.status(400).json({ error: "No se recibió archivo de firma." });
 
   const nombreCompleto = `${primerNombre} ${segundoNombre || ''} ${primerApellido} ${segundoApellido || ''} ${tercerApellido || ''}`.trim();
   const fechaHora = new Date(fechaIngreso);
   const firmaNombre = req.file.filename;
 
-  console.log("Datos recibidos para registro:", req.body);
-  console.log("Nombre de firma:", firmaNombre);
-
   try {
-    await sql.connect(dbConfig);
-    const resultado = await sql.query`
-      INSERT INTO Usuarios (Usuario, NombreCompleto, Correo, Rol, FechaRegistro, Clave, Firma, Estado)
-      VALUES (
-        ${usuario},
-        ${nombreCompleto},
-        ${correo},
-        ${rol},
-        ${fechaHora},
-        '',
-        ${firmaNombre},
-        1
-      )
-    `;
-
-    if (resultado.rowsAffected[0] === 0) {
-      console.warn("⚠️ El INSERT no afectó ninguna fila.");
-      return res.status(400).json({ error: "No se pudo registrar el usuario. Verifica si ya existe." });
-    }
-
-    console.log("✅ Usuario registrado correctamente.");
+    await pool.query(
+      `INSERT INTO "Usuarios" ("Usuario","NombreCompleto","Correo","Rol","FechaRegistro","Clave","Firma","Estado")
+       VALUES ($1,$2,$3,$4,$5,'',$6,true)`,
+      [usuario, nombreCompleto, correo, rol, fechaHora, firmaNombre]
+    );
     res.status(200).json({ mensaje: 'Usuario registrado exitosamente' });
   } catch (err) {
     console.error('❌ Error en /api/agregar-usuario:', err);
@@ -215,31 +181,24 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
 // Historial de acciones recientes
 app.post('/api/acciones', async (req, res) => {
   const { usuario } = req.body;
-
-  if (!usuario) {
-    return res.status(400).json({ error: 'Usuario no proporcionado' });
-  }
+  if (!usuario) return res.status(400).json({ error: 'Usuario no proporcionado' });
 
   try {
-    await sql.connect(dbConfig);
-    const result = await sql.query`
-      SELECT TOP 20
-        Usuario,
-        Declaracion,
-        CodigoFormulario,
-        Municipio,
-        Distrito,
-        FechaHoraLocal
-      FROM Acciones
-      WHERE Usuario = ${usuario}
-      ORDER BY Id DESC
-    `;
-    res.json(result.recordset);
+    const result = await pool.query(
+      `SELECT "Usuario","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal"
+       FROM "Acciones"
+       WHERE "Usuario" = $1
+       ORDER BY "Id" DESC
+       LIMIT 20`,
+      [usuario]
+    );
+    res.json(result.rows);
   } catch (err) {
     console.error("❌ Error en /api/acciones:", err);
     res.status(500).json({ error: "Error al obtener historial de acciones" });
   }
 });
+
 // Filtrar formularios
 app.post("/api/filtrar", async (req, res) => {
   const {
@@ -254,34 +213,41 @@ app.post("/api/filtrar", async (req, res) => {
   } = req.body;
 
   try {
-    await sql.connect(dbConfig);
-
-    let query = "SELECT * FROM Formularios WHERE 1=1";
+    let query = 'SELECT * FROM "Formularios" WHERE 1=1';
+    const params = [];
+    let idx = 1;
 
     if (numeroFormulario) {
-      query += ` AND NumeroFormulario = '${numeroFormulario}'`;
+      query += ` AND "NumeroFormulario" = $${idx++}`;
+      params.push(numeroFormulario);
     }
     if (declaracion) {
-      query += ` AND Declaraciones = '${declaracion}'`;
+      query += ` AND "Declaraciones" = $${idx++}`;
+      params.push(declaracion);
     }
     if (distrito) {
-      query += ` AND Distrito = '${distrito}'`;
+      query += ` AND "Distrito" = $${idx++}`;
+      params.push(distrito);
     }
     if (municipio) {
-      query += ` AND Municipio = '${municipio}'`;
+      query += ` AND "Municipio" = $${idx++}`;
+      params.push(municipio);
     }
     if (primerApellidoPadre) {
-      query += ` AND PrimerApellidoPadre LIKE '%${primerApellidoPadre}%'`;
+      query += ` AND "PrimerApellidoPadre" ILIKE $${idx++}`;
+      params.push(`%${primerApellidoPadre}%`);
     }
     if (primerApellidoMadre) {
-      query += ` AND PrimerApellidoMadre LIKE '%${primerApellidoMadre}%'`;
+      query += ` AND "PrimerApellidoMadre" ILIKE $${idx++}`;
+      params.push(`%${primerApellidoMadre}%`);
     }
-    if (fechaInicio && fechaFin) {
-      query += ` AND FechaPresentacion BETWEEN '${fechaInicio}' AND '${fechaFin}'`;
+        if (fechaInicio && fechaFin) {
+      query += ` AND "FechaPresentacion" BETWEEN $${idx++} AND $${idx++}`;
+      params.push(fechaInicio, fechaFin);
     }
 
-    const result = await sql.query(query);
-    res.json(result.recordset);
+    const result = await pool.query(query, params);
+    res.json(result.rows);
   } catch (err) {
     console.error("❌ Error en /api/filtrar:", err);
     res.status(500).json({ error: "Error al filtrar formularios" });
@@ -289,44 +255,11 @@ app.post("/api/filtrar", async (req, res) => {
 });
 
 // ==============================
-// FORMULARIO EJS
+// INICIO DEL SERVIDOR
 // ==============================
 
-// Generador de códigos de formularios
-let contadorFormularios = 1;
-function generarCodigoFormulario() {
-  const año = new Date().getFullYear();
-  const correlativo = String(contadorFormularios++).padStart(5, "0");
-  return `LLE-${año}-${correlativo}`;
-}
-
-// Página 1 del formulario
-app.get("/formulario", (req, res) => {
-  const codigo = generarCodigoFormulario();
-  const usuario = req.query.usuario || "Desconocido";
-  res.render("index", {
-    modo: "nuevo",
-    data: {
-      codigoFormulario: codigo,
-      usuario
-    }
-  });
-});
-
-// Página 2 del formulario
-app.post("/page2", (req, res) => {
-  const page1Data = req.body;
-
-  res.render("page2", {
-    modo: "nuevo",
-    data: page1Data   // ← ahora todo se accede como data.xxx en page2.ejs
-  });
-});
-
-// Vista previa / resumen final
-app.post("/preview", (req, res) => {
-  const allData = req.body; // todo ya viene en req.body
-  res.render("pdf-preview", { data: allData });
+app.listen(PORT, () => {
+  console.log(`✅ Servidor corriendo en puerto ${PORT}`);
 });
 
 // Guardar datos finales y mostrar vista previa
@@ -337,260 +270,152 @@ app.post("/guardar", async (req, res) => {
   const normalizar = v => Array.isArray(v) ? v[0] : v || null;
 
   try {
-    await sql.connect(dbConfig);
-
     // Normalizar todos los campos necesarios
     const datos = {
-  codigoFormulario: normalizar(req.body.codigoFormulario),
-  usuario: normalizar(req.body.usuario),
-  refLLE: normalizar(req.body.refLLE),
-  municipio: normalizar(req.body.municipio),
-  distrito: normalizar(req.body.distrito),
-  lugarPresentacion: normalizar(req.body.lugarPresentacion),
-  fechaPresentacion: normalizar(req.body.fechaPresentacion),
-  horaPresentacion: normalizar(req.body.horaPresentacion),
-  contacto: normalizar(req.body.contacto),
-  plazo: normalizar(req.body.plazo),
-  docTipo: normalizar(req.body.docTipo),
-  dui: normalizar(req.body.dui),
-  pasaporte: normalizar(req.body.pasaporte),
-  otroDoc: normalizar(req.body.otroDoc),
-  primerNombre: normalizar(req.body.primerNombre),
-  segundoNombre: normalizar(req.body.segundoNombre),
-  primerApellido: normalizar(req.body.primerApellido),
-  segundoApellido: normalizar(req.body.segundoApellido),
-  tercerApellido: normalizar(req.body.tercerApellido),
-  canton: normalizar(req.body.canton),
-  colonia: normalizar(req.body.colonia),
-  calle: normalizar(req.body.calle),
-  numeroCasa: normalizar(req.body.numeroCasa),
-  titular: normalizar(req.body.titular),
-  telefono: normalizar(req.body.telefono),
-  correo: normalizar(req.body.correo),
-  caracter: Array.isArray(req.body.caracter) ? req.body.caracter.join(",") : normalizar(req.body.caracter),
-  docTitular: normalizar(req.body.docTitular),
-  duiTitular: normalizar(req.body.duiTitular),
-  nuiTitular: normalizar(req.body.nuiTitular),
-  otroTitular: normalizar(req.body.otroTitular),
-  fechaHecho: normalizar(req.body.fechaHecho),
-  lugarHecho: normalizar(req.body.lugarHecho),
-  primerNombreTitular: normalizar(req.body.primerNombreTitular),
-  segundoNombreTitular: normalizar(req.body.segundoNombreTitular),
-  primerApellidoTitular: normalizar(req.body.primerApellidoTitular),
-  segundoApellidoTitular: normalizar(req.body.segundoApellidoTitular),
-  tercerApellidoTitular: normalizar(req.body.tercerApellidoTitular),
-  primerNombrePadre: normalizar(req.body.primerNombrePadre),
-  segundoNombrePadre: normalizar(req.body.segundoNombrePadre),
-  primerApellidoPadre: normalizar(req.body.primerApellidoPadre),
-  segundoApellidoPadre: normalizar(req.body.segundoApellidoPadre),
-  primerNombreMadre: normalizar(req.body.primerNombreMadre),
-  segundoNombreMadre: normalizar(req.body.segundoNombreMadre),
-  primerApellidoMadre: normalizar(req.body.primerApellidoMadre),
-  segundoApellidoMadre: normalizar(req.body.segundoApellidoMadre),
-  tercerApellidoMadre: normalizar(req.body.tercerApellidoMadre),
-  declaracion: normalizar(req.body.declaracion),
-  descripcionDocumentacion: [...(req.body.doc || []), ...(req.body.doc2 || [])].length > 0 
-    ? [...(req.body.doc || []), ...(req.body.doc2 || [])].join(", ") 
-    : null
-};
-    // INSERT con columnas y valores alineados
-    await sql.query`
-      INSERT INTO Formularios (
-        NumeroFormulario,
-        PrimerNombre,
-        SegundoNombre,
-        PrimerApellido,
-        SegundoApellido,
-        TercerApellido,
-        PrimerNombreTitular,
-        SegundoNombreTitular,
-        PrimerApellidoTitular,
-        SegundoApellidoTitular,
-        TercerApellidoTitular,
-        PrimerNombrePadre,
-        SegundoNombrePadre,
-        PrimerApellidoPadre,
-        SegundoApellidoPadre,
-        PrimerNombreMadre,
-        SegundoNombreMadre,
-        PrimerApellidoMadre,
-        SegundoApellidoMadre,
-        TercerApellidoMadre,
-        Municipio,
-        Distrito,
-        Canton,
-        Colonia,
-        Calle,
-        NumeroCasa,
-        LugarHecho,
-        FechaPresentacion,
-        HoraPresentacion,
-        Telefono,
-        Correo,
-        Declaraciones,
-        DescripcionDocumentacion,
-        RefLLE,
-        LugarPresentacion,
-        Contacto,
-        Plazo,
-        DocTipo,
-        DUI,
-        Pasaporte,
-        OtroDoc,
-        Titular,
-        Caracter,
-        DocTitular,
-        DuiTitular,
-        NuiTitular,
-        OtroTitular,
-        FechaHecho
-      )
-      VALUES (
-        ${datos.codigoFormulario},
-        ${datos.primerNombre},
-        ${datos.segundoNombre || null},
-        ${datos.primerApellido},
-        ${datos.segundoApellido || null},
-        ${datos.tercerApellido || null},
-        ${datos.primerNombreTitular},
-        ${datos.segundoNombreTitular || null},
-        ${datos.primerApellidoTitular},
-        ${datos.segundoApellidoTitular || null},
-        ${datos.tercerApellidoTitular || null},
-        ${datos.primerNombrePadre},
-        ${datos.segundoNombrePadre || null},
-        ${datos.primerApellidoPadre},
-        ${datos.segundoApellidoPadre || null},
-        ${datos.primerNombreMadre},
-        ${datos.segundoNombreMadre || null},
-        ${datos.primerApellidoMadre},
-        ${datos.segundoApellidoMadre || null},
-        ${datos.tercerApellidoMadre || null},
-        ${datos.municipio},
-        ${datos.distrito},
-        ${datos.canton || null},
-        ${datos.colonia || null},
-        ${datos.calle || null},
-        ${datos.numeroCasa || null},
-        ${datos.lugarHecho || null},
-        ${datos.fechaPresentacion},
-        ${datos.horaPresentacion},
-        ${datos.telefono},
-        ${datos.correo},
-        ${datos.declaracion},
-        ${datos.descripcionDocumentacion},
-        ${datos.refLLE || null},
-        ${datos.lugarPresentacion || null},
-        ${datos.contacto || null},
-        ${datos.plazo || null},
-        ${datos.docTipo || null},
-        ${datos.dui || null},
-        ${datos.pasaporte || null},
-        ${datos.otroDoc || null},
-        ${datos.titular || null},
-        ${datos.caracter},
-        ${datos.docTitular || null},
-        ${datos.duiTitular || null},
-        ${datos.nuiTitular || null},
-        ${datos.otroTitular || null},
-        ${datos.fechaHecho || null}
-      )
-    `;
+      codigoFormulario: normalizar(req.body.codigoFormulario),
+      usuario: normalizar(req.body.usuario),
+      refLLE: normalizar(req.body.refLLE),
+      municipio: normalizar(req.body.municipio),
+      distrito: normalizar(req.body.distrito),
+      lugarPresentacion: normalizar(req.body.lugarPresentacion),
+      fechaPresentacion: normalizar(req.body.fechaPresentacion),
+      horaPresentacion: normalizar(req.body.horaPresentacion),
+      contacto: normalizar(req.body.contacto),
+      plazo: normalizar(req.body.plazo),
+      docTipo: normalizar(req.body.docTipo),
+      dui: normalizar(req.body.dui),
+      pasaporte: normalizar(req.body.pasaporte),
+      otroDoc: normalizar(req.body.otroDoc),
+      primerNombre: normalizar(req.body.primerNombre),
+      segundoNombre: normalizar(req.body.segundoNombre),
+      primerApellido: normalizar(req.body.primerApellido),
+      segundoApellido: normalizar(req.body.segundoApellido),
+      tercerApellido: normalizar(req.body.tercerApellido),
+      canton: normalizar(req.body.canton),
+      colonia: normalizar(req.body.colonia),
+      calle: normalizar(req.body.calle),
+      numeroCasa: normalizar(req.body.numeroCasa),
+      titular: normalizar(req.body.titular),
+      telefono: normalizar(req.body.telefono),
+      correo: normalizar(req.body.correo),
+      caracter: Array.isArray(req.body.caracter) ? req.body.caracter.join(",") : normalizar(req.body.caracter),
+      docTitular: normalizar(req.body.docTitular),
+      duiTitular: normalizar(req.body.duiTitular),
+      nuiTitular: normalizar(req.body.nuiTitular),
+      otroTitular: normalizar(req.body.otroTitular),
+      fechaHecho: normalizar(req.body.fechaHecho),
+      lugarHecho: normalizar(req.body.lugarHecho),
+      primerNombreTitular: normalizar(req.body.primerNombreTitular),
+      segundoNombreTitular: normalizar(req.body.segundoNombreTitular),
+      primerApellidoTitular: normalizar(req.body.primerApellidoTitular),
+      segundoApellidoTitular: normalizar(req.body.segundoApellidoTitular),
+      tercerApellidoTitular: normalizar(req.body.tercerApellidoTitular),
+      primerNombrePadre: normalizar(req.body.primerNombrePadre),
+      segundoNombrePadre: normalizar(req.body.segundoNombrePadre),
+      primerApellidoPadre: normalizar(req.body.primerApellidoPadre),
+      segundoApellidoPadre: normalizar(req.body.segundoApellidoPadre),
+      primerNombreMadre: normalizar(req.body.primerNombreMadre),
+      segundoNombreMadre: normalizar(req.body.segundoNombreMadre),
+      primerApellidoMadre: normalizar(req.body.primerApellidoMadre),
+      segundoApellidoMadre: normalizar(req.body.segundoApellidoMadre),
+      tercerApellidoMadre: normalizar(req.body.tercerApellidoMadre),
+      declaracion: normalizar(req.body.declaracion),
+      descripcionDocumentacion: [...(req.body.doc || []), ...(req.body.doc2 || [])].length > 0 
+        ? [...(req.body.doc || []), ...(req.body.doc2 || [])].join(", ") 
+        : null
+    };
+
+    // INSERT con parámetros en PostgreSQL
+    await pool.query(
+      `INSERT INTO "Formularios" (
+        "NumeroFormulario","PrimerNombre","SegundoNombre","PrimerApellido","SegundoApellido","TercerApellido",
+        "PrimerNombreTitular","SegundoNombreTitular","PrimerApellidoTitular","SegundoApellidoTitular","TercerApellidoTitular",
+        "PrimerNombrePadre","SegundoNombrePadre","PrimerApellidoPadre","SegundoApellidoPadre",
+        "PrimerNombreMadre","SegundoNombreMadre","PrimerApellidoMadre","SegundoApellidoMadre","TercerApellidoMadre",
+        "Municipio","Distrito","Canton","Colonia","Calle","NumeroCasa","LugarHecho",
+        "FechaPresentacion","HoraPresentacion","Telefono","Correo","Declaraciones","DescripcionDocumentacion",
+        "RefLLE","LugarPresentacion","Contacto","Plazo","DocTipo","DUI","Pasaporte","OtroDoc",
+        "Titular","Caracter","DocTitular","DuiTitular","NuiTitular","OtroTitular","FechaHecho"
+      ) VALUES (
+        $1,$2,$3,$4,$5,$6,
+        $7,$8,$9,$10,$11,
+        $12,$13,$14,$15,
+        $16,$17,$18,$19,$20,
+        $21,$22,$23,$24,$25,$26,$27,
+        $28,$29,$30,$31,$32,$33,
+        $34,$35,$36,$37,$38,$39,$40,$41,
+        $42,$43,$44,$45,$46,$47,$48
+      )`,
+      [
+        datos.codigoFormulario, datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido,
+        datos.primerNombreTitular, datos.segundoNombreTitular, datos.primerApellidoTitular, datos.segundoApellidoTitular, datos.tercerApellidoTitular,
+        datos.primerNombrePadre, datos.segundoNombrePadre, datos.primerApellidoPadre, datos.segundoApellidoPadre,
+        datos.primerNombreMadre, datos.segundoNombreMadre, datos.primerApellidoMadre, datos.segundoApellidoMadre, datos.tercerApellidoMadre,
+        datos.municipio, datos.distrito, datos.canton, datos.colonia, datos.calle, datos.numeroCasa, datos.lugarHecho,
+        datos.fechaPresentacion, datos.horaPresentacion, datos.telefono, datos.correo, datos.declaracion, datos.descripcionDocumentacion,
+        datos.refLLE, datos.lugarPresentacion, datos.contacto, datos.plazo, datos.docTipo, datos.dui, datos.pasaporte, datos.otroDoc,
+        datos.titular, datos.caracter, datos.docTitular, datos.duiTitular, datos.nuiTitular, datos.otroTitular, datos.fechaHecho
+      ]
+    );
 
     // Registrar acción en la tabla Acciones
-    await sql.query`
-      INSERT INTO Acciones (
-        Usuario,
-        TipoAccion,
-        Declaracion,
-        CodigoFormulario,
-        Municipio,
-        Distrito,
-        FechaHoraLocal
-      )
-      VALUES (
-        ${datos.usuario},
-        'Formulario enviado',
-        ${datos.declaracion},
-        ${datos.codigoFormulario},
-        ${datos.municipio},
-        ${datos.distrito},
-        ${req.body.fechaHoraLocal}
-      )
-    `;
+    await pool.query(
+      `INSERT INTO "Acciones" ("Usuario","TipoAccion","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal")
+       VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+      [datos.usuario, 'Formulario enviado', datos.declaracion, datos.codigoFormulario, datos.municipio, datos.distrito, req.body.fechaHoraLocal]
+    );
+
     const documentos = [...(req.body.doc || []), ...(req.body.doc2 || [])];
-const datosConCodigo = {
-  codigoFormulario: datos.codigoFormulario,
-  refLLE: datos.refLLE,
-  fechaPresentacion: datos.fechaPresentacion,
-  horaPresentacion: datos.horaPresentacion,
-  fechaHecho: datos.fechaHecho,
-  doc: documentos,
+    const datosConCodigo = {
+      codigoFormulario: datos.codigoFormulario,
+      refLLE: datos.refLLE,
+      fechaPresentacion: datos.fechaPresentacion,
+      horaPresentacion: datos.horaPresentacion,
+      fechaHecho: datos.fechaHecho,
+      doc: documentos,
+      municipio: datos.municipio,
+      distrito: datos.distrito,
+      lugarPresentacion: datos.lugarPresentacion,
+      contacto: datos.contacto,
+      plazo: datos.plazo,
+      docTipo: datos.docTipo,
+      dui: datos.dui,
+      pasaporte: datos.pasaporte,
+      otroDoc: datos.otroDoc,
+      titular: datos.titular,
+      caracter: datos.caracter,
+      nombreSolicitante: [
+        datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido
+      ].filter(Boolean).join(" "),
+      domicilio: [
+        datos.calle, datos.numeroCasa ? `#${datos.numeroCasa}` : null, datos.colonia, datos.canton
+      ].filter(Boolean).join(", "),
+      telefono: datos.telefono,
+      correo: datos.correo,
+      docTitular: datos.docTitular,
+      duiTitular: datos.duiTitular,
+      nuiTitular: datos.nuiTitular,
+      otroTitular: datos.otroTitular,
+      primerNombreTitular: datos.primerNombreTitular,
+      segundoNombreTitular: datos.segundoNombreTitular,
+      primerApellidoTitular: datos.primerApellidoTitular,
+      segundoApellidoTitular: datos.segundoApellidoTitular,
+      tercerApellidoTitular: datos.tercerApellidoTitular,
+      lugarHecho: datos.lugarHecho,
+      primerNombreMadre: datos.primerNombreMadre,
+      segundoNombreMadre: datos.segundoNombreMadre,
+      primerApellidoMadre: datos.primerApellidoMadre,
+      segundoApellidoMadre: datos.segundoApellidoMadre,
+      tercerApellidoMadre: datos.tercerApellidoMadre,
+      primerNombrePadre: datos.primerNombrePadre,
+      segundoNombrePadre: datos.segundoNombrePadre,
+      primerApellidoPadre: datos.primerApellidoPadre,
+      segundoApellidoPadre: datos.segundoApellidoPadre,
+      declaracion: datos.declaracion
+    };
 
-  // Campos para vista previa
-  municipio: datos.municipio,
-  distrito: datos.distrito,
-  lugarPresentacion: datos.lugarPresentacion,
-  contacto: datos.contacto,
-  plazo: datos.plazo,
-  docTipo: datos.docTipo,
-  dui: datos.dui,
-  pasaporte: datos.pasaporte,
-  otroDoc: datos.otroDoc,
-  titular: datos.titular,
-  caracter: datos.caracter,
-
-  // Reconstrucción de nombre completo
-  nombreSolicitante: [
-    datos.primerNombre,
-    datos.segundoNombre,
-    datos.primerApellido,
-    datos.segundoApellido,
-    datos.tercerApellido
-  ].filter(Boolean).join(" "),
-
-  // Reconstrucción de domicilio
-  domicilio: [
-    datos.calle,
-    datos.numeroCasa ? `#${datos.numeroCasa}` : null,
-    datos.colonia,
-    datos.canton
-  ].filter(Boolean).join(", "),
-
-  // Teléfono y correo
-  telefono: datos.telefono,
-  correo: datos.correo,
-
-  // Datos del titular del asiento
-  docTitular: datos.docTitular,
-  duiTitular: datos.duiTitular,
-  nuiTitular: datos.nuiTitular,
-  otroTitular: datos.otroTitular,
-  primerNombreTitular: datos.primerNombreTitular,
-  segundoNombreTitular: datos.segundoNombreTitular,
-  primerApellidoTitular: datos.primerApellidoTitular,
-  segundoApellidoTitular: datos.segundoApellidoTitular,
-  tercerApellidoTitular: datos.tercerApellidoTitular,
-
-  // Lugar y fecha del hecho
-  lugarHecho: datos.lugarHecho,
-
-  // Datos de madre y padre
-  primerNombreMadre: datos.primerNombreMadre,
-  segundoNombreMadre: datos.segundoNombreMadre,
-  primerApellidoMadre: datos.primerApellidoMadre,
-  segundoApellidoMadre: datos.segundoApellidoMadre,
-  tercerApellidoMadre: datos.tercerApellidoMadre,
-  primerNombrePadre: datos.primerNombrePadre,
-  segundoNombrePadre: datos.segundoNombrePadre,
-  primerApellidoPadre: datos.primerApellidoPadre,
-  segundoApellidoPadre: datos.segundoApellidoPadre,
-
-  // Declaración solicitada
-  declaracion: datos.declaracion
-};
-
-res.render("pdf-preview", { data: datosConCodigo });
+    // Renderizar vista previa con los datos completos
+    res.render("pdf-preview", { data: datosConCodigo });
 
   } catch (err) {
     console.error("❌ Error al guardar el formulario:", err);
@@ -618,16 +443,16 @@ app.get("/editar-formulario", async (req, res) => {
   const codigo = normalizarCodigo(req.query.codigo);
 
   try {
-    await sql.connect(dbConfig);
-    const result = await sql.query`
-      SELECT * FROM Formularios WHERE NumeroFormulario = ${codigo}
-    `;
+    const result = await pool.query(
+      'SELECT * FROM "Formularios" WHERE "NumeroFormulario" = $1',
+      [codigo]
+    );
 
-    if (result.recordset.length === 0) {
+    if (result.rows.length === 0) {
       return res.status(404).send("Formulario no encontrado");
     }
 
-    const f = result.recordset[0];
+    const f = result.rows[0];
 
     res.render("index", {
       modo: "editar",
@@ -683,16 +508,16 @@ app.get("/editar-formulario-p2", async (req, res) => {
   const codigo = normalizarCodigo(req.query.codigo);
 
   try {
-    await sql.connect(dbConfig);
-    const result = await sql.query`
-      SELECT * FROM Formularios WHERE NumeroFormulario = ${codigo}
-    `;
+    const result = await pool.query(
+      'SELECT * FROM "Formularios" WHERE "NumeroFormulario" = $1',
+      [codigo]
+    );
 
-    if (result.recordset.length === 0) {
+    if (result.rows.length === 0) {
       return res.status(404).send("Formulario no encontrado");
     }
 
-    const f = result.recordset[0];
+    const f = result.rows[0];
 
     // Separar documentación en dos grupos (doc y doc2)
     const allDocs = f.DescripcionDocumentacion
@@ -756,8 +581,6 @@ app.get("/editar-formulario-p2", async (req, res) => {
 // Actualizar formulario existente
 app.post("/actualizar", async (req, res) => {
   try {
-    await sql.connect(dbConfig);
-
     const normalizar = v => Array.isArray(v) ? v[0] : v || null;
 
     // Fechas y horas
@@ -782,64 +605,75 @@ app.post("/actualizar", async (req, res) => {
         })()
       : null;
 
-    // RefLLE ahora es texto (NVARCHAR)
+    // RefLLE ahora es texto
     const refLLE = normalizar(req.body.refLLE);
 
     // Documentación combinada
     const documentos = [...(req.body.doc || []), ...(req.body.doc2 || [])];
     const descripcionDocumentacion = documentos.length > 0 ? documentos.join(", ") : null;
 
-    await sql.query`
-      UPDATE Formularios
-      SET
-        PrimerNombre = ${normalizar(req.body.primerNombre)},
-        SegundoNombre = ${normalizar(req.body.segundoNombre)},
-        PrimerApellido = ${normalizar(req.body.primerApellido)},
-        SegundoApellido = ${normalizar(req.body.segundoApellido)},
-        TercerApellido = ${normalizar(req.body.tercerApellido)},
-        PrimerNombreTitular = ${normalizar(req.body.primerNombreTitular)},
-        SegundoNombreTitular = ${normalizar(req.body.segundoNombreTitular)},
-        PrimerApellidoTitular = ${normalizar(req.body.primerApellidoTitular)},
-        SegundoApellidoTitular = ${normalizar(req.body.segundoApellidoTitular)},
-        TercerApellidoTitular = ${normalizar(req.body.tercerApellidoTitular)},
-        PrimerNombrePadre = ${normalizar(req.body.primerNombrePadre)},
-        SegundoNombrePadre = ${normalizar(req.body.segundoNombrePadre)},
-        PrimerApellidoPadre = ${normalizar(req.body.primerApellidoPadre)},
-        SegundoApellidoPadre = ${normalizar(req.body.segundoApellidoPadre)},
-        PrimerNombreMadre = ${normalizar(req.body.primerNombreMadre)},
-        SegundoNombreMadre = ${normalizar(req.body.segundoNombreMadre)},
-        PrimerApellidoMadre = ${normalizar(req.body.primerApellidoMadre)},
-        SegundoApellidoMadre = ${normalizar(req.body.segundoApellidoMadre)},
-        TercerApellidoMadre = ${normalizar(req.body.tercerApellidoMadre)},
-        Distrito = ${normalizar(req.body.distrito)},
-        Canton = ${normalizar(req.body.canton)},
-        Colonia = ${normalizar(req.body.colonia)},
-        Calle = ${normalizar(req.body.calle)},
-        NumeroCasa = ${normalizar(req.body.numeroCasa)},
-        LugarHecho = ${normalizar(req.body.lugarHecho)},
-        FechaPresentacion = ${fechaPresentacion},
-        HoraPresentacion = ${horaPresentacion},
-        Telefono = ${normalizar(req.body.telefono)},
-        Correo = ${normalizar(req.body.correo)},
-        Declaraciones = ${normalizar(req.body.declaracion)},
-        DescripcionDocumentacion = ${descripcionDocumentacion},
-        RefLLE = ${refLLE},
-        LugarPresentacion = ${normalizar(req.body.lugarPresentacion)},
-        Contacto = ${normalizar(req.body.contacto)},
-        Plazo = ${normalizar(req.body.plazo)},
-        DocTipo = ${normalizar(req.body.docTipo)},
-        DUI = ${normalizar(req.body.dui)},
-        Pasaporte = ${normalizar(req.body.pasaporte)},
-        OtroDoc = ${normalizar(req.body.otroDoc)},
-        Titular = ${normalizar(req.body.titular)},
-        Caracter = ${Array.isArray(req.body.caracter) ? [...new Set(req.body.caracter)].join(",") : normalizar(req.body.caracter)},
-        DocTitular = ${normalizar(req.body.docTitular)},
-        DuiTitular = ${normalizar(req.body.duiTitular)},
-        NuiTitular = ${normalizar(req.body.nuiTitular)},
-        OtroTitular = ${normalizar(req.body.otroTitular)},
-        FechaHecho = ${fechaHecho}
-      WHERE NumeroFormulario = ${normalizar(req.body.codigoFormulario)}
-    `;
+    // UPDATE con parámetros en PostgreSQL
+    await pool.query(
+      `UPDATE "Formularios"
+       SET "PrimerNombre"=$1,"SegundoNombre"=$2,"PrimerApellido"=$3,"SegundoApellido"=$4,"TercerApellido"=$5,
+           "PrimerNombreTitular"=$6,"SegundoNombreTitular"=$7,"PrimerApellidoTitular"=$8,"SegundoApellidoTitular"=$9,"TercerApellidoTitular"=$10,
+           "PrimerNombrePadre"=$11,"SegundoNombrePadre"=$12,"PrimerApellidoPadre"=$13,"SegundoApellidoPadre"=$14,
+           "PrimerNombreMadre"=$15,"SegundoNombreMadre"=$16,"PrimerApellidoMadre"=$17,"SegundoApellidoMadre"=$18,"TercerApellidoMadre"=$19,
+           "Distrito"=$20,"Canton"=$21,"Colonia"=$22,"Calle"=$23,"NumeroCasa"=$24,"LugarHecho"=$25,
+           "FechaPresentacion"=$26,"HoraPresentacion"=$27,"Telefono"=$28,"Correo"=$29,"Declaraciones"=$30,"DescripcionDocumentacion"=$31,
+           "RefLLE"=$32,"LugarPresentacion"=$33,"Contacto"=$34,"Plazo"=$35,"DocTipo"=$36,"DUI"=$37,"Pasaporte"=$38,"OtroDoc"=$39,
+           "Titular"=$40,"Caracter"=$41,"DocTitular"=$42,"DuiTitular"=$43,"NuiTitular"=$44,"OtroTitular"=$45,"FechaHecho"=$46
+       WHERE "NumeroFormulario"=$47`,
+      [
+        normalizar(req.body.primerNombre),
+        normalizar(req.body.segundoNombre),
+        normalizar(req.body.primerApellido),
+        normalizar(req.body.segundoApellido),
+        normalizar(req.body.tercerApellido),
+        normalizar(req.body.primerNombreTitular),
+        normalizar(req.body.segundoNombreTitular),
+        normalizar(req.body.primerApellidoTitular),
+        normalizar(req.body.segundoApellidoTitular),
+        normalizar(req.body.tercerApellidoTitular),
+        normalizar(req.body.primerNombrePadre),
+        normalizar(req.body.segundoNombrePadre),
+        normalizar(req.body.primerApellidoPadre),
+        normalizar(req.body.segundoApellidoPadre),
+        normalizar(req.body.primerNombreMadre),
+        normalizar(req.body.segundoNombreMadre),
+        normalizar(req.body.primerApellidoMadre),
+        normalizar(req.body.segundoApellidoMadre),
+        normalizar(req.body.tercerApellidoMadre),
+        normalizar(req.body.distrito),
+        normalizar(req.body.canton),
+        normalizar(req.body.colonia),
+        normalizar(req.body.calle),
+        normalizar(req.body.numeroCasa),
+        normalizar(req.body.lugarHecho),
+        fechaPresentacion,
+        horaPresentacion,
+        normalizar(req.body.telefono),
+        normalizar(req.body.correo),
+        normalizar(req.body.declaracion),
+        descripcionDocumentacion,
+        refLLE,
+        normalizar(req.body.lugarPresentacion),
+        normalizar(req.body.contacto),
+        normalizar(req.body.plazo),
+        normalizar(req.body.docTipo),
+        normalizar(req.body.dui),
+        normalizar(req.body.pasaporte),
+        normalizar(req.body.otroDoc),
+        normalizar(req.body.titular),
+        Array.isArray(req.body.caracter) ? [...new Set(req.body.caracter)].join(",") : normalizar(req.body.caracter),
+        normalizar(req.body.docTitular),
+        normalizar(req.body.duiTitular),
+        normalizar(req.body.nuiTitular),
+        normalizar(req.body.otroTitular),
+        fechaHecho,
+        normalizar(req.body.codigoFormulario)
+      ]
+    );
 
     const datosConCodigo = {
       codigoFormulario: normalizar(req.body.codigoFormulario),
@@ -895,6 +729,7 @@ app.post("/actualizar", async (req, res) => {
       segundoApellidoPadre: normalizar(req.body.segundoApellidoPadre),
       declaracion: normalizar(req.body.declaracion)
     };
+
     res.render("pdf-preview", { data: datosConCodigo });
   } catch (err) {
     console.error("❌ Error en /actualizar:", err);
