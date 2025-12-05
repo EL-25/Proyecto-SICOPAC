@@ -72,6 +72,18 @@
       max-width: 200px;
       margin-top: 0.5em;
     }
+
+    /* Botón verde institucional */
+    .btn-verde {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 0.6em 1.2em;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 1em;
+    }
   </style>
 </head>
 <body class="fondo-datos">
@@ -99,6 +111,9 @@
         <i class="fas fa-sign-out-alt"></i>
         Cerrar sesión
       </div>
+
+      <!-- Botón solo visible para administrador -->
+      <div id="accionesAdmin"></div>
     </div>
   </main>
 
@@ -119,31 +134,36 @@
     function abrirSeccion(id) {
       const target = document.getElementById(id);
       const isVisible = target.classList.contains('activa');
-
       document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
-
       if (!isVisible) {
         target.classList.add('activa');
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // No se abre ninguna sección automáticamente
-    });
-
     function cerrarSesion() {
       localStorage.removeItem("usuarioActivo");
       window.location.href = "login.html";
     }
+
+    // Mostrar botón solo si el rol es Administrador
+    document.addEventListener("DOMContentLoaded", () => {
+      const rol = localStorage.getItem("rolActivo");
+      if (rol === "Administrador") {
+        const btn = document.createElement("button");
+        btn.textContent = "Agregar usuario";
+        btn.className = "btn-verde";
+        btn.onclick = () => window.location.href = "agregar-usuario.html";
+        document.getElementById("accionesAdmin").appendChild(btn);
+      }
+    });
   </script>
 
   <!-- Overlay emergente -->
-<div id="overlay" class="overlay">
-  <div class="overlay-box">
-    <i class="fas fa-spinner fa-spin"></i>
-    <p>Dirigiendo al Formulario Único de Solicitud…</p>
+  <div id="overlay" class="overlay">
+    <div class="overlay-box">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Dirigiendo al Formulario Único de Solicitud…</p>
+    </div>
   </div>
-</div>
-
 </body>
 </html>

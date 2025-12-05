@@ -45,6 +45,17 @@ if (datos.firma && datos.firma.trim() !== "") {
   firmaImg.style.display = "none";
 }
 
+if (datos.rol === "Administrador") {
+      const accionesAdmin = document.getElementById("accionesAdmin");
+      if (accionesAdmin) {
+        const btn = document.createElement("button");
+        btn.textContent = "Agregar usuario";
+        btn.className = "btn-verde";
+        btn.onclick = () => window.location.href = "agregar-usuario.html";
+        accionesAdmin.appendChild(btn);
+      }
+    }
+    
   } catch (error) {
     console.error("Error al cargar los datos:", error);
     alert("Error al cargar los datos del usuario");
