@@ -274,6 +274,28 @@ app.post("/api/filtrar", async (req, res) => {
   }
 });
 
+// Generar nuevo código de formulario incremental
+app.get("/api/nuevo-codigo", async (req, res) => {
+  try {
+    const añoActual = new Date().getFullYear();
+    const prefijo = `LLE-${añoActual}-`;
+
+    const result = await pool.query(
+      `SELECT COUNT(*) AS total FROM "Formularios" WHERE "NumeroFormulario" LIKE $1`,
+      [`${prefijo}%`]
+    );
+
+    const siguiente = parseInt(result.rows[0].total) + 1;
+    const numero = String(siguiente).padStart(5, "0");
+    const codigo = `${prefijo}${numero}`;
+
+    res.json({ codigo });
+  } catch (err) {
+    console.error("❌ Error en /api/nuevo-codigo:", err);
+    res.status(500).json({ error: "Error al generar código" });
+  }
+});
+
 // ==============================
 // INICIO DEL SERVIDOR
 // ==============================

@@ -358,6 +358,21 @@
         }
       });
     });
+  </script>.
+
+  <!-- Nuevo script para generar código del formulario -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const codigoInput = document.querySelector("input[name='codigoFormulario']");
+      if (codigoInput && !codigoInput.value) {
+        fetch("/api/nuevo-codigo")
+          .then(res => res.json())
+          .then(data => {
+            codigoInput.value = data.codigo;
+          })
+          .catch(err => console.error("Error al obtener código:", err));
+      }
+    });
   </script>
 
 </body>
