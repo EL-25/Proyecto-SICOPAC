@@ -1,20 +1,26 @@
+// ==============================
+// formulario.js
+// ==============================
+
 // Al cargar la página, obtener los formularios recientes del usuario
 document.addEventListener("DOMContentLoaded", async () => {
   const usuario = localStorage.getItem("usuarioActivo");
+  const rol = localStorage.getItem("rolActivo");
 
-  if (!usuario) {
+  if (!usuario || !rol) {
     alert("No hay sesión activa. Por favor inicia sesión.");
     window.location.href = "login.html";
     return;
   }
 
   // Cargar formularios recientes
-  await cargarFormularios(usuario);
+  await cargarFormularios(usuario, rol);
 });
 
 // Función para cerrar sesión
 function cerrarSesion() {
   localStorage.removeItem("usuarioActivo");
+  localStorage.removeItem("rolActivo");
   window.location.href = "login.html";
 }
 
@@ -25,7 +31,7 @@ function mostrarFiltro() {
 }
 
 // Cargar formularios recientes desde /api/acciones
-async function cargarFormularios(usuario) {
+async function cargarFormularios(usuario, rol) {
   const lista = document.getElementById("listaFormularios");
   lista.innerHTML = "<li>Cargando formularios recientes...</li>";
 
@@ -33,7 +39,7 @@ async function cargarFormularios(usuario) {
     const resp = await fetch("/api/acciones", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ usuario })
+      body: JSON.stringify({ usuario, rol }) // 👈 ahora enviamos también el rol
     });
 
     if (!resp.ok) throw new Error("Error al obtener formularios");
@@ -47,9 +53,20 @@ async function cargarFormularios(usuario) {
     }
 
     formularios.forEach(f => {
-      const li = document.createElement("li");
       const fecha = f.FechaHoraLocal || "—";
-      li.textContent = `Formulario ${f.CodigoFormulario || "—"} - ${f.Declaracion || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"} - Fecha: ${fecha}`;
+      const li = document.createElement("li");
+
+      // Mostrar el usuario que lo creó si eres administrador
+      if (rol === "Administrador") {
+        li.innerHTML = `
+          <strong>${f.Usuario}</strong> — Formulario ${f.CodigoFormulario || "—"}<br>
+          ${f.Declaracion || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"}<br>
+          Fecha: ${fecha}
+        `;
+      } else {
+        li.textContent = `Formulario ${f.CodigoFormulario || "—"} - ${f.Declaracion || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"} - Fecha: ${fecha}`;
+      }
+
       lista.appendChild(li);
     });
   } catch (err) {
@@ -60,6 +77,9 @@ async function cargarFormularios(usuario) {
 
 // Aplicar filtros usando /api/filtrar
 async function aplicarFiltro() {
+  const usuario = localStorage.getItem("usuarioActivo");
+  const rol = localStorage.getItem("rolActivo");
+
   const filtros = {
     numeroFormulario: document.getElementById("numeroFormularioFiltro")?.value || "",
     declaracion: document.getElementById("tipoFiltro")?.value || "",
@@ -68,7 +88,9 @@ async function aplicarFiltro() {
     primerApellidoPadre: document.getElementById("apellidoPadreFiltro")?.value || "",
     primerApellidoMadre: document.getElementById("apellidoMadreFiltro")?.value || "",
     fechaInicio: document.getElementById("fechaInicioFiltro")?.value || "",
-    fechaFin: document.getElementById("fechaFinFiltro")?.value || ""
+    fechaFin: document.getElementById("fechaFinFiltro")?.value || "",
+    usuario,
+    rol // 👈 también enviamos el rol en filtros
   };
 
   const lista = document.getElementById("listaFormularios");
@@ -92,9 +114,19 @@ async function aplicarFiltro() {
     }
 
     resultados.forEach(f => {
-      const li = document.createElement("li");
       const fecha = f.FechaPresentacion ? new Date(f.FechaPresentacion).toLocaleDateString("es-SV") : "—";
-      li.textContent = `Formulario ${f.NumeroFormulario || "—"} - ${f.Declaraciones || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"} - Fecha: ${fecha}`;
+      const li = document.createElement("li");
+
+      if (rol === "Administrador") {
+        li.innerHTML = `
+          <strong>${f.Usuario}</strong> — Formulario ${f.NumeroFormulario || "—"}<br>
+          ${f.Declaraciones || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"}<br>
+          Fecha: ${fecha}
+        `;
+      } else {
+        li.textContent = `Formulario ${f.NumeroFormulario || "—"} - ${f.Declaraciones || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"} - Fecha: ${fecha}`;
+      }
+
       lista.appendChild(li);
     });
   } catch (err) {

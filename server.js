@@ -200,18 +200,34 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
 
 // Historial de acciones recientes
 app.post('/api/acciones', async (req, res) => {
-  const { usuario } = req.body;
-  if (!usuario) return res.status(400).json({ error: 'Usuario no proporcionado' });
+  const { usuario, rol } = req.body;
+  if (!usuario || !rol) {
+    return res.status(400).json({ error: 'Datos insuficientes' });
+  }
 
   try {
-    const result = await pool.query(
-      `SELECT "Usuario","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal"
-       FROM "Acciones"
-       WHERE "Usuario" = $1
-       ORDER BY "Id" DESC
-       LIMIT 20`,
-      [usuario]
-    );
+    let result;
+
+    if (rol === "Administrador") {
+      // Administrador ve todos los formularios
+      result = await pool.query(
+        `SELECT "Usuario","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal"
+         FROM "Acciones"
+         ORDER BY "Id" DESC
+         LIMIT 50`
+      );
+    } else {
+      // Otros roles ven solo sus formularios
+      result = await pool.query(
+        `SELECT "Usuario","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal"
+         FROM "Acciones"
+         WHERE "Usuario" = $1
+         ORDER BY "Id" DESC
+         LIMIT 20`,
+        [usuario]
+      );
+    }
+
     res.json(result.rows);
   } catch (err) {
     console.error("❌ Error en /api/acciones:", err);
@@ -229,13 +245,21 @@ app.post("/api/filtrar", async (req, res) => {
     primerApellidoPadre,
     primerApellidoMadre,
     fechaInicio,
-    fechaFin
+    fechaFin,
+    usuario,
+    rol
   } = req.body;
 
   try {
     let query = 'SELECT * FROM "Formularios" WHERE 1=1';
     const params = [];
     let idx = 1;
+
+    // Si no es administrador, limitar a sus propios formularios
+    if (rol !== "Administrador") {
+      query += ` AND "Usuario" = $${idx++}`;
+      params.push(usuario);
+    }
 
     if (numeroFormulario) {
       query += ` AND "NumeroFormulario" = $${idx++}`;
@@ -261,10 +285,12 @@ app.post("/api/filtrar", async (req, res) => {
       query += ` AND "PrimerApellidoMadre" ILIKE $${idx++}`;
       params.push(`%${primerApellidoMadre}%`);
     }
-        if (fechaInicio && fechaFin) {
+    if (fechaInicio && fechaFin) {
       query += ` AND "FechaPresentacion" BETWEEN $${idx++} AND $${idx++}`;
       params.push(fechaInicio, fechaFin);
     }
+
+    query += ` ORDER BY "FechaPresentacion" DESC LIMIT 50`;
 
     const result = await pool.query(query, params);
     res.json(result.rows);
