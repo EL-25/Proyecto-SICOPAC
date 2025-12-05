@@ -73,16 +73,24 @@
       margin-top: 0.5em;
     }
 
-    /* Botón verde institucional */
-    .btn-verde {
+    /* Botón verde institucional en header */
+    .btn-verde-header {
+      position: absolute;
+      bottom: 10px;
+      left: 20px;
       background-color: #2e7d32;
       color: white;
       border: none;
-      padding: 0.6em 1.2em;
+      padding: 8px 14px;
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
-      margin-top: 1em;
+      font-size: 0.9em;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .btn-verde-header:hover {
+      background-color: #1b5e20;
     }
   </style>
 </head>
@@ -90,6 +98,7 @@
   <header class="encabezado">
     <h1>Panel de Usuario</h1>
     <p>Bienvenido al módulo de consulta personal</p>
+    <div id="botonAdminHeader"></div>
   </header>
 
   <!-- Cards elevadas -->
@@ -111,9 +120,6 @@
         <i class="fas fa-sign-out-alt"></i>
         Cerrar sesión
       </div>
-
-      <!-- Botón solo visible para administrador -->
-      <div id="accionesAdmin"></div>
     </div>
   </main>
 
@@ -149,11 +155,14 @@
     document.addEventListener("DOMContentLoaded", () => {
       const rol = localStorage.getItem("rolActivo");
       if (rol === "Administrador") {
-        const btn = document.createElement("button");
-        btn.textContent = "Agregar usuario";
-        btn.className = "btn-verde";
-        btn.onclick = () => window.location.href = "agregar-usuario.html";
-        document.getElementById("accionesAdmin").appendChild(btn);
+        const contenedor = document.getElementById("botonAdminHeader");
+        if (contenedor) {
+          const btn = document.createElement("button");
+          btn.textContent = "Agregar usuario";
+          btn.className = "btn-verde-header";
+          btn.onclick = () => window.location.href = "agregar-usuario.html";
+          contenedor.appendChild(btn);
+        }
       }
     });
   </script>

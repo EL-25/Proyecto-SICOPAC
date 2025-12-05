@@ -25,37 +25,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     const datos = await response.json();
 
     // Insertar los datos en los campos correspondientes
-document.getElementById("campo-usuario").textContent = datos.usuario || "No disponible";
-document.getElementById("campo-correo").textContent = datos.correo || "No disponible";
-document.getElementById("campo-rol").textContent = datos.rol || "No disponible";
+    document.getElementById("campo-usuario").textContent = datos.usuario || "No disponible";
+    document.getElementById("campo-correo").textContent = datos.correo || "No disponible";
+    document.getElementById("campo-rol").textContent = datos.rol || "No disponible";
 
-// Mostrar firma digital si existe
-const firmaImg = document.getElementById("firma-img");
-console.log("📦 Datos completos recibidos:", datos); // Ver todo el objeto
-console.log("🖋️ Firma recibida:", datos.firma); // Ver solo el campo firma
+    // Mostrar firma digital si existe
+    const firmaImg = document.getElementById("firma-img");
+    console.log("📦 Datos completos recibidos:", datos); // Ver todo el objeto
+    console.log("🖋️ Firma recibida:", datos.firma); // Ver solo el campo firma
 
-if (datos.firma && datos.firma.trim() !== "") {
-  const firmaURL = `https://proyecto-sicopac-production.up.railway.app/img/firma/${encodeURIComponent(datos.firma)}`;
-  console.log("🌐 URL final de la firma:", firmaURL); // Ver la URL que se asigna
+    if (datos.firma && datos.firma.trim() !== "") {
+      const firmaURL = `https://proyecto-sicopac-production.up.railway.app/img/firma/${encodeURIComponent(datos.firma)}`;
+      console.log("🌐 URL final de la firma:", firmaURL); // Ver la URL que se asigna
 
-  firmaImg.src = firmaURL;
-  firmaImg.alt = `Firma de ${datos.usuario}`;
-  firmaImg.style.display = "block";
-} else {
-  firmaImg.style.display = "none";
-}
+      firmaImg.src = firmaURL;
+      firmaImg.alt = `Firma de ${datos.usuario}`;
+      firmaImg.style.display = "block";
+    } else {
+      firmaImg.style.display = "none";
+    }
 
-if (datos.rol === "Administrador") {
-      const accionesAdmin = document.getElementById("accionesAdmin");
-      if (accionesAdmin) {
+    // Mostrar botón solo si el rol es Administrador (en header)
+    if (datos.rol === "Administrador") {
+      const contenedor = document.getElementById("botonAdminHeader");
+      if (contenedor) {
         const btn = document.createElement("button");
         btn.textContent = "Agregar usuario";
-        btn.className = "btn-verde";
+        btn.className = "btn-verde-header";
         btn.onclick = () => window.location.href = "agregar-usuario.html";
-        accionesAdmin.appendChild(btn);
+        contenedor.appendChild(btn);
       }
     }
-    
+
   } catch (error) {
     console.error("Error al cargar los datos:", error);
     alert("Error al cargar los datos del usuario");
