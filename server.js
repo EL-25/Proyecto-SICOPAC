@@ -277,20 +277,42 @@ app.post("/api/filtrar", async (req, res) => {
 // ==============================
 // INICIO DEL SERVIDOR
 // ==============================
-
 app.listen(PORT, () => {
   console.log(`✅ Servidor corriendo en puerto ${PORT}`);
 });
 
-// Guardar datos finales y mostrar vista previa
+// ==============================
+// RUTA DE ENTRADA AL FORMULARIO (NUEVO)
+// ==============================
+// Esta ruta abre la PRIMERA página del formulario (index.ejs) en modo nuevo
+app.get("/formulario", (req, res) => {
+  const usuario = req.query.usuario || "Invitado";
+  res.render("index", { 
+    modo: "nuevo",   // ← importante: indica que es un formulario nuevo
+    data: { usuario }
+  });
+});
+
+// ==============================
+// RUTA PARA LA SEGUNDA PÁGINA DEL FORMULARIO (NUEVO)
+// ==============================
+// Esta ruta abre directamente la SEGUNDA página (page2.ejs) en modo nuevo
+app.post("/page2", (req, res) => {
+  res.render("page2", { 
+    data: req.body,
+    modo: "nuevo"
+  });
+});
+
+// ==============================
+// GUARDAR DATOS FINALES Y MOSTRAR VISTA PREVIA
+// ==============================
 app.post("/guardar", async (req, res) => {
   console.log("📥 Datos recibidos en /guardar:", req.body);
 
-  // Función para normalizar valores que llegan como array
   const normalizar = v => Array.isArray(v) ? v[0] : v || null;
 
   try {
-    // Normalizar todos los campos necesarios
     const datos = {
       codigoFormulario: normalizar(req.body.codigoFormulario),
       usuario: normalizar(req.body.usuario),
@@ -345,7 +367,8 @@ app.post("/guardar", async (req, res) => {
         : null
     };
 
-    // INSERT con parámetros en PostgreSQL
+    // Aquí sigue el INSERT en PostgreSQL (segunda parte)
+        // INSERT con parámetros en PostgreSQL
     await pool.query(
       `INSERT INTO "Formularios" (
         "NumeroFormulario","PrimerNombre","SegundoNombre","PrimerApellido","SegundoApellido","TercerApellido",
@@ -385,6 +408,7 @@ app.post("/guardar", async (req, res) => {
       [datos.usuario, 'Formulario enviado', datos.declaracion, datos.codigoFormulario, datos.municipio, datos.distrito, req.body.fechaHoraLocal]
     );
 
+    // Construir objeto para vista previa
     const documentos = [...(req.body.doc || []), ...(req.body.doc2 || [])];
     const datosConCodigo = {
       codigoFormulario: datos.codigoFormulario,
@@ -443,22 +467,18 @@ app.post("/guardar", async (req, res) => {
   }
 });
 
-// Nuevo formulario → pasar datos de index.ejs a page2.ejs
-app.post("/page2", (req, res) => {
-  res.render("page2", { 
-    data: req.body,
-    modo: "nuevo"
-  });
-});
-
-// Función para normalizar el código del formulario
+// ==============================
+// FUNCIÓN PARA NORMALIZAR EL CÓDIGO DEL FORMULARIO
+// ==============================
 function normalizarCodigo(v) {
   if (Array.isArray(v)) return v[0];        // Si viene como array, toma el primero
   if (typeof v === 'string') return v.split(',')[0]; // Si viene como string con comas, toma el primero
   return v;
 }
 
-// Editar formulario existente (cargar index.ejs con datos)
+// ==============================
+// EDITAR FORMULARIO EXISTENTE (CARGAR index.ejs CON DATOS)
+// ==============================
 app.get("/editar-formulario", async (req, res) => {
   const codigo = normalizarCodigo(req.query.codigo);
 
@@ -517,13 +537,17 @@ app.get("/editar-formulario", async (req, res) => {
   }
 });
 
-// Redirección POST → GET para edición
+// ==============================
+// REDIRECCIÓN POST → GET PARA EDICIÓN
+// ==============================
 app.post("/editar-formulario-p2", (req, res) => {
   const codigo = normalizarCodigo(req.body.codigoFormulario);
   res.redirect(`/editar-formulario-p2?codigo=${codigo}`);
 });
 
-// Editar formulario existente (cargar page2.ejs con datos)
+// ==============================
+// EDITAR FORMULARIO EXISTENTE (CARGAR page2.ejs CON DATOS)
+// ==============================
 app.get("/editar-formulario-p2", async (req, res) => {
   const codigo = normalizarCodigo(req.query.codigo);
 
@@ -598,7 +622,9 @@ app.get("/editar-formulario-p2", async (req, res) => {
   }
 });
 
-// Actualizar formulario existente
+// ==============================
+// ACTUALIZAR FORMULARIO EXISTENTE
+// ==============================
 app.post("/actualizar", async (req, res) => {
   try {
     const normalizar = v => Array.isArray(v) ? v[0] : v || null;
@@ -695,6 +721,7 @@ app.post("/actualizar", async (req, res) => {
       ]
     );
 
+    // Construir objeto para vista previa
     const datosConCodigo = {
       codigoFormulario: normalizar(req.body.codigoFormulario),
       refLLE,
@@ -750,6 +777,7 @@ app.post("/actualizar", async (req, res) => {
       declaracion: normalizar(req.body.declaracion)
     };
 
+    // Renderizar vista previa con los datos actualizados
     res.render("pdf-preview", { data: datosConCodigo });
   } catch (err) {
     console.error("❌ Error en /actualizar:", err);
