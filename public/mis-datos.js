@@ -25,18 +25,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const datos = await response.json();
 
     // Insertar los datos en los campos correspondientes
-    document.getElementById("campo-usuario").textContent = datos.usuario || "No disponible";
-    document.getElementById("campo-correo").textContent = datos.correo || "No disponible";
-    document.getElementById("campo-rol").textContent = datos.rol || "No disponible";
+document.getElementById("campo-usuario").textContent = datos.usuario || "No disponible";
+document.getElementById("campo-correo").textContent = datos.correo || "No disponible";
+document.getElementById("campo-rol").textContent = datos.rol || "No disponible";
 
-    // Mostrar firma digital si existe
+// Mostrar firma digital si existe
 const firmaImg = document.getElementById("firma-img");
-console.log("🖋️ Firma recibida:", datos.firma); // Debug en consola
+console.log("📦 Datos completos recibidos:", datos); // Ver todo el objeto
+console.log("🖋️ Firma recibida:", datos.firma); // Ver solo el campo firma
 
 if (datos.firma && datos.firma.trim() !== "") {
-  // Codificar el nombre del archivo para evitar problemas con espacios o caracteres especiales
   const firmaURL = `https://proyecto-sicopac-production.up.railway.app/img/firma/${encodeURIComponent(datos.firma)}`;
-  
+  console.log("🌐 URL final de la firma:", firmaURL); // Ver la URL que se asigna
+
   firmaImg.src = firmaURL;
   firmaImg.alt = `Firma de ${datos.usuario}`;
   firmaImg.style.display = "block";
