@@ -30,14 +30,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("campo-rol").textContent = datos.rol || "No disponible";
 
     // Mostrar firma digital si existe
-    const firmaImg = document.getElementById("firma-img");
-    if (datos.firma) {
-      firmaImg.src = `https://proyecto-sicopac-production.up.railway.app/img/firma/${datos.firma}`;
-      firmaImg.alt = `Firma de ${datos.usuario}`;
-      firmaImg.style.display = "block";
-    } else {
-      firmaImg.style.display = "none";
-    }
+const firmaImg = document.getElementById("firma-img");
+console.log("🖋️ Firma recibida:", datos.firma); // Debug en consola
+
+if (datos.firma && datos.firma.trim() !== "") {
+  // Codificar el nombre del archivo para evitar problemas con espacios o caracteres especiales
+  const firmaURL = `https://proyecto-sicopac-production.up.railway.app/img/firma/${encodeURIComponent(datos.firma)}`;
+  
+  firmaImg.src = firmaURL;
+  firmaImg.alt = `Firma de ${datos.usuario}`;
+  firmaImg.style.display = "block";
+} else {
+  firmaImg.style.display = "none";
+}
 
   } catch (error) {
     console.error("Error al cargar los datos:", error);

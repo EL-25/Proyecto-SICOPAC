@@ -104,9 +104,8 @@ body.fondo-datos::before {
 }
 
 .firma-img {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: aparecerFirma 1s ease-out forwards;
+  opacity: 1;
+  transform: none;
   max-width: 250px;
   height: auto;
   border: 1px solid #ccc;
