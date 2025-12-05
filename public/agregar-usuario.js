@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Validación previa: verificar si el usuario ya existe
     try {
-      const existeResponse = await fetch("/api/verificar-usuario", {
+      const existeResponse = await fetch("https://proyecto-sicopac-production.up.railway.app/api/verificar-usuario", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ usuario })
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("/api/agregar-usuario", {
+      const response = await fetch("https://proyecto-sicopac-production.up.railway.app/api/agregar-usuario", {
         method: "POST",
         body: formData
       });

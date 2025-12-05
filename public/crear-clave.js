@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!usuario) return;
 
   try {
-    const response = await fetch("http://127.0.0.1:3000/api/mis-datos", {
+    const response = await fetch("https://proyecto-sicopac-production.up.railway.app/api/mis-datos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ usuario })
@@ -45,7 +45,7 @@ async function crearClave() {
   boton.textContent = "Guardando...";
 
   try {
-    const response = await fetch("http://127.0.0.1:3000/api/crear-clave", {
+    const response = await fetch("https://proyecto-sicopac-production.up.railway.app/api/crear-clave", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ usuario, nuevaClave })
