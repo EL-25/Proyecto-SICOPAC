@@ -121,7 +121,7 @@ app.post('/api/mis-datos', async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT "Usuario" AS usuario, "NombreCompleto" AS nombre, "Correo" AS correo, 
-              "Rol" AS rol, "FechaRegistro" AS fechaIngreso, "Firma"
+              "Rol" AS rol, "FechaRegistro" AS fechaIngreso, "Firma" AS firma
        FROM "Usuarios"
        WHERE "Usuario" = $1 AND "Estado" = true`,
       [usuario]
