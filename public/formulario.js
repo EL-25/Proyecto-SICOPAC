@@ -24,13 +24,13 @@ function mostrarFiltro() {
   panel.style.display = panel.style.display === "none" ? "block" : "none";
 }
 
-// ✅ Cargar formularios recientes desde /api/acciones
+// Cargar formularios recientes desde /api/acciones
 async function cargarFormularios(usuario) {
   const lista = document.getElementById("listaFormularios");
   lista.innerHTML = "<li>Cargando formularios recientes...</li>";
 
   try {
-    const resp = await fetch("http://127.0.0.1:3000/api/acciones", {
+    const resp = await fetch("/api/acciones", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ usuario })
@@ -58,7 +58,7 @@ async function cargarFormularios(usuario) {
   }
 }
 
-// ✅ Aplicar filtros usando /api/filtrar
+// Aplicar filtros usando /api/filtrar
 async function aplicarFiltro() {
   const filtros = {
     numeroFormulario: document.getElementById("numeroFormularioFiltro")?.value || "",
@@ -75,7 +75,7 @@ async function aplicarFiltro() {
   lista.innerHTML = "<li>Aplicando filtros...</li>";
 
   try {
-    const resp = await fetch("http://127.0.0.1:3000/api/filtrar", {
+    const resp = await fetch("/api/filtrar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(filtros)
