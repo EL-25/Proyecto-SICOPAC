@@ -169,6 +169,14 @@ function activarEdicion() {
       if (response.ok) {
         const data = await response.json();
         alert(data.mensaje || "Datos actualizados correctamente");
+
+        // ✅ Actualizar localStorage si se cambió el usuario
+        const nuevoUsuario = formData.get("nuevoUsuario");
+        const usuarioActual = formData.get("usuario");
+        if (nuevoUsuario && nuevoUsuario.trim() !== "" && nuevoUsuario.trim() !== usuarioActual.trim()) {
+          localStorage.setItem("usuarioActivo", nuevoUsuario.trim());
+        }
+
         window.location.reload();
       } else {
         alert("Error al actualizar usuario");
