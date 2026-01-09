@@ -328,3 +328,49 @@ body.fondo-datos::before {
   .modal-contenido h2 { font-size: 1.1em; }
   .modal-contenido p { font-size: 0.9em; }
 }
+
+/* ==============================
+   Botones en edición de perfil
+   ============================== */
+.botones-edicion {
+  display: flex;
+  justify-content: flex-start; /* alineados a la izquierda */
+  gap: 10px; /* espacio entre botones */
+  margin-top: 15px;
+}
+
+.btn-guardar {
+  background-color: #007bff; /* azul */
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-guardar:hover {
+  background-color: #0056b3; /* azul más oscuro */
+}
+
+.btn-volver {
+  background-color: #6c757d; /* gris */
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-volver:hover {
+  background-color: #5a6268; /* gris más oscuro */
+}

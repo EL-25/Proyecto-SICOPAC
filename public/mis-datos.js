@@ -116,6 +116,9 @@ function registrarAccesoReportes() {
 function activarEdicion() {
   const perfil = document.getElementById("perfilDatos");
 
+  // Guardamos el contenido original para poder restaurarlo con "Volver"
+  const contenidoOriginal = perfil.innerHTML;
+
   perfil.innerHTML = `
     <form id="formEditarUsuario" class="form-edicion">
       <h3 class="titulo-edicion"><i class="fas fa-user-edit"></i> Edición de Perfil</h3>
@@ -145,16 +148,21 @@ function activarEdicion() {
         <input type="password" name="clave" placeholder="Ingrese nueva clave" required />
       </div>
 
-      <button type="submit" class="btn-guardar">
-        <i class="fas fa-save"></i> Guardar cambios
-      </button>
+      <div class="botones-edicion">
+        <button type="submit" class="btn-guardar">
+          <i class="fas fa-save"></i> Guardar cambios
+        </button>
+        <button type="button" class="btn-volver" id="btnVolverPerfil">
+          <i class="fas fa-arrow-left"></i> Volver
+        </button>
+      </div>
     </form>
   `;
 
+  // ✅ Evento para enviar cambios
   document.getElementById("formEditarUsuario").addEventListener("submit", async function(e) {
     e.preventDefault();
 
-    // Construir objeto plano con los valores del formulario
     const formData = {
       usuario: this.usuario.value,
       nuevoUsuario: this.nuevoUsuario.value,
@@ -174,7 +182,6 @@ function activarEdicion() {
         const data = await response.json();
         alert(data.mensaje || "Datos actualizados correctamente");
 
-        // ✅ Actualizar localStorage si se cambió el usuario
         if (formData.nuevoUsuario && formData.nuevoUsuario.trim() !== "" && formData.nuevoUsuario.trim() !== formData.usuario.trim()) {
           localStorage.setItem("usuarioActivo", formData.nuevoUsuario.trim());
         }
@@ -187,5 +194,10 @@ function activarEdicion() {
       console.error("Error en fetch:", error);
       alert("Error de conexión con el servidor");
     }
+  });
+
+  // ✅ Evento para volver sin guardar (restaurar contenido original)
+  document.getElementById("btnVolverPerfil").addEventListener("click", () => {
+    perfil.innerHTML = contenidoOriginal;
   });
 }
