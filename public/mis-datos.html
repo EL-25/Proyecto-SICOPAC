@@ -35,35 +35,19 @@
     </div>
   </main>
 
-  <!-- Sección Perfil -->
-  <section class="seccion activa" id="perfilDatos">
-    <form id="formEditarUsuario" class="form-edicion">
-      <h3 class="titulo-edicion"><i class="fas fa-user-edit"></i> Edición de Perfil</h3>
+  <!-- Sección Perfil (solo lectura al inicio) -->
+  <section class="seccion" id="perfilDatos">
+    <div class="campo"><strong>Usuario:</strong> <span id="campo-usuario">Cargando...</span></div>
+    <div class="campo"><strong>Correo institucional:</strong> <span id="campo-correo">Cargando...</span></div>
+    <div class="campo"><strong>Rol:</strong> <span id="campo-rol">Cargando...</span></div>
+    <div class="campo firma-digital">
+      <strong>Firma digital:</strong><br />
+      <img src="" alt="Firma Digital" class="firma-img" id="firma-img" />
+    </div>
 
-      <div class="grupo-campo">
-        <label for="usuario">Usuario</label>
-        <input type="text" name="usuario" id="usuario" required />
-      </div>
-
-      <div class="grupo-campo">
-        <label for="correo">Correo institucional</label>
-        <input type="email" name="correo" id="correo" required />
-      </div>
-
-      <div class="grupo-campo">
-        <label for="rol">Rol</label>
-        <input type="text" name="rol" id="rol" required />
-      </div>
-
-      <div class="grupo-campo">
-        <label for="firma">Firma digital</label>
-        <input type="file" name="firma" id="firma" accept="image/*" />
-      </div>
-
-      <button type="submit" class="btn-guardar">
-        <i class="fas fa-save"></i> Guardar cambios
-      </button>
-    </form>
+    <button class="btn-editar" onclick="activarEdicion()">
+      <i class="fas fa-edit"></i> Editar datos
+    </button>
   </section>
 
   <!-- Modal Institucional -->
@@ -81,15 +65,21 @@
     </div>
   </div>
 
+  <!-- Overlay emergente -->
+  <div id="overlay" class="overlay">
+    <div class="overlay-box">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Dirigiendo al Formulario Único de Solicitud…</p>
+    </div>
+  </div>
+
   <script src="mis-datos.js"></script>
   <script>
     function abrirSeccion(id) {
       const target = document.getElementById(id);
       const isVisible = target.classList.contains('activa');
       document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
-      if (!isVisible) {
-        target.classList.add('activa');
-      }
+      if (!isVisible) target.classList.add('activa');
     }
 
     function cerrarSesion() {
@@ -111,23 +101,14 @@
       }
     });
 
-    // Funciones para el modal
     function aceptarModal() {
       document.getElementById("modalConfirmacion").style.display = "none";
-      window.location.reload(); // recargar para ver datos actualizados
+      window.location.reload();
     }
 
     function cerrarModal() {
       document.getElementById("modalConfirmacion").style.display = "none";
     }
   </script>
-
-  <!-- Overlay emergente -->
-  <div id="overlay" class="overlay">
-    <div class="overlay-box">
-      <i class="fas fa-spinner fa-spin"></i>
-      <p>Dirigiendo al Formulario Único de Solicitud…</p>
-    </div>
-  </div>
 </body>
 </html>

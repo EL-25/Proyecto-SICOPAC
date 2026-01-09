@@ -2,7 +2,6 @@
 // mis-datos.js
 // ==============================
 
-// Al cargar la página, obtener los datos del usuario autenticado
 document.addEventListener("DOMContentLoaded", cargarDatosUsuario);
 
 // ==============================
@@ -76,11 +75,6 @@ function cerrarSesion() {
   window.location.href = "login.html";
 }
 
-function mostrarPerfil() {
-  const perfil = document.getElementById("perfilDatos");
-  perfil.style.display = perfil.style.display === "none" ? "block" : "none";
-}
-
 function registrarAccesoFormulario() {
   const usuario = localStorage.getItem("usuarioActivo");
   if (!usuario) {
@@ -123,37 +117,35 @@ function mostrarOverlay(mensaje) {
 function activarEdicion() {
   const perfil = document.getElementById("perfilDatos");
 
-  perfil.innerHTML = `
-    <form id="formEditarUsuario" class="form-edicion">
-      <h3 class="titulo-edicion"><i class="fas fa-user-edit"></i> Edición de Perfil</h3>
-
-      <div class="grupo-campo">
-        <label>Usuario</label>
-        <input type="text" name="usuario" value="${document.getElementById("campo-usuario").textContent}" required />
-      </div>
-
-      <div class="grupo-campo">
-        <label>Correo institucional</label>
-        <input type="email" name="correo" value="${document.getElementById("campo-correo").textContent}" required />
-      </div>
-
-      <div class="grupo-campo">
-        <label>Rol</label>
-        <input type="text" name="rol" value="${document.getElementById("campo-rol").textContent}" required />
-      </div>
-
-      <div class="grupo-campo">
-        <label>Firma digital</label>
-        <input type="file" name="firma" accept="image/*" />
-      </div>
-
-      <button type="submit" class="btn-guardar">
-        <i class="fas fa-save"></i> Guardar cambios
-      </button>
-    </form>
+  // Crear formulario sin borrar todo el contenido
+  const form = document.createElement("form");
+  form.id = "formEditarUsuario";
+  form.className = "form-edicion";
+  form.innerHTML = `
+    <h3 class="titulo-edicion"><i class="fas fa-user-edit"></i> Edición de Perfil</h3>
+    <div class="grupo-campo">
+      <label>Usuario</label>
+      <input type="text" name="usuario" value="${document.getElementById("campo-usuario").textContent}" required />
+    </div>
+    <div class="grupo-campo">
+      <label>Correo institucional</label>
+      <input type="email" name="correo" value="${document.getElementById("campo-correo").textContent}" required />
+    </div>
+    <div class="grupo-campo">
+      <label>Rol</label>
+      <input type="text" name="rol" value="${document.getElementById("campo-rol").textContent}" required />
+    </div>
+    <div class="grupo-campo">
+      <label>Firma digital</label>
+      <input type="file" name="firma" accept="image/*" />
+    </div>
+    <button type="submit" class="btn-guardar">
+      <i class="fas fa-save"></i> Guardar cambios
+    </button>
   `;
+  perfil.appendChild(form);
 
-  document.getElementById("formEditarUsuario").addEventListener("submit", guardarCambiosUsuario);
+  form.addEventListener("submit", guardarCambiosUsuario);
 }
 
 async function guardarCambiosUsuario(e) {
@@ -168,10 +160,12 @@ async function guardarCambiosUsuario(e) {
       body: formData
     });
 
+    const overlay = document.getElementById("overlay");
+    if (overlay) overlay.style.display = "none"; // cerrar overlay antes del modal
+
     if (response.ok) {
       const data = await response.json();
       console.info("✅ Usuario actualizado:", data);
-
       mostrarModal("Datos actualizados", data.mensaje || "Los datos se guardaron correctamente.");
     } else {
       mostrarModal("Error", "No se pudo actualizar el usuario.");
@@ -179,9 +173,6 @@ async function guardarCambiosUsuario(e) {
   } catch (error) {
     console.error("❌ Error en fetch:", error);
     mostrarModal("Error de conexión", "No se pudo conectar con el servidor.");
-  } finally {
-    const overlay = document.getElementById("overlay");
-    if (overlay) overlay.style.display = "none";
   }
 }
 
@@ -200,5 +191,5 @@ function cerrarModal() {
 
 function aceptarModal() {
   document.getElementById("modalConfirmacion").style.display = "none";
-  window.location.reload(); // recargar para ver datos actualizados
+  window.location.reload();
 }

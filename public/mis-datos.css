@@ -266,11 +266,6 @@ body.fondo-datos::before {
 }
 .btn-cancelar:hover { background-color: #999; transform: scale(1.05); }
 
-@keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
 /* Overlay emergente */
 .overlay {
   position: fixed;
