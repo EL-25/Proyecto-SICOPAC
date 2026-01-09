@@ -4,12 +4,18 @@
   <meta charset="UTF-8" />
   <title>Agregar Usuario</title>
   <link rel="stylesheet" href="/agregar-usuario.css" />
-  <!--Font Awesome para íconos institucionales -->
+  <!-- Font Awesome para íconos institucionales -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body class="fondo-datos">
   <div class="formulario-container">
     <h2>Registro de Usuario Institucional</h2>
+
+    <!-- Botón Home integrado dentro del contenedor -->
+    <button class="home-btn" onclick="window.location.href='mis-datos.html'">
+      <i class="fas fa-home"></i> Home
+    </button>
+
     <form id="registroForm" enctype="multipart/form-data">
       <input type="text" name="usuario" placeholder="Usuario" required />
       <input type="text" name="primerNombre" placeholder="Primer nombre" required />
