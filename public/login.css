@@ -61,10 +61,11 @@ body::before {
 /* Contenedor principal con dos columnas */
 .main-container {
   display: flex;
-  height: calc(100vh - 50px);
+  height: 100vh;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 0 5%;
+  gap: 60px; /* separa visualmente los paneles */
 }
 
 /* Panel informativo a la izquierda */
