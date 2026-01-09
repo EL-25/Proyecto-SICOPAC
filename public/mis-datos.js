@@ -118,3 +118,56 @@ function registrarAccesoReportes() {
     window.location.href = "formulario.html";
   }, 1500);
 }
+
+// ==============================
+// Función para activar edición de perfil
+// ==============================
+function activarEdicion() {
+  const perfil = document.getElementById("perfilDatos");
+
+  // Reemplazar contenido por formulario editable
+  perfil.innerHTML = `
+    <form id="formEditarUsuario">
+      <label>Usuario</label>
+      <input type="text" name="usuario" value="${document.getElementById("campo-usuario").textContent}" required />
+
+      <label>Correo institucional</label>
+      <input type="email" name="correo" value="${document.getElementById("campo-correo").textContent}" required />
+
+      <label>Rol</label>
+      <input type="text" name="rol" value="${document.getElementById("campo-rol").textContent}" required />
+
+      <label>Firma digital</label>
+      <input type="file" name="firma" accept="image/*" />
+
+      <button type="submit" class="btn-editar">
+        <i class="fas fa-save"></i> Guardar cambios
+      </button>
+    </form>
+  `;
+
+  // Enviar datos al backend
+  document.getElementById("formEditarUsuario").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    try {
+      const response = await fetch("https://proyecto-sicopac-production.up.railway.app/api/actualizar-usuario", {
+        method: "POST",
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.mensaje || "Datos actualizados correctamente");
+        // Opcional: recargar la página para mostrar los datos actualizados
+        window.location.reload();
+      } else {
+        alert("Error al actualizar usuario");
+      }
+    } catch (error) {
+      console.error("Error en fetch:", error);
+      alert("Error de conexión con el servidor");
+    }
+  });
+}

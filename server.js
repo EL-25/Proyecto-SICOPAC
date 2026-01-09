@@ -198,6 +198,55 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
   }
 });
 
+// ==============================
+// Actualizar datos de usuario
+// ==============================
+app.post('/api/actualizar-usuario', upload.single("firma"), async (req, res) => {
+  const {
+    usuario,
+    correo,
+    rol
+  } = req.body;
+
+  if (!usuario || !correo || !rol) {
+    return res.status(400).json({ error: 'Faltan campos obligatorios' });
+  }
+
+  try {
+    let query = `
+      UPDATE "Usuarios"
+      SET "Correo" = $1,
+          "Rol" = $2
+      WHERE "Usuario" = $3 AND "Estado" = true
+    `;
+    const params = [correo, rol, usuario];
+
+    // Si se envía nueva firma digital
+    if (req.file) {
+      query = `
+        UPDATE "Usuarios"
+        SET "Correo" = $1,
+            "Rol" = $2,
+            "Firma" = $3
+        WHERE "Usuario" = $4 AND "Estado" = true
+      `;
+      params.push(req.file.filename);
+      params.push(usuario);
+    }
+
+    const result = await pool.query(query, params);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado o inactivo' });
+    }
+
+    res.status(200).json({ mensaje: 'Usuario actualizado correctamente' });
+  } catch (err) {
+    console.error('❌ Error en /api/actualizar-usuario:', err);
+    res.status(500).json({ error: 'Error al actualizar usuario' });
+  }
+});
+
 // Historial de acciones recientes
 app.post('/api/acciones', async (req, res) => {
   const { usuario, rol } = req.body;
