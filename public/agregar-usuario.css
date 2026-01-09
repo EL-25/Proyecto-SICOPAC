@@ -137,3 +137,67 @@ form button:hover {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
+
+/* Responsividad */
+@media screen and (max-width: 768px) {
+  .formulario-container {
+    max-width: 90%;
+    margin: 30px auto;
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 1.4em;
+  }
+
+  form input, form select {
+    font-size: 0.95em;
+    padding: 8px;
+  }
+
+  form button {
+    font-size: 1em;
+    padding: 12px;
+  }
+
+  .modal-contenido {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .icono-exito i {
+    font-size: 40px;
+  }
+
+  .botones-modal {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-aceptar, .btn-cancelar {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  h2 {
+    font-size: 1.2em;
+  }
+
+  .formulario-container {
+    padding: 15px;
+  }
+
+  form input, form select {
+    font-size: 0.9em;
+  }
+
+  .modal-contenido {
+    padding: 15px;
+  }
+
+  .icono-exito i {
+    font-size: 32px;
+  }
+}

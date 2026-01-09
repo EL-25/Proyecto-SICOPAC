@@ -274,3 +274,114 @@ body.fondo-datos::before {
 .btn-verde-header:hover {
   background-color: #1b5e20;
 }
+
+/* Responsividad */
+@media screen and (max-width: 768px) {
+  .encabezado {
+    height: auto;
+    padding: 15px;
+  }
+
+  .encabezado h1 {
+    font-size: 1.1em;
+  }
+
+  .encabezado p {
+    font-size: 0.8em;
+  }
+
+  .perfil-btn,
+  .cerrar-btn,
+  .btn-verde-header {
+    position: static;
+    margin: 10px 5px;
+    display: inline-block;
+  }
+
+  .perfil-datos,
+  .registro-acciones,
+  .filtro-panel {
+    max-width: 95%;
+    margin: 20px auto;
+    padding: 15px;
+  }
+
+  .registro-acciones h2 {
+    font-size: 1.1em;
+  }
+
+  #listaAcciones li {
+    font-size: 0.9em;
+    padding: 6px;
+  }
+
+  .filtrar-btn {
+    position: static;
+    display: block;
+    margin: 10px auto;
+    width: 100%;
+    text-align: center;
+  }
+
+  .filtro-panel label {
+    font-size: 0.9em;
+  }
+
+  .filtro-panel select {
+    font-size: 0.9em;
+    padding: 8px;
+  }
+
+  .filtro-panel button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1em;
+  }
+
+  .firma-img {
+    max-width: 90%;
+  }
+
+  .overlay-box {
+    width: 90%;
+    padding: 1.5em;
+  }
+
+  .overlay-box p {
+    font-size: 1em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .encabezado h1 {
+    font-size: 1em;
+  }
+
+  .encabezado p {
+    font-size: 0.75em;
+  }
+
+  .registro-acciones h2 {
+    font-size: 1em;
+  }
+
+  #listaAcciones li {
+    font-size: 0.85em;
+  }
+
+  .filtro-panel label {
+    font-size: 0.85em;
+  }
+
+  .filtro-panel select {
+    font-size: 0.85em;
+  }
+
+  .firma-img {
+    max-width: 100%;
+  }
+
+  .overlay-box p {
+    font-size: 0.9em;
+  }
+}

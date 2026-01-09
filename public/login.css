@@ -218,3 +218,104 @@ a {
 .boton-agregar:hover {
   background-color: #218838;
 }
+
+/* Responsividad */
+@media screen and (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    height: auto;
+  }
+
+  .info-panel {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .info-panel h1 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+  }
+
+  .info-panel p {
+    font-size: 0.9em;
+    line-height: 1.4;
+  }
+
+  .login-container {
+    width: 100%;
+    max-width: 350px;
+    padding: 20px;
+  }
+
+  .logo {
+    width: 120px;
+    margin-bottom: 15px;
+  }
+
+  h2 {
+    font-size: 1.3em;
+  }
+
+  input {
+    font-size: 0.95em;
+    padding: 8px;
+  }
+
+  button {
+    font-size: 1em;
+    padding: 12px;
+  }
+
+  .modal-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .checkmark {
+    font-size: 40px;
+  }
+
+  .acciones-extra a {
+    font-size: 0.8em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .info-panel h1 {
+    font-size: 1.2em;
+  }
+
+  .info-panel p {
+    font-size: 0.85em;
+  }
+
+  .login-container {
+    max-width: 95%;
+    padding: 15px;
+  }
+
+  .logo {
+    width: 100px;
+  }
+
+  h2 {
+    font-size: 1.1em;
+  }
+
+  input {
+    font-size: 0.9em;
+  }
+
+  .modal-content {
+    padding: 15px;
+  }
+
+  .checkmark {
+    font-size: 32px;
+  }
+}

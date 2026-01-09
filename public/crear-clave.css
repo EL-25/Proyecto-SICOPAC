@@ -249,3 +249,108 @@ button:hover {
   50% { transform: scale(1.1); }
   100% { transform: scale(1); }
 }
+
+/* Responsividad */
+@media screen and (max-width: 768px) {
+  .formulario-clave {
+    max-width: 90%;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  .logo {
+    width: 90px;
+  }
+
+  h2 {
+    font-size: 1.4em;
+  }
+
+  p {
+    font-size: 0.85em;
+  }
+
+  input {
+    width: 100%;
+    font-size: 0.95em;
+    padding: 8px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 1em;
+    padding: 12px;
+  }
+
+  .modal-error-contenido,
+  .modal-exito-contenido,
+  .modal-acceso-contenido {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .icono-error i,
+  .icono-exito-clave i,
+  .icono-acceso i {
+    font-size: 40px;
+  }
+
+  .modal-acceso-contenido h2 {
+    font-size: 1.4em;
+  }
+
+  .modal-acceso-contenido p {
+    font-size: 0.9em;
+  }
+
+  .btn-cerrar-error,
+  .btn-exito-clave,
+  .btn-continuar {
+    width: 100%;
+    padding: 12px;
+    font-size: 1em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .formulario-clave {
+    margin: 20px auto;
+    padding: 15px;
+  }
+
+  .logo {
+    width: 70px;
+  }
+
+  h2 {
+    font-size: 1.2em;
+  }
+
+  p {
+    font-size: 0.8em;
+  }
+
+  input {
+    font-size: 0.9em;
+  }
+
+  .modal-error-contenido,
+  .modal-exito-contenido,
+  .modal-acceso-contenido {
+    padding: 15px;
+  }
+
+  .icono-error i,
+  .icono-exito-clave i,
+  .icono-acceso i {
+    font-size: 32px;
+  }
+
+  .modal-acceso-contenido h2 {
+    font-size: 1.2em;
+  }
+
+  .modal-acceso-contenido p {
+    font-size: 0.85em;
+  }
+}

@@ -176,3 +176,105 @@ body.fondo-datos::before {
 .filtro-panel button:hover {
   background-color: #0056b3;
 }
+
+/* Responsividad */
+@media screen and (max-width: 768px) {
+  .encabezado {
+    height: auto;
+    padding: 15px;
+  }
+
+  .encabezado h1 {
+    font-size: 1.2em;
+  }
+
+  .encabezado p {
+    font-size: 0.85em;
+  }
+
+  .perfil-btn,
+  .cerrar-btn {
+    position: static;
+    margin: 10px 5px;
+    display: inline-block;
+  }
+
+  .registro-acciones {
+    max-width: 95%;
+    margin: 20px auto;
+    padding: 15px;
+  }
+
+  .registro-acciones h2 {
+    font-size: 1.2em;
+  }
+
+  #listaFormularios li {
+    font-size: 0.9em;
+    padding: 8px;
+  }
+
+  .filtrar-btn {
+    position: static;
+    display: block;
+    margin: 10px auto;
+    width: 100%;
+    text-align: center;
+  }
+
+  .filtro-panel {
+    max-width: 95%;
+    padding: 15px;
+  }
+
+  .filtro-panel h3 {
+    font-size: 1.1em;
+  }
+
+  .filtro-panel label {
+    font-size: 0.9em;
+  }
+
+  .filtro-panel input,
+  .filtro-panel select {
+    font-size: 0.9em;
+    padding: 8px;
+  }
+
+  .filtro-panel button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .encabezado h1 {
+    font-size: 1em;
+  }
+
+  .encabezado p {
+    font-size: 0.8em;
+  }
+
+  .registro-acciones h2 {
+    font-size: 1em;
+  }
+
+  #listaFormularios li {
+    font-size: 0.85em;
+  }
+
+  .filtro-panel h3 {
+    font-size: 1em;
+  }
+
+  .filtro-panel label {
+    font-size: 0.85em;
+  }
+
+  .filtro-panel input,
+  .filtro-panel select {
+    font-size: 0.85em;
+  }
+}
