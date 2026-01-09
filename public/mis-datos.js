@@ -153,12 +153,21 @@ function activarEdicion() {
 
   document.getElementById("formEditarUsuario").addEventListener("submit", async function(e) {
     e.preventDefault();
-    const formData = new FormData(this);
+
+    // Construir objeto plano con los valores del formulario
+    const formData = {
+      usuario: this.usuario.value,
+      nuevoUsuario: this.nuevoUsuario.value,
+      correo: this.correo.value,
+      rol: this.rol.value,
+      clave: this.clave.value
+    };
 
     try {
       const response = await fetch("https://proyecto-sicopac-production.up.railway.app/api/actualizar-usuario", {
         method: "POST",
-        body: formData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
       });
 
       if (response.ok) {
@@ -166,10 +175,8 @@ function activarEdicion() {
         alert(data.mensaje || "Datos actualizados correctamente");
 
         // ✅ Actualizar localStorage si se cambió el usuario
-        const nuevoUsuario = formData.get("nuevoUsuario");
-        const usuarioActual = formData.get("usuario");
-        if (nuevoUsuario && nuevoUsuario.trim() !== "" && nuevoUsuario.trim() !== usuarioActual.trim()) {
-          localStorage.setItem("usuarioActivo", nuevoUsuario.trim());
+        if (formData.nuevoUsuario && formData.nuevoUsuario.trim() !== "" && formData.nuevoUsuario.trim() !== formData.usuario.trim()) {
+          localStorage.setItem("usuarioActivo", formData.nuevoUsuario.trim());
         }
 
         window.location.reload();

@@ -199,7 +199,7 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
 });
 
 // ==============================
-// Actualizar datos de usuario (sin edición de firma)
+// Actualizar datos de usuario
 // ==============================
 app.post('/api/actualizar-usuario', async (req, res) => {
   const { usuario, correo, rol, nuevoUsuario, clave } = req.body;
