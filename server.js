@@ -198,7 +198,10 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
   }
 });
 
-app.post('/api/actualizar-usuario', upload.single("firma"), async (req, res) => {
+// ==============================
+// Actualizar datos de usuario (sin edición de firma)
+// ==============================
+app.post('/api/actualizar-usuario', async (req, res) => {
   const { usuario, correo, rol, nuevoUsuario, clave } = req.body;
 
   if (!usuario || !correo || !rol || !clave) {
@@ -206,7 +209,7 @@ app.post('/api/actualizar-usuario', upload.single("firma"), async (req, res) => 
   }
 
   try {
-    let query = `
+    const query = `
       UPDATE "Usuarios"
       SET "Usuario" = $1,
           "Correo" = $2,
@@ -214,20 +217,7 @@ app.post('/api/actualizar-usuario', upload.single("firma"), async (req, res) => 
           "Clave" = $4
       WHERE "Usuario" = $5 AND "Estado" = true
     `;
-    let params = [nuevoUsuario || usuario, correo, rol, clave, usuario];
-
-    if (req.file) {
-      query = `
-        UPDATE "Usuarios"
-        SET "Usuario" = $1,
-            "Correo" = $2,
-            "Rol" = $3,
-            "Clave" = $4,
-            "Firma" = $5
-        WHERE "Usuario" = $6 AND "Estado" = true
-      `;
-      params = [nuevoUsuario || usuario, correo, rol, clave, req.file.filename, usuario];
-    }
+    const params = [nuevoUsuario || usuario, correo, rol, clave, usuario];
 
     const result = await pool.query(query, params);
 

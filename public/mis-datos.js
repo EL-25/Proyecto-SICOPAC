@@ -145,11 +145,6 @@ function activarEdicion() {
         <input type="password" name="clave" placeholder="Ingrese nueva clave" required />
       </div>
 
-      <div class="grupo-campo">
-        <label>Firma digital</label>
-        <input type="file" name="firma" accept="image/*" />
-      </div>
-
       <button type="submit" class="btn-guardar">
         <i class="fas fa-save"></i> Guardar cambios
       </button>
