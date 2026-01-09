@@ -121,11 +121,12 @@ h2 {
 
 /* Campos de entrada */
 input {
-  width: 100%;
+  width: 94%; /* reduce ligeramente el ancho para que no toque el borde */
   padding: 10px;
-  margin: 10px 0;
+  margin: 10px auto;
   border: 1px solid #ccc;
   border-radius: 5px;
+  display: block; /* asegura que se centre */
 }
 
 /* Botón de login */
