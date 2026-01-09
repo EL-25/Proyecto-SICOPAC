@@ -13,46 +13,58 @@ body.fondo-datos::before {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 0.9);
   z-index: -1;
 }
 
 /* Encabezado institucional */
 .encabezado {
-  background-color: #0056b3;
+  background: linear-gradient(90deg, #0056b3, #0077cc);
   color: white;
-  height: 100px;
+  min-height: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
   text-align: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
 }
 
 .encabezado h1 {
-  font-size: 1.3em;
+  font-size: 1.5em;
   margin: 0;
+  font-weight: bold;
 }
 
 .encabezado p {
-  font-size: 0.85em;
-  margin-top: 2px;
+  font-size: 0.9em;
+  margin-top: 4px;
+  opacity: 0.9;
 }
 
 /* Botones institucionales */
+.cerrar-btn,
+.perfil-btn,
+.btn-verde-header {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9em;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
 .cerrar-btn {
   position: absolute;
   bottom: 10px;
   right: 20px;
   background-color: #c62828;
   color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
 }
+.cerrar-btn:hover { background-color: #b71c1c; transform: scale(1.05); }
 
 .perfil-btn {
   position: absolute;
@@ -60,66 +72,56 @@ body.fondo-datos::before {
   left: 20px;
   background-color: #ffffff;
   color: #0056b3;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
 }
+.perfil-btn:hover { background-color: #e3f2fd; transform: scale(1.05); }
 
-.formulario-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-}
-
-.formulario-btn button {
-  background-color: #007b5e;
+.btn-verde-header {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  background-color: #2e7d32;
   color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
 }
+.btn-verde-header:hover { background-color: #1b5e20; transform: scale(1.05); }
 
 /* Panel de perfil */
 .perfil-datos {
   display: none;
-  background-color: white;
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 500px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background-color: #ffffff;
+  padding: 25px;
+  margin: 25px auto;
+  max-width: 600px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .campo {
-  margin-bottom: 12px;
+  margin-bottom: 15px;
   font-size: 1em;
   color: #333;
 }
 
 .campo strong {
   color: #0077cc;
+  font-weight: bold;
 }
 
 .firma-img {
-  opacity: 1;
-  transform: none;
   max-width: 250px;
   height: auto;
   border: 1px solid #ccc;
-  padding: 5px;
+  padding: 6px;
   background-color: #f9f9f9;
-  margin: 10px auto;
+  margin: 15px auto;
   display: block;
-}
-
-@keyframes aparecerFirma {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 .firma-digital {
@@ -127,99 +129,146 @@ body.fondo-datos::before {
   margin-top: 20px;
 }
 
-/* Card de registro de acciones */
-.registro-acciones {
-  background: #ffffff;
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  border: 1px solid #ccc;
-  position: relative;
-}
-
-.registro-acciones h2 {
-  color: #005baa;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-#listaAcciones {
-  list-style: none;
-  padding: 0;
-}
-
-#listaAcciones li {
-  padding: 8px;
-  border-bottom: 1px solid #eee;
-  font-size: 0.95em;
-}
-
-/* Botón de filtro */
-.filtrar-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+/* Botón editar */
+.btn-editar {
   background-color: #0077cc;
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* Panel de filtros mejorado */
-.filtro-panel {
-  max-width: 700px;
-  margin: 30px auto;
-  padding: 20px 25px;
-  background: linear-gradient(to right, #eaf3ff, #f8f9fa);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  border: 1px solid #cfd8dc;
-  transition: all 0.3s ease-in-out;
-}
-
-.filtro-panel label {
-  display: block;
-  margin-top: 15px;
+  padding: 10px 18px;
+  border-radius: 6px;
   font-weight: bold;
-  color: #0056b3;
-  font-size: 0.95em;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-editar:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
 }
 
-.filtro-panel select {
+/* Formulario de edición */
+.form-edicion {
+  background-color: #f9f9f9;
+  padding: 1.5em;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: auto;
+}
+
+.titulo-edicion {
+  text-align: center;
+  color: #0077cc;
+  margin-bottom: 1em;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.grupo-campo {
+  margin-bottom: 1em;
+}
+
+.grupo-campo label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.3em;
+  color: #0056b3;
+}
+
+.grupo-campo input {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 15px;
+  padding: 0.6em;
   border: 1px solid #ccc;
   border-radius: 6px;
-  background-color: #ffffff;
-  font-size: 0.95em;
+  font-size: 1em;
   transition: border-color 0.2s ease;
 }
-
-.filtro-panel select:focus {
+.grupo-campo input:focus {
   border-color: #0077cc;
   outline: none;
 }
 
-.filtro-panel button {
+.btn-guardar {
   background-color: #0077cc;
   color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 1em;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn-guardar:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Modal institucional */
+.modal-confirmacion {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-contenido {
+  background: #ffffff;
+  padding: 2em 3em;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  animation: fadeInScale 0.4s ease forwards;
+}
+
+.icono-exito {
+  font-size: 3em;
+  color: #2e7d32;
+  margin-bottom: 0.5em;
+}
+
+.botones-modal {
+  margin-top: 1.5em;
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+}
+
+.btn-aceptar,
+.btn-cancelar {
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.filtro-panel button:hover {
-  background-color: #0056b3;
+.btn-aceptar {
+  background-color: #0077cc;
+  color: white;
+}
+.btn-aceptar:hover { background-color: #0056b3; transform: scale(1.05); }
+
+.btn-cancelar {
+  background-color: #ccc;
+  color: #333;
+}
+.btn-cancelar:hover { background-color: #999; transform: scale(1.05); }
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 /* Overlay emergente */
@@ -237,7 +286,7 @@ body.fondo-datos::before {
 .overlay-box {
   background: #ffffff;
   padding: 2em 3em;
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0,0,0,0.3);
   animation: fadeInScale 0.4s ease forwards;
@@ -250,158 +299,37 @@ body.fondo-datos::before {
   margin-top: 1em;
 }
 
+/* Animación para overlay y modal */
 @keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.8); }
+  from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }
-}
-
-/* Botón verde institucional en header (solo administrador) */
-.btn-verde-header {
-  position: absolute;
-  bottom: 10px;
-  left: 20px;
-  background-color: #2e7d32;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 0.9em;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.btn-verde-header:hover {
-  background-color: #1b5e20;
 }
 
 /* Responsividad */
 @media screen and (max-width: 768px) {
   .encabezado {
-    height: auto;
     padding: 15px;
   }
-
-  .encabezado h1 {
-    font-size: 1.1em;
-  }
-
-  .encabezado p {
-    font-size: 0.8em;
-  }
-
-  .perfil-btn,
-  .cerrar-btn,
-  .btn-verde-header {
-    position: static;
-    margin: 10px 5px;
-    display: inline-block;
-  }
+  .encabezado h1 { font-size: 1.2em; }
+  .encabezado p { font-size: 0.8em; }
 
   .perfil-datos,
-  .registro-acciones,
-  .filtro-panel {
+  .form-edicion {
     max-width: 95%;
     margin: 20px auto;
     padding: 15px;
   }
 
-  .registro-acciones h2 {
-    font-size: 1.1em;
-  }
-
-  #listaAcciones li {
-    font-size: 0.9em;
-    padding: 6px;
-  }
-
-  .filtrar-btn {
-    position: static;
-    display: block;
-    margin: 10px auto;
-    width: 100%;
-    text-align: center;
-  }
-
-  .filtro-panel label {
-    font-size: 0.9em;
-  }
-
-  .filtro-panel select {
-    font-size: 0.9em;
-    padding: 8px;
-  }
-
-  .filtro-panel button {
-    width: 100%;
-    padding: 12px;
-    font-size: 1em;
-  }
-
-  .firma-img {
-    max-width: 90%;
-  }
-
-  .overlay-box {
-    width: 90%;
-    padding: 1.5em;
-  }
-
-  .overlay-box p {
-    font-size: 1em;
-  }
+  .firma-img { max-width: 90%; }
+  .overlay-box { width: 90%; padding: 1.5em; }
+  .modal-contenido { width: 90%; padding: 1.5em; }
 }
 
 @media screen and (max-width: 480px) {
-  .encabezado h1 {
-    font-size: 1em;
-  }
-
-  .encabezado p {
-    font-size: 0.75em;
-  }
-
-  .registro-acciones h2 {
-    font-size: 1em;
-  }
-
-  #listaAcciones li {
-    font-size: 0.85em;
-  }
-
-  .filtro-panel label {
-    font-size: 0.85em;
-  }
-
-  .filtro-panel select {
-    font-size: 0.85em;
-  }
-
-  .firma-img {
-    max-width: 100%;
-  }
-
-  .overlay-box p {
-    font-size: 0.9em;
-  }
-}
-
-.btn-editar {
-  background-color: #0077cc;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 20px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-editar:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
+  .encabezado h1 { font-size: 1em; }
+  .encabezado p { font-size: 0.75em; }
+  .titulo-edicion { font-size: 1.1em; }
+  .overlay-box p { font-size: 0.9em; }
+  .modal-contenido h2 { font-size: 1.1em; }
+  .modal-contenido p { font-size: 0.9em; }
 }

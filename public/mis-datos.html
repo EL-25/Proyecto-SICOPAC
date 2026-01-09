@@ -6,93 +6,6 @@
   <title>Panel de Usuario - Alcaldía La Libertad Este</title>
   <link rel="stylesheet" href="mis-datos.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    .home-wrapper {
-      padding: 1.5em 1em 0;
-      display: flex;
-      justify-content: center;
-    }
-
-    .card-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2em;
-      max-width: 900px;
-    }
-
-    .card-box {
-      width: 200px;
-      height: 200px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2em;
-      font-weight: bold;
-      color: white;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      text-align: center;
-    }
-
-    .card-box i {
-      font-size: 2.5em;
-      margin-bottom: 0.5em;
-    }
-
-    .card-box:hover {
-      transform: scale(1.05);
-    }
-
-    .perfil-card { background-color: #0074D9; }
-    .formulario-card { background-color: #2ECC40; }
-    .reportes-card { background-color: #FF851B; }
-    .cerrar-card { background-color: #FF4136; }
-
-    .seccion {
-      display: none;
-      background-color: rgba(255,255,255,0.95);
-      padding: 1.5em;
-      margin: 1em auto 0.5em;
-      max-width: 700px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .seccion.activa { display: block; }
-
-    .campo {
-      margin: 0.5em 0;
-    }
-
-    .firma-img {
-      max-width: 200px;
-      margin-top: 0.5em;
-    }
-
-    /* Botón verde institucional en header */
-    .btn-verde-header {
-      position: absolute;
-      bottom: 10px;
-      left: 20px;
-      background-color: #2e7d32;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.9em;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-
-    .btn-verde-header:hover {
-      background-color: #1b5e20;
-    }
-  </style>
 </head>
 <body class="fondo-datos">
   <header class="encabezado">
@@ -101,7 +14,6 @@
     <div id="botonAdminHeader"></div>
   </header>
 
-  <!-- Cards elevadas -->
   <main class="home-wrapper">
     <div class="card-container">
       <div class="card-box perfil-card" onclick="abrirSeccion('perfilDatos')">
@@ -124,22 +36,51 @@
   </main>
 
   <!-- Sección Perfil -->
-  <section class="seccion" id="perfilDatos">
-    <div class="campo"><strong>Usuario:</strong> <span id="campo-usuario">Cargando...</span></div>
-    <div class="campo"><strong>Correo institucional:</strong> <span id="campo-correo">Cargando...</span></div>
-    <div class="campo"><strong>Rol:</strong> <span id="campo-rol">Cargando...</span></div>
-    <div class="campo firma-digital">
-      <strong>Firma digital:</strong><br />
-      <img src="" alt="Firma Digital" class="firma-img" id="firma-img" />
-    </div>
+  <section class="seccion activa" id="perfilDatos">
+    <form id="formEditarUsuario" class="form-edicion">
+      <h3 class="titulo-edicion"><i class="fas fa-user-edit"></i> Edición de Perfil</h3>
 
-    <!-- Botón Editar datos -->
-     <button class="btn-editar" onclick="activarEdicion()"> 
-      <i class="fas fa-edit"></i> Editar datos 
-    </button>
+      <div class="grupo-campo">
+        <label for="usuario">Usuario</label>
+        <input type="text" name="usuario" id="usuario" required />
+      </div>
+
+      <div class="grupo-campo">
+        <label for="correo">Correo institucional</label>
+        <input type="email" name="correo" id="correo" required />
+      </div>
+
+      <div class="grupo-campo">
+        <label for="rol">Rol</label>
+        <input type="text" name="rol" id="rol" required />
+      </div>
+
+      <div class="grupo-campo">
+        <label for="firma">Firma digital</label>
+        <input type="file" name="firma" id="firma" accept="image/*" />
+      </div>
+
+      <button type="submit" class="btn-guardar">
+        <i class="fas fa-save"></i> Guardar cambios
+      </button>
+    </form>
   </section>
 
-  <!-- Scripts -->
+  <!-- Modal Institucional -->
+  <div id="modalConfirmacion" class="modal-confirmacion" style="display: none;">
+    <div class="modal-contenido">
+      <div class="icono-exito">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h2 id="modalTitulo">¡Operación exitosa!</h2>
+      <p id="modalMensaje">Los datos del usuario se han actualizado correctamente.</p>
+      <div class="botones-modal">
+        <button onclick="aceptarModal()" class="btn-aceptar">Aceptar</button>
+        <button onclick="cerrarModal()" class="btn-cancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <script src="mis-datos.js"></script>
   <script>
     function abrirSeccion(id) {
@@ -156,7 +97,6 @@
       window.location.href = "login.html";
     }
 
-    // Mostrar botón solo si el rol es Administrador
     document.addEventListener("DOMContentLoaded", () => {
       const rol = localStorage.getItem("rolActivo");
       if (rol === "Administrador") {
@@ -170,6 +110,16 @@
         }
       }
     });
+
+    // Funciones para el modal
+    function aceptarModal() {
+      document.getElementById("modalConfirmacion").style.display = "none";
+      window.location.reload(); // recargar para ver datos actualizados
+    }
+
+    function cerrarModal() {
+      document.getElementById("modalConfirmacion").style.display = "none";
+    }
   </script>
 
   <!-- Overlay emergente -->
