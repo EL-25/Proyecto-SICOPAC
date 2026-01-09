@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch("https://proyecto-sicopac-production.up.railway.app/api/mis-datos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ usuario }) // 👈 en minúscula
+      body: JSON.stringify({ usuario })
     });
 
     if (!response.ok) throw new Error("No se pudo obtener los datos del usuario");
@@ -31,13 +31,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Mostrar firma digital si existe
     const firmaImg = document.getElementById("firma-img");
-    console.log("📦 Datos completos recibidos:", datos); // Ver todo el objeto
-    console.log("🖋️ Firma recibida:", datos.firma); // Ver solo el campo firma
-
     if (datos.firma && datos.firma.trim() !== "") {
       const firmaURL = `https://proyecto-sicopac-production.up.railway.app/img/firma/${encodeURIComponent(datos.firma)}`;
-      console.log("🌐 URL final de la firma:", firmaURL); // Ver la URL que se asigna
-
       firmaImg.src = firmaURL;
       firmaImg.alt = `Firma de ${datos.usuario}`;
       firmaImg.style.display = "block";
@@ -67,19 +62,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Funciones auxiliares
 // ==============================
 
-// Cerrar sesión
 function cerrarSesion() {
   localStorage.removeItem("usuarioActivo");
   window.location.href = "login.html";
 }
 
-// Mostrar/ocultar el panel de perfil
 function mostrarPerfil() {
   const perfil = document.getElementById("perfilDatos");
   perfil.style.display = perfil.style.display === "none" ? "block" : "none";
 }
 
-// Redirección al formulario con overlay emergente
 function registrarAccesoFormulario() {
   const usuario = localStorage.getItem("usuarioActivo");
   if (!usuario) {
@@ -99,7 +91,6 @@ function registrarAccesoFormulario() {
   }, 1500);
 }
 
-// Redirección a reportes con overlay emergente
 function registrarAccesoReportes() {
   const usuario = localStorage.getItem("usuarioActivo");
   if (!usuario) {
@@ -116,7 +107,7 @@ function registrarAccesoReportes() {
 
   setTimeout(() => {
     window.location.href = "formulario.html";
-  }, 1500);ow.location.reload();
+  }, 1500);
 }
 
 // ==============================
@@ -125,28 +116,36 @@ function registrarAccesoReportes() {
 function activarEdicion() {
   const perfil = document.getElementById("perfilDatos");
 
-  // Reemplazar contenido por formulario editable
   perfil.innerHTML = `
-    <form id="formEditarUsuario">
-      <label>Usuario</label>
-      <input type="text" name="usuario" value="${document.getElementById("campo-usuario").textContent}" required />
+    <form id="formEditarUsuario" class="form-edicion">
+      <h3 class="titulo-edicion"><i class="fas fa-user-edit"></i> Edición de Perfil</h3>
 
-      <label>Correo institucional</label>
-      <input type="email" name="correo" value="${document.getElementById("campo-correo").textContent}" required />
+      <div class="grupo-campo">
+        <label>Usuario</label>
+        <input type="text" name="usuario" value="${document.getElementById("campo-usuario").textContent}" required />
+      </div>
 
-      <label>Rol</label>
-      <input type="text" name="rol" value="${document.getElementById("campo-rol").textContent}" required />
+      <div class="grupo-campo">
+        <label>Correo institucional</label>
+        <input type="email" name="correo" value="${document.getElementById("campo-correo").textContent}" required />
+      </div>
 
-      <label>Firma digital</label>
-      <input type="file" name="firma" accept="image/*" />
+      <div class="grupo-campo">
+        <label>Rol</label>
+        <input type="text" name="rol" value="${document.getElementById("campo-rol").textContent}" required />
+      </div>
 
-      <button type="submit" class="btn-editar">
+      <div class="grupo-campo">
+        <label>Firma digital</label>
+        <input type="file" name="firma" accept="image/*" />
+      </div>
+
+      <button type="submit" class="btn-guardar">
         <i class="fas fa-save"></i> Guardar cambios
       </button>
     </form>
   `;
 
-  // Enviar datos al backend
   document.getElementById("formEditarUsuario").addEventListener("submit", async function(e) {
     e.preventDefault();
     const formData = new FormData(this);
@@ -160,7 +159,6 @@ function activarEdicion() {
       if (response.ok) {
         const data = await response.json();
         alert(data.mensaje || "Datos actualizados correctamente");
-        // Opcional: recargar la página para mostrar los datos actualizados
         window.location.reload();
       } else {
         alert("Error al actualizar usuario");
