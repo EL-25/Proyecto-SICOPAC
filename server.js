@@ -198,40 +198,35 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
   }
 });
 
-// ==============================
-// Actualizar datos de usuario
-// ==============================
 app.post('/api/actualizar-usuario', upload.single("firma"), async (req, res) => {
-  const {
-    usuario,
-    correo,
-    rol
-  } = req.body;
+  const { usuario, correo, rol, nuevoUsuario, clave } = req.body;
 
-  if (!usuario || !correo || !rol) {
+  if (!usuario || !correo || !rol || !clave) {
     return res.status(400).json({ error: 'Faltan campos obligatorios' });
   }
 
   try {
     let query = `
       UPDATE "Usuarios"
-      SET "Correo" = $1,
-          "Rol" = $2
-      WHERE "Usuario" = $3 AND "Estado" = true
+      SET "Usuario" = $1,
+          "Correo" = $2,
+          "Rol" = $3,
+          "Clave" = $4
+      WHERE "Usuario" = $5 AND "Estado" = true
     `;
-    const params = [correo, rol, usuario];
+    let params = [nuevoUsuario || usuario, correo, rol, clave, usuario];
 
-    // Si se envía nueva firma digital
     if (req.file) {
       query = `
         UPDATE "Usuarios"
-        SET "Correo" = $1,
-            "Rol" = $2,
-            "Firma" = $3
-        WHERE "Usuario" = $4 AND "Estado" = true
+        SET "Usuario" = $1,
+            "Correo" = $2,
+            "Rol" = $3,
+            "Clave" = $4,
+            "Firma" = $5
+        WHERE "Usuario" = $6 AND "Estado" = true
       `;
-      params.push(req.file.filename);
-      params.push(usuario);
+      params = [nuevoUsuario || usuario, correo, rol, clave, req.file.filename, usuario];
     }
 
     const result = await pool.query(query, params);

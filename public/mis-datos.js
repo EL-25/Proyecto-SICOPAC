@@ -121,8 +121,13 @@ function activarEdicion() {
       <h3 class="titulo-edicion"><i class="fas fa-user-edit"></i> Edición de Perfil</h3>
 
       <div class="grupo-campo">
-        <label>Usuario</label>
-        <input type="text" name="usuario" value="${document.getElementById("campo-usuario").textContent}" required />
+        <label>Usuario actual</label>
+        <input type="text" name="usuario" value="${document.getElementById("campo-usuario").textContent}" readonly />
+      </div>
+
+      <div class="grupo-campo">
+        <label>Nuevo usuario</label>
+        <input type="text" name="nuevoUsuario" placeholder="Ingrese nuevo usuario" />
       </div>
 
       <div class="grupo-campo">
@@ -133,6 +138,11 @@ function activarEdicion() {
       <div class="grupo-campo">
         <label>Rol</label>
         <input type="text" name="rol" value="${document.getElementById("campo-rol").textContent}" required />
+      </div>
+
+      <div class="grupo-campo">
+        <label>Clave</label>
+        <input type="password" name="clave" placeholder="Ingrese nueva clave" required />
       </div>
 
       <div class="grupo-campo">
