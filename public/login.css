@@ -94,24 +94,28 @@ body::before {
 /* Contenedor del login a la derecha */
 .login-container {
   background: #f9f9f9;
-  padding: 30px;
+  padding: 20px 25px;
   border-radius: 10px;
   text-align: center;
-  width: 320px;
+  width: 300px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   border: 1px solid #ddd;
+  margin-top: -30px; /* reduce espacio blanco superior */
 }
 
 /* Logo institucional */
 .logo {
-  width: 180px;
-  margin-bottom: 20px;
+  width: 140px;
+  margin: 10px auto 8px auto; /* menos espacio arriba y abajo */
+  display: block;
 }
 
 /* Título del formulario */
 h2 {
-  margin-bottom: 20px;
+  margin-top: 4px;
+  margin-bottom: 18px;
   color: #005baa;
+  font-size: 1.3em;
 }
 
 /* Campos de entrada */
@@ -250,15 +254,17 @@ a {
     width: 100%;
     max-width: 350px;
     padding: 20px;
+    margin-top: -20px; /* reduce espacio blanco en móviles */
   }
 
   .logo {
     width: 120px;
-    margin-bottom: 15px;
+    margin: 8px auto 6px auto; /* menos separación en móviles */
   }
 
   h2 {
     font-size: 1.3em;
+    margin-top: 2px;
   }
 
   input {
@@ -297,14 +303,17 @@ a {
   .login-container {
     max-width: 95%;
     padding: 15px;
+    margin-top: -15px;
   }
 
   .logo {
     width: 100px;
+    margin: 6px auto 4px auto;
   }
 
   h2 {
     font-size: 1.1em;
+    margin-top: 2px;
   }
 
   input {
