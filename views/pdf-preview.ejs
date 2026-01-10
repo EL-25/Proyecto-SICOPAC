@@ -242,18 +242,21 @@
     </div>
     <div class="pie-firma">
   <div class="firmas">
+    <!-- Bloque Usuario solicitante -->
     <div class="firma-bloque firma-contenedor">
-      <% if (firmaSolicitante) { %>
-        <img src="<%= firmaSolicitante %>" alt="Firma solicitante" class="firma-img-ref firma-sobre-linea">
+      <% if (data.firmaSolicitante) { %>
+        <img src="<%= data.firmaSolicitante %>" alt="Firma solicitante" class="firma-img-ref firma-sobre-linea">
       <% } else { %>
         <div class="firma-espacio"></div>
       <% } %>
       <div class="linea-firma"></div>
       <p class="firma-texto"><strong>Usuario solicitante</strong><br>(Firma o huella)</p>
     </div>
+
+    <!-- Bloque REF -->
     <div class="firma-bloque firma-contenedor">
-      <% if (firmaUsuario) { %>
-        <img src="<%= firmaUsuario %>" alt="Firma REF" class="firma-img-ref firma-sobre-linea">
+      <% if (data.firmaUsuario) { %>
+        <img src="<%= data.firmaUsuario %>" alt="Firma REF" class="firma-img-ref firma-sobre-linea">
       <% } else { %>
         <div class="firma-espacio"></div>
       <% } %>
@@ -261,8 +264,11 @@
       <p class="firma-texto"><strong>REF</strong><br>(Nombre y firma)</p>
     </div>
   </div>
+
   <div class="separador-legal"></div>
-  <p class="texto-legal">La información contenida en esta solicitud es de exclusiva responsabilidad de quien la complete...</p>
+  <p class="texto-legal">
+    La información contenida en esta solicitud es de exclusiva responsabilidad de quien la complete...
+  </p>
 </div>
 
   </div>
