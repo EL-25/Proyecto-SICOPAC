@@ -99,10 +99,12 @@ legend {
 
 /* Imagen de firma */
 .firma-img-ref {
-    max-height: 100px;
-    border: 1px solid #ccc;
-    padding: 4px;
-    border-radius: 4px;
+  max-height: 100px;
+  max-width: 100%;
+  object-fit: contain;
+  border: 1px solid #ccc;
+  padding: 4px;
+  border-radius: 4px;
 }
 
 /* Espacio reservado para firmas sin imagen */
