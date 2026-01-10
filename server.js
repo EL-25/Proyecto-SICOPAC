@@ -540,8 +540,22 @@ app.post("/guardar", async (req, res) => {
       declaracion: datos.declaracion
     };
 
-    // Renderizar vista previa con los datos completos
-    res.render("pdf-preview", { data: datosConCodigo });
+    // Obtener firma del usuario que llenó el formulario
+    const firmaResult = await pool.query(
+      `SELECT "Firma" FROM "Usuarios" WHERE "Usuario" = $1 AND "Estado" = true`,
+      [datos.usuario]
+    );
+    
+    let firmaUsuario = null;
+    if (firmaResult.rows.length > 0) {
+      firmaUsuario = '/img/firma/' + firmaResult.rows[0].Firma; // ruta accesible
+      }
+
+      // Renderizar vista previa con los datos completos + firma
+      res.render("pdf-preview", { 
+        data: datosConCodigo,
+        firmaUsuario //Aquí pasamos la firma al EJS
+        });
 
   } catch (err) {
     console.error("❌ Error al guardar el formulario:", err);

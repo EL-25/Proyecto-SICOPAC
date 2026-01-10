@@ -247,9 +247,14 @@
           <p><strong>Usuario solicitante</strong><br>(Firma o huella)</p>
         </div>
         <div class="firma-bloque">
-          <p class="linea-firma"></p>
-          <p><strong>REF</strong><br>(Nombre y firma)</p>
-        </div>
+          <% if (firmaUsuario) { %>
+            <img src="<%= firmaUsuario %>" alt="Firma REF" style="max-width:220px; height:auto; margin-bottom:6px; border:1px solid #ccc; padding:4px; border-radius:4px;">
+            <p><strong>REF</strong><br>(Nombre y firma)</p>
+            <% } else { %>
+              <p class="linea-firma"></p>
+              <p><strong>REF</strong><br>(Nombre y firma)</p>
+              <% } %>
+            </div>
       </div>
       <div class="separador-legal"></div>
       <p class="texto-legal">La información contenida en esta solicitud es de exclusiva responsabilidad de quien la complete...</p>
