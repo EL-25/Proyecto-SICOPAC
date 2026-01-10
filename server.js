@@ -550,18 +550,20 @@ app.post("/guardar", async (req, res) => {
     if (firmaResult.rows.length > 0) {
       firmaUsuario = '/img/firma/' + firmaResult.rows[0].Firma; // ruta accesible
       }
-
-      // Renderizar vista previa con los datos completos + firma
+      
+      // Agregar la firma al objeto datosConCodigo
+      datosConCodigo.firmaUsuario = firmaUsuario;
+      
+      // Renderizar vista previa con los datos completos (incluyendo la firma)
       res.render("pdf-preview", { 
-        data: datosConCodigo,
-        firmaUsuario //Aquí pasamos la firma al EJS
-        });
-
-  } catch (err) {
-    console.error("❌ Error al guardar el formulario:", err);
-    res.status(500).send("Error al guardar el formulario");
-  }
-});
+        data: datosConCodigo
+      });
+    
+    } catch (err) {
+      console.error("❌ Error al guardar el formulario:", err);
+      res.status(500).send("Error al guardar el formulario");
+    }
+  });
 
 // ==============================
 // FUNCIÓN PARA NORMALIZAR EL CÓDIGO DEL FORMULARIO
