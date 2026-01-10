@@ -242,19 +242,19 @@
     </div>
     <div class="pie-firma">
       <div class="firmas">
-        <div class="firma-bloque">
-          <p class="linea-firma"></p>
-          <p style="margin-top:8px;"><strong>Usuario solicitante</strong><br>(Firma o huella)</p>
+        <div class="firma-bloque firma-contenedor">
+          <div class="linea-firma"></div>
+          <div class="firma-espacio"></div>
+          <p class="firma-texto"><strong>Usuario solicitante</strong><br>(Firma o huella)</p>
         </div>
-        <div class="firma-bloque">
+        <div class="firma-bloque firma-contenedor">
+          <div class="linea-firma"></div>
           <% if (firmaUsuario) { %>
-            <p class="linea-firma"></p>
-            <img src="<%= firmaUsuario %>" alt="Firma REF" class="firma-img-ref">
-            <p style="margin-top:8px;"><strong>REF</strong><br>(Nombre y firma)</p>
+            <img src="<%= firmaUsuario %>" alt="Firma REF" class="firma-img-ref firma-sobre-linea">
             <% } else { %>
-              <p class="linea-firma"></p>
-              <p style="margin-top:8px;"><strong>REF</strong><br>(Nombre y firma)</p>
+              <div class="firma-espacio"></div>
               <% } %>
+              <p class="firma-texto"><strong>REF</strong><br>(Nombre y firma)</p>
             </div>
       </div>
       <div class="separador-legal"></div>

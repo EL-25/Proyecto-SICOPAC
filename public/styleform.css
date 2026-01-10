@@ -96,6 +96,7 @@ legend {
     margin-bottom: 0.5em;
 }
 
+/* Imagen de firma REF */
 .firma-img-ref {
     max-height: 100px;
     margin-top: 6px;
@@ -103,6 +104,16 @@ legend {
     border: 1px solid #ccc;
     padding: 4px;
     border-radius: 4px;
+}
+
+/* Espacio reservado para firmas sin imagen */
+.firma-espacio {
+    height: 100px;
+}
+
+/* Texto debajo de la firma */
+.firma-texto {
+    margin-top: 8px;
 }
 
 /* Responsividad */
@@ -193,4 +204,15 @@ legend {
     max-width: 90%;
     height: auto;
   }
+}
+
+.firma-contenedor {
+  position: relative;
+}
+
+.firma-sobre-linea {
+  position: absolute;
+  top: 0;              /* coloca la firma justo sobre la línea */
+  left: 50%;
+  transform: translateX(-50%);
 }
