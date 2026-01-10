@@ -241,25 +241,29 @@
       <a href="/editar-formulario?codigo=<%= data.codigoFormulario %>" class="btn" style="background-color:#2e7d32; color:white; padding:0.5em 1.2em; border-radius:6px;">Editar</a>
     </div>
     <div class="pie-firma">
-      <div class="firmas">
-        <div class="firma-bloque firma-contenedor">
-          <div class="linea-firma"></div>
-          <div class="firma-espacio"></div>
-          <p class="firma-texto"><strong>Usuario solicitante</strong><br>(Firma o huella)</p>
-        </div>
-        <div class="firma-bloque firma-contenedor">
-          <div class="linea-firma"></div>
-          <% if (firmaUsuario) { %>
-            <img src="<%= firmaUsuario %>" alt="Firma REF" class="firma-img-ref firma-sobre-linea">
-            <% } else { %>
-              <div class="firma-espacio"></div>
-              <% } %>
-              <p class="firma-texto"><strong>REF</strong><br>(Nombre y firma)</p>
-            </div>
-      </div>
-      <div class="separador-legal"></div>
-      <p class="texto-legal">La información contenida en esta solicitud es de exclusiva responsabilidad de quien la complete...</p>
+  <div class="firmas">
+    <div class="firma-bloque firma-contenedor">
+      <% if (firmaSolicitante) { %>
+        <img src="<%= firmaSolicitante %>" alt="Firma solicitante" class="firma-img-ref firma-sobre-linea">
+      <% } else { %>
+        <div class="firma-espacio"></div>
+      <% } %>
+      <div class="linea-firma"></div>
+      <p class="firma-texto"><strong>Usuario solicitante</strong><br>(Firma o huella)</p>
     </div>
+    <div class="firma-bloque firma-contenedor">
+      <% if (firmaUsuario) { %>
+        <img src="<%= firmaUsuario %>" alt="Firma REF" class="firma-img-ref firma-sobre-linea">
+      <% } else { %>
+        <div class="firma-espacio"></div>
+      <% } %>
+      <div class="linea-firma"></div>
+      <p class="firma-texto"><strong>REF</strong><br>(Nombre y firma)</p>
+    </div>
+  </div>
+  <div class="separador-legal"></div>
+  <p class="texto-legal">La información contenida en esta solicitud es de exclusiva responsabilidad de quien la complete...</p>
+</div>
 
   </div>
 </body>
