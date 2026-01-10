@@ -244,15 +244,16 @@
       <div class="firmas">
         <div class="firma-bloque">
           <p class="linea-firma"></p>
-          <p><strong>Usuario solicitante</strong><br>(Firma o huella)</p>
+          <p style="margin-top:8px;"><strong>Usuario solicitante</strong><br>(Firma o huella)</p>
         </div>
         <div class="firma-bloque">
           <% if (firmaUsuario) { %>
-            <img src="<%= firmaUsuario %>" alt="Firma REF" style="max-width:220px; height:auto; margin-bottom:6px; border:1px solid #ccc; padding:4px; border-radius:4px;">
-            <p><strong>REF</strong><br>(Nombre y firma)</p>
+            <p class="linea-firma"></p>
+            <img src="<%= firmaUsuario %>" alt="Firma REF" class="firma-img-ref">
+            <p style="margin-top:8px;"><strong>REF</strong><br>(Nombre y firma)</p>
             <% } else { %>
               <p class="linea-firma"></p>
-              <p><strong>REF</strong><br>(Nombre y firma)</p>
+              <p style="margin-top:8px;"><strong>REF</strong><br>(Nombre y firma)</p>
               <% } %>
             </div>
       </div>

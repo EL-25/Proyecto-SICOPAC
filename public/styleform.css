@@ -14,6 +14,7 @@ body {
     box-shadow: 0 0 10px #ccc;
 }
 
+/* Encabezados */
 h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -25,6 +26,7 @@ label {
     margin-top: 10px;
 }
 
+/* Inputs y selects */
 input,
 select {
     padding: 6px;
@@ -34,6 +36,7 @@ select {
     border-radius: 5px;
 }
 
+/* Botones */
 button,
 .btn {
     padding: 10px 20px;
@@ -43,6 +46,7 @@ button,
     border-radius: 6px;
     cursor: pointer;
     text-decoration: none;
+    transition: background 0.3s ease;
 }
 
 button:hover,
@@ -50,6 +54,7 @@ button:hover,
     background: rgb(40, 90, 150);
 }
 
+/* Fieldset */
 fieldset {
     border: 1px solid #bbb;
     padding: 15px;
@@ -61,6 +66,7 @@ legend {
     font-weight: bold;
 }
 
+/* Bloque de botones */
 .botones {
     display: flex;
     justify-content: center;
@@ -69,7 +75,44 @@ legend {
     margin-top: 30px;
 }
 
+/* Firmas */
+.firmas {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    flex-wrap: wrap;
+}
+
+.firma-bloque {
+    width: 48%;
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.linea-firma {
+    border-bottom: 1px solid #000;
+    height: 2em;
+    margin-bottom: 0.5em;
+}
+
+.firma-img-ref {
+    max-height: 100px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    border: 1px solid #ccc;
+    padding: 4px;
+    border-radius: 4px;
+}
+
 /* Responsividad */
+@media screen and (max-width: 1024px) {
+  .container {
+    width: 95%;
+    padding: 20px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .container {
     width: 95%;
@@ -105,6 +148,15 @@ legend {
     flex-direction: column;
     gap: 12px;
   }
+
+  .firmas {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .firma-bloque {
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -135,5 +187,10 @@ legend {
 
   .botones {
     gap: 10px;
+  }
+
+  .firma-img-ref {
+    max-width: 90%;
+    height: auto;
   }
 }
