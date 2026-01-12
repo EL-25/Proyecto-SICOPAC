@@ -71,6 +71,12 @@ p {
   border-radius: 0 6px 6px 0;
 }
 
+.toggle-visibility i {
+  font-size: 18px;
+  line-height: 1;
+  vertical-align: middle;
+}
+
 .toggle-visibility:hover {
   background: #e9f2ff;
   color: #005baa;
