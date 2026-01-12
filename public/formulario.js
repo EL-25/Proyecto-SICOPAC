@@ -1,5 +1,5 @@
 // ==============================
-// formulario.js
+// formulario.js actualizado
 // ==============================
 
 // Al cargar la página, obtener los formularios recientes del usuario
@@ -39,7 +39,7 @@ async function cargarFormularios(usuario, rol) {
     const resp = await fetch("/api/acciones", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ usuario, rol }) // 👈 ahora enviamos también el rol
+      body: JSON.stringify({ usuario, rol })
     });
 
     if (!resp.ok) throw new Error("Error al obtener formularios");
@@ -56,7 +56,6 @@ async function cargarFormularios(usuario, rol) {
       const fecha = f.FechaHoraLocal || "—";
       const li = document.createElement("li");
 
-      // Mostrar el usuario que lo creó si eres administrador
       if (rol === "Administrador") {
         li.innerHTML = `
           <strong>${f.Usuario}</strong> — Formulario ${f.CodigoFormulario || "—"}<br>
@@ -77,8 +76,13 @@ async function cargarFormularios(usuario, rol) {
 
 // Aplicar filtros usando /api/filtrar
 async function aplicarFiltro() {
-  const usuario = localStorage.getItem("usuarioActivo");
+  const usuarioActivo = localStorage.getItem("usuarioActivo");
   const rol = localStorage.getItem("rolActivo");
+
+  // 👇 Si es administrador, usar el campo del filtro; si no, usar su propio usuario
+  const usuarioFiltro = rol === "Administrador" 
+    ? document.getElementById("usuarioFiltro")?.value || "" 
+    : usuarioActivo;
 
   const filtros = {
     numeroFormulario: document.getElementById("numeroFormularioFiltro")?.value || "",
@@ -89,8 +93,8 @@ async function aplicarFiltro() {
     primerApellidoMadre: document.getElementById("apellidoMadreFiltro")?.value || "",
     fechaInicio: document.getElementById("fechaInicioFiltro")?.value || "",
     fechaFin: document.getElementById("fechaFinFiltro")?.value || "",
-    usuario,
-    rol // 👈 también enviamos el rol en filtros
+    usuario: usuarioFiltro, // 👈 ahora correcto
+    rol
   };
 
   const lista = document.getElementById("listaFormularios");
