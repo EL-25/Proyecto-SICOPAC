@@ -23,7 +23,55 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (err) {
     console.error("No se pudo obtener el nombre:", err);
   }
+
+  // Activar checklist dinámico
+  const input = document.getElementById("nuevaClave");
+  const toggleBtn = document.querySelector(".toggle-visibility i");
+
+  const reqs = {
+    length: document.getElementById("req-length"),
+    upper: document.getElementById("req-upper"),
+    lower: document.getElementById("req-lower"),
+    number: document.getElementById("req-number"),
+    special: document.getElementById("req-special"),
+  };
+
+  input.addEventListener("input", () => {
+    const val = input.value;
+
+    const checks = {
+      length: val.length >= 8,
+      upper: /[A-Z]/.test(val),
+      lower: /[a-z]/.test(val),
+      number: /[0-9]/.test(val),
+      special: /[!@#$%&*?]/.test(val),
+    };
+
+    actualizarReq(reqs.length, checks.length);
+    actualizarReq(reqs.upper, checks.upper);
+    actualizarReq(reqs.lower, checks.lower);
+    actualizarReq(reqs.number, checks.number);
+    actualizarReq(reqs.special, checks.special);
+
+    Object.entries(checks).forEach(([key, ok]) => {
+      const el = reqs[key];
+      const icon = el.querySelector("i");
+      icon.className = ok ? "fas fa-check-circle" : "fas fa-circle";
+    });
+  });
+
+  // Toggle visibilidad contraseña
+  document.querySelector(".toggle-visibility").addEventListener("click", () => {
+    const isPassword = input.getAttribute("type") === "password";
+    input.setAttribute("type", isPassword ? "text" : "password");
+    toggleBtn.className = isPassword ? "fas fa-eye-slash" : "fas fa-eye";
+  });
 });
+
+function actualizarReq(el, ok) {
+  if (!el) return;
+  el.classList.toggle("cumplido", ok);
+}
 
 // Función para crear la contraseña
 async function crearClave() {
@@ -35,12 +83,20 @@ async function crearClave() {
     return;
   }
 
-  if (nuevaClave.length < 6) {
-    mostrarModalErrorClave("La contraseña debe tener al menos 6 caracteres.");
+  // Validación moderna
+  const valida =
+    nuevaClave.length >= 8 &&
+    /[A-Z]/.test(nuevaClave) &&
+    /[a-z]/.test(nuevaClave) &&
+    /[0-9]/.test(nuevaClave) &&
+    /[!@#$%&*?]/.test(nuevaClave);
+
+  if (!valida) {
+    mostrarModalErrorClave("La contraseña debe tener mínimo 8 caracteres, incluir mayúscula, minúscula, número y símbolo.");
     return;
   }
 
-  const boton = document.querySelector("button");
+  const boton = document.getElementById("btnGuardar");
   boton.disabled = true;
   boton.textContent = "Guardando...";
 

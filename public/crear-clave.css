@@ -10,17 +10,19 @@ body.fondo-datos {
 /* Contenedor del formulario */
 .formulario-clave {
   background: rgba(255, 255, 255, 0.95);
-  max-width: 400px;
+  max-width: 420px;
   margin: 80px auto;
   padding: 30px;
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  box-shadow: 0 0 18px rgba(0,0,0,0.2);
 }
 
+/* Logo institucional más grande */
 .logo {
-  width: 120px;
-  margin-bottom: 10px;
+  width: 160px;
+  height: auto;
+  margin-bottom: 12px;
 }
 
 h2 {
@@ -29,45 +31,97 @@ h2 {
 }
 
 p {
-  font-size: 0.9em;
+  font-size: 0.95em;
   margin-bottom: 20px;
   color: #333;
 }
 
-input {
-  width: 90%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+/* Input con toggle de visibilidad */
+.input-password {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-button {
+.input-password input {
+  width: 90%;
+  padding: 10px 40px 10px 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+}
+
+.toggle-visibility {
+  position: absolute;
+  right: 25px;
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+}
+
+.toggle-visibility:hover {
+  color: #005baa;
+}
+
+/* Checklist dinámico de requisitos */
+.requisitos {
+  text-align: left;
+  margin-top: 12px;
+  border: 1px dashed #cfe2ff;
+  background: #f8fbff;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.req-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #555;
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.req-item i {
+  font-size: 12px;
+  color: #999;
+}
+
+.req-item.cumplido {
+  color: #1e7e34;
+}
+
+.req-item.cumplido i {
+  color: #28a745;
+}
+
+/* Botón principal */
+button, #btnGuardar {
   background-color: #005baa;
   color: white;
   border: none;
-  padding: 10px 25px;
-  border-radius: 5px;
+  padding: 12px 25px;
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 15px;
 }
 
-button:hover {
+button:hover, #btnGuardar:hover {
   background-color: #003f7d;
 }
 
 /* Modal de error */
 .modal-error-clave {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(200, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex; justify-content: center; align-items: center;
   z-index: 9999;
   animation: fadeIn 0.4s ease-in-out;
 }
@@ -106,14 +160,10 @@ button:hover {
 /* Modal de éxito */
 .modal-exito-clave {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0, 150, 136, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex; justify-content: center; align-items: center;
   z-index: 9999;
   animation: fadeIn 0.5s ease-in-out;
 }
@@ -149,41 +199,18 @@ button:hover {
   background-color: #218838;
 }
 
-/* Animaciones compartidas */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { transform: translateY(50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
-}
-
-/* 🟦 Modal de acceso autorizado con fondo animado tipo partículas */
+/* Modal de acceso autorizado con fondo animado tipo partículas */
 .modal-acceso-autorizado {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: radial-gradient(circle at 20% 30%, #007bff 0%, transparent 25%),
               radial-gradient(circle at 80% 70%, #00bcd4 0%, transparent 25%),
               radial-gradient(circle at 50% 50%, #005baa 0%, transparent 30%);
   background-color: #003f7d;
   background-blend-mode: screen;
   animation: fondoParticulas 8s linear infinite;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex; justify-content: center; align-items: center;
   z-index: 9999;
   font-family: 'Segoe UI', sans-serif;
 }
@@ -239,11 +266,15 @@ button:hover {
 }
 
 /* Animaciones compartidas */
-@keyframes slideUp {
-  from { transform: translateY(50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
 }
-
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.1); }
@@ -259,28 +290,14 @@ button:hover {
   }
 
   .logo {
-    width: 90px;
+    width: 120px;
   }
 
-  h2 {
-    font-size: 1.4em;
-  }
+  h2 { font-size: 1.4em; }
+  p { font-size: 0.85em; }
 
-  p {
-    font-size: 0.85em;
-  }
-
-  input {
-    width: 100%;
-    font-size: 0.95em;
-    padding: 8px;
-  }
-
-  button {
-    width: 100%;
-    font-size: 1em;
-    padding: 12px;
-  }
+  input { width: 100%; font-size: 0.95em; padding: 8px; }
+  button { width: 100%; font-size: 1em; padding: 12px; }
 
   .modal-error-contenido,
   .modal-exito-contenido,
@@ -295,13 +312,8 @@ button:hover {
     font-size: 40px;
   }
 
-  .modal-acceso-contenido h2 {
-    font-size: 1.4em;
-  }
-
-  .modal-acceso-contenido p {
-    font-size: 0.9em;
-  }
+  .modal-acceso-contenido h2 { font-size: 1.4em; }
+  .modal-acceso-contenido p { font-size: 0.9em; }
 
   .btn-cerrar-error,
   .btn-exito-clave,
@@ -318,21 +330,10 @@ button:hover {
     padding: 15px;
   }
 
-  .logo {
-    width: 70px;
-  }
-
-  h2 {
-    font-size: 1.2em;
-  }
-
-  p {
-    font-size: 0.8em;
-  }
-
-  input {
-    font-size: 0.9em;
-  }
+  .logo { width: 90px; }
+  h2 { font-size: 1.2em; }
+  p { font-size: 0.8em; }
+  input { font-size: 0.9em; }
 
   .modal-error-contenido,
   .modal-exito-contenido,
@@ -346,11 +347,6 @@ button:hover {
     font-size: 32px;
   }
 
-  .modal-acceso-contenido h2 {
-    font-size: 1.2em;
-  }
-
-  .modal-acceso-contenido p {
-    font-size: 0.85em;
-  }
+  .modal-acceso-contenido h2 { font-size: 1.2em; }
+  .modal-acceso-contenido p { font-size: 0.85em; }
 }

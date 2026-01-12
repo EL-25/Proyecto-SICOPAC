@@ -10,26 +10,57 @@
 <body class="fondo-datos">
   <div class="formulario-clave">
     <img src="img/LogoAlcaldia.png" alt="Logo Alcaldía" class="logo" />
+
     <h2>Crear Contraseña</h2>
     <p>Defina su nueva contraseña. Anótela o guárdela para poder recordarla.</p>
 
-    <input type="password" id="nuevaClave" placeholder="Nueva contraseña" required />
-    <button onclick="crearClave()">Guardar contraseña</button>
+    <div class="input-password">
+      <input type="password" id="nuevaClave" placeholder="Nueva contraseña" required />
+      <button type="button" class="toggle-visibility" aria-label="Mostrar/Ocultar contraseña">
+        <i class="fas fa-eye"></i>
+      </button>
+    </div>
+
+    <!-- Checklist dinámico de requisitos -->
+    <div class="requisitos">
+      <div class="req-item" id="req-length">
+        <i class="fas fa-circle"></i>
+        <span>Mínimo 8 caracteres</span>
+      </div>
+      <div class="req-item" id="req-upper">
+        <i class="fas fa-circle"></i>
+        <span>Al menos una mayúscula</span>
+      </div>
+      <div class="req-item" id="req-lower">
+        <i class="fas fa-circle"></i>
+        <span>Al menos una minúscula</span>
+      </div>
+      <div class="req-item" id="req-number">
+        <i class="fas fa-circle"></i>
+        <span>Al menos un número</span>
+      </div>
+      <div class="req-item" id="req-special">
+        <i class="fas fa-circle"></i>
+        <span>Al menos un símbolo (!@#$%&*?)</span>
+      </div>
+    </div>
+
+    <button id="btnGuardar" onclick="crearClave()">Guardar contraseña</button>
   </div>
 
-  <!-- Modal de error: contraseña demasiado corta -->
+  <!-- Modal de error: contraseña inválida -->
   <div id="modalErrorClave" class="modal-error-clave" style="display: none;">
     <div class="modal-error-contenido">
       <div class="icono-error">
         <i class="fas fa-exclamation-triangle"></i>
       </div>
-      <h3>Contraseña demasiado corta</h3>
-      <p>La contraseña debe tener al menos 6 caracteres para garantizar seguridad institucional.</p>
+      <h3>Contraseña inválida</h3>
+      <p>Verifique que cumpla todos los requisitos marcados.</p>
       <button onclick="cerrarModalError()" class="btn-cerrar-error">Entendido</button>
     </div>
   </div>
 
-  <!-- Modal de éxito: contraseña creada -->
+    <!-- Modal de éxito: contraseña creada -->
   <div id="modalExitoClave" class="modal-exito-clave" style="display: none;">
     <div class="modal-exito-contenido">
       <div class="icono-exito-clave">
