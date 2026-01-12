@@ -312,7 +312,12 @@ app.post("/api/filtrar", async (req, res) => {
   } = req.body;
 
   try {
-    let query = 'SELECT * FROM "Formularios" WHERE 1=1';
+    let query = `
+    SELECT "Usuario","NumeroFormulario","Declaraciones",
+    "Distrito","Municipio","FechaPresentacion"
+    FROM "Formularios"
+    WHERE 1=1
+    `;
     const params = [];
     let idx = 1;
 

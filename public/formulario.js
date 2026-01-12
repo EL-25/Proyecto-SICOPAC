@@ -2,7 +2,6 @@
 // formulario.js actualizado
 // ==============================
 
-// Al cargar la página, obtener los formularios recientes del usuario
 document.addEventListener("DOMContentLoaded", async () => {
   const usuario = localStorage.getItem("usuarioActivo");
   const rol = localStorage.getItem("rolActivo");
@@ -13,24 +12,42 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // Cargar formularios recientes
   await cargarFormularios(usuario, rol);
 });
 
-// Función para cerrar sesión
 function cerrarSesion() {
   localStorage.removeItem("usuarioActivo");
   localStorage.removeItem("rolActivo");
   window.location.href = "login.html";
 }
 
-// Mostrar/ocultar panel de filtros
 function mostrarFiltro() {
   const panel = document.getElementById("filtroPanel");
   panel.style.display = panel.style.display === "none" ? "block" : "none";
 }
 
-// Cargar formularios recientes desde /api/acciones
+// Normalizar campos para evitar undefined
+function mapFormulario(f) {
+  return {
+    usuario: f.Usuario || f.usuario || f.CreadoPor || "—",
+    codigo: f.CodigoFormulario || f.NumeroFormulario || "—",
+    declaracion: f.Declaracion || f.Declaraciones || "—",
+    municipio: "La Libertad Este",
+    distrito: f.Distrito || "—",
+    fecha: f.FechaHoraLocal || f.FechaPresentacion || null
+  };
+}
+
+function formatFecha(fecha) {
+  if (!fecha) return "—";
+  try {
+    return new Date(fecha).toLocaleDateString("es-SV");
+  } catch {
+    return "—";
+  }
+}
+
+// Cargar formularios recientes
 async function cargarFormularios(usuario, rol) {
   const lista = document.getElementById("listaFormularios");
   lista.innerHTML = "<li>Cargando formularios recientes...</li>";
@@ -47,23 +64,23 @@ async function cargarFormularios(usuario, rol) {
     const formularios = await resp.json();
     lista.innerHTML = "";
 
-    if (formularios.length === 0) {
+    if (!Array.isArray(formularios) || formularios.length === 0) {
       lista.innerHTML = "<li>No hay formularios registrados aún.</li>";
       return;
     }
 
-    formularios.forEach(f => {
-      const fecha = f.FechaHoraLocal || "—";
+    formularios.forEach(raw => {
+      const f = mapFormulario(raw);
       const li = document.createElement("li");
 
       if (rol === "Administrador") {
         li.innerHTML = `
-          <strong>${f.Usuario}</strong> — Formulario ${f.CodigoFormulario || "—"}<br>
-          ${f.Declaracion || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"}<br>
-          Fecha: ${fecha}
+          <strong>${f.usuario}</strong> — Formulario ${f.codigo}<br>
+          ${f.declaracion} - ${f.municipio}/${f.distrito}<br>
+          Fecha: ${formatFecha(f.fecha)}
         `;
       } else {
-        li.textContent = `Formulario ${f.CodigoFormulario || "—"} - ${f.Declaracion || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"} - Fecha: ${fecha}`;
+        li.textContent = `Formulario ${f.codigo} - ${f.declaracion} - ${f.municipio}/${f.distrito} - Fecha: ${formatFecha(f.fecha)}`;
       }
 
       lista.appendChild(li);
@@ -74,26 +91,25 @@ async function cargarFormularios(usuario, rol) {
   }
 }
 
-// Aplicar filtros usando /api/filtrar
+// Aplicar filtros
 async function aplicarFiltro() {
   const usuarioActivo = localStorage.getItem("usuarioActivo");
   const rol = localStorage.getItem("rolActivo");
 
-  // 👇 Si es administrador, usar el campo del filtro; si no, usar su propio usuario
-  const usuarioFiltro = rol === "Administrador" 
-    ? document.getElementById("usuarioFiltro")?.value || "" 
+  const usuarioFiltro = rol === "Administrador"
+    ? document.getElementById("usuarioFiltro")?.value || ""
     : usuarioActivo;
 
   const filtros = {
     numeroFormulario: document.getElementById("numeroFormularioFiltro")?.value || "",
     declaracion: document.getElementById("tipoFiltro")?.value || "",
-    municipio: document.getElementById("municipioFiltro")?.value || "",
+    municipio: "La Libertad Este", // fijo
     distrito: document.getElementById("distritoFiltro")?.value || "",
     primerApellidoPadre: document.getElementById("apellidoPadreFiltro")?.value || "",
     primerApellidoMadre: document.getElementById("apellidoMadreFiltro")?.value || "",
     fechaInicio: document.getElementById("fechaInicioFiltro")?.value || "",
     fechaFin: document.getElementById("fechaFinFiltro")?.value || "",
-    usuario: usuarioFiltro, // 👈 ahora correcto
+    usuario: usuarioFiltro,
     rol
   };
 
@@ -112,23 +128,23 @@ async function aplicarFiltro() {
     const resultados = await resp.json();
     lista.innerHTML = "";
 
-    if (resultados.length === 0) {
+    if (!Array.isArray(resultados) || resultados.length === 0) {
       lista.innerHTML = "<li>No hay formularios que coincidan con el filtro.</li>";
       return;
     }
 
-    resultados.forEach(f => {
-      const fecha = f.FechaPresentacion ? new Date(f.FechaPresentacion).toLocaleDateString("es-SV") : "—";
+    resultados.forEach(raw => {
+      const f = mapFormulario(raw);
       const li = document.createElement("li");
 
       if (rol === "Administrador") {
         li.innerHTML = `
-          <strong>${f.Usuario}</strong> — Formulario ${f.NumeroFormulario || "—"}<br>
-          ${f.Declaraciones || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"}<br>
-          Fecha: ${fecha}
+          <strong>${f.usuario}</strong> — Formulario ${f.codigo}<br>
+          ${f.declaracion} - ${f.municipio}/${f.distrito}<br>
+          Fecha: ${formatFecha(f.fecha)}
         `;
       } else {
-        li.textContent = `Formulario ${f.NumeroFormulario || "—"} - ${f.Declaraciones || "—"} - ${f.Municipio || "—"}/${f.Distrito || "—"} - Fecha: ${fecha}`;
+        li.textContent = `Formulario ${f.codigo} - ${f.declaracion} - ${f.municipio}/${f.distrito} - Fecha: ${formatFecha(f.fecha)}`;
       }
 
       lista.appendChild(li);

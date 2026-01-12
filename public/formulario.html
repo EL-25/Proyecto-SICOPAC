@@ -35,20 +35,19 @@
       <option value="Union">Unión no matrimonial</option>
     </select>
 
-    <label for="municipioFiltro">Municipio:</label>
-    <select id="municipioFiltro">
+    <!-- Municipio fijo -->
+    <label>Municipio:</label>
+    <input type="text" id="municipioFiltro" value="La Libertad Este" readonly>
+
+    <!-- Distrito seleccionable -->
+    <label for="distritoFiltro">Distrito:</label>
+    <select id="distritoFiltro">
       <option value="">Todos</option>
       <option value="Antiguo Cuscatlán">Antiguo Cuscatlán</option>
       <option value="Nuevo Cuscatlán">Nuevo Cuscatlán</option>
       <option value="San José Villanueva">San José Villanueva</option>
       <option value="Zaragoza">Zaragoza</option>
       <option value="Huizúcar">Huizúcar</option>
-    </select>
-
-    <label for="distritoFiltro">Distrito:</label>
-    <select id="distritoFiltro">
-      <option value="">Todos</option>
-      <option value="La Libertad Este">La Libertad Este</option>
     </select>
 
     <label for="apellidoPadreFiltro">Apellido del padre:</label>
@@ -62,7 +61,7 @@
     <input type="date" id="fechaFinFiltro">
 
     <label for="usuarioFiltro">Usuario:</label> 
-    <input type="text" id="usuarioFiltro" placeholder="Ej. Roberto_Carcamo">
+    <input type="text" id="usuarioFiltro" placeholder="Ej. L_Edwin">
 
     <button onclick="aplicarFiltro()">Aplicar filtro</button>
   </div>
