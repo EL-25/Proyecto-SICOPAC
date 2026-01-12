@@ -21,8 +21,13 @@
       </button>
     </div>
 
-    <!-- Checklist dinámico de requisitos -->
-    <div class="requisitos">
+    <!-- Botón para mostrar/ocultar requisitos -->
+    <button type="button" id="btnToggleRequisitos" class="btn-toggle-requisitos">
+      🔍 Ver requisitos
+    </button>
+
+    <!-- Checklist dinámico de requisitos (oculto por defecto) -->
+    <div class="requisitos" id="bloqueRequisitos" style="display: none;">
       <div class="req-item" id="req-length">
         <i class="fas fa-circle"></i>
         <span>Mínimo 8 caracteres</span>
@@ -60,7 +65,7 @@
     </div>
   </div>
 
-    <!-- Modal de éxito: contraseña creada -->
+  <!-- Modal de éxito: contraseña creada -->
   <div id="modalExitoClave" class="modal-exito-clave" style="display: none;">
     <div class="modal-exito-contenido">
       <div class="icono-exito-clave">

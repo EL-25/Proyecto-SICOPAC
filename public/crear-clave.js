@@ -66,6 +66,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     input.setAttribute("type", isPassword ? "text" : "password");
     toggleBtn.className = isPassword ? "fas fa-eye-slash" : "fas fa-eye";
   });
+
+  // Botón para mostrar/ocultar requisitos
+  const btnToggle = document.getElementById("btnToggleRequisitos");
+  const bloqueRequisitos = document.getElementById("bloqueRequisitos");
+
+  btnToggle.addEventListener("click", () => {
+    const visible = bloqueRequisitos.style.display === "block";
+    bloqueRequisitos.style.display = visible ? "none" : "block";
+    btnToggle.textContent = visible ? "🔍 Ver requisitos" : "🔽 Ocultar requisitos";
+  });
 });
 
 function actualizarReq(el, ok) {

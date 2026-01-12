@@ -39,15 +39,13 @@ p {
 /* Input con toggle de visibilidad */
 .input-password {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 90%;
+  margin: 0 auto;
 }
 
 .input-password input {
-  width: 90%;
-  padding: 10px 40px 10px 12px;
-  margin: 10px 0;
+  width: 100%;
+  padding: 10px 42px 10px 12px; /* espacio para el ojo */
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1em;
@@ -55,15 +53,41 @@ p {
 
 .toggle-visibility {
   position: absolute;
-  right: 25px;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   border: none;
   color: #666;
   cursor: pointer;
+  border-radius: 6px;
 }
 
 .toggle-visibility:hover {
+  background: #e9f2ff;
   color: #005baa;
+}
+
+/* Botón para ver requisitos */
+.btn-toggle-requisitos {
+  background-color: #f4f4f4;
+  color: #005baa;
+  border: 1px solid #ccc;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-toggle-requisitos:hover {
+  background-color: #e9f2ff;
 }
 
 /* Checklist dinámico de requisitos */
@@ -74,6 +98,8 @@ p {
   background: #f8fbff;
   padding: 12px;
   border-radius: 8px;
+  display: none; /* oculto por defecto */
+  transition: all 0.3s ease-in-out;
 }
 
 .req-item {
@@ -289,10 +315,7 @@ button:hover, #btnGuardar:hover {
     padding: 20px;
   }
 
-  .logo {
-    width: 120px;
-  }
-
+  .logo { width: 120px; }
   h2 { font-size: 1.4em; }
   p { font-size: 0.85em; }
 
