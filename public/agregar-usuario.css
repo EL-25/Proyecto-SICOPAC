@@ -22,6 +22,26 @@ h2 {
   margin-bottom: 20px;
 }
 
+/* Mensaje de error institucional */
+.error-popup {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  display: none; /* oculto por defecto */
+  align-items: center;
+  gap: 8px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.error-popup i {
+  color: #dc3545;
+  font-size: 16px;
+}
+
 /* Campos del formulario */
 form input, form select {
   width: 100%;
@@ -202,6 +222,7 @@ form button:hover {
   }
 }
 
+/* Botón Home */
 .home-btn {
   background-color: #0077cc;
   color: white;
