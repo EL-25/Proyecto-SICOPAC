@@ -274,7 +274,7 @@ app.post('/api/acciones', async (req, res) => {
       result = await pool.query(
         `SELECT "Usuario","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal"
          FROM "Acciones"
-         ORDER BY "Id" DESC
+         ORDER BY CAST(SUBSTRING("CodigoFormulario" FROM '[0-9]+') AS INTEGER) DESC
          LIMIT 50`
       );
     } else {
@@ -283,7 +283,7 @@ app.post('/api/acciones', async (req, res) => {
         `SELECT "Usuario","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal"
          FROM "Acciones"
          WHERE "Usuario" = $1
-         ORDER BY "Id" DESC
+         ORDER BY CAST(SUBSTRING("CodigoFormulario" FROM '[0-9]+') AS INTEGER) DESC
          LIMIT 20`,
         [usuario]
       );
