@@ -189,6 +189,29 @@ button:hover {
   margin-top: 15px;
 }
 
+/* Eliminar el rectángulo azul al enfocar el input */
+.input-group input:focus {
+  outline: none;
+  background: transparent !important;
+}
+
+/* Mantener el fondo gris del grupo cuando el input está enfocado */
+.input-group:focus-within {
+  border-color: #005baa;
+  box-shadow: 0 0 0 2px rgba(0, 91, 170, 0.15);
+  background-color: #f0f0f0;
+}
+
+/* Normalizar el fondo del autofill (Chrome/Edge) */
+.input-group input:-webkit-autofill,
+.input-group input:-webkit-autofill:hover,
+.input-group input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #f0f0f0 inset;
+  box-shadow: 0 0 0px 1000px #f0f0f0 inset;
+  -webkit-text-fill-color: #333;
+  caret-color: #333;
+}
+
 /* Responsividad */
 @media screen and (max-width: 768px) {
   .main-container {
