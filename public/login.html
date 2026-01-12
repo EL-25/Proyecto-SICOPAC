@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <title>Login - Alcaldía La Libertad Este</title>
   <link rel="stylesheet" href="/login.css" />
@@ -33,9 +34,21 @@
     <div class="login-container">
       <img src="/img/LogoAlcaldia.png" alt="Logo Alcaldía" class="logo" />
       <h2>Iniciar Sesión</h2>
+
+      <!-- Mensaje de error elegante -->
+      <div id="mensajeError" class="error-popup" style="display:none;">
+        <i class="fas fa-exclamation-circle"></i> Usuario o contraseña incorrectos
+      </div>
+
       <form id="loginForm">
-        <input type="text" id="username" placeholder="Usuario" required />
-        <input type="password" id="password" placeholder="Contraseña" required />
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" placeholder="Usuario" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="Contraseña" required />
+        </div>
         <button type="submit">Entrar</button>
       </form>
     </div>

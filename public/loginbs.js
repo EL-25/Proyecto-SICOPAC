@@ -2,16 +2,22 @@ document.getElementById('loginForm').addEventListener('submit', async function (
   e.preventDefault();
 
   // Capturar valores del formulario
-  const Usuario = document.getElementById('username').value;
-  const Clave = document.getElementById('password').value;
+  const Usuario = document.getElementById('username').value.trim();
+  const Clave = document.getElementById('password').value.trim();
+
+  // Referencia al contenedor de error
+  const mensajeError = document.getElementById('mensajeError');
+
+  // Ocultar error previo
+  if (mensajeError) {
+    mensajeError.style.display = "none";
+  }
 
   try {
     // Enviar datos al backend
     const response = await fetch('/api/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ Usuario, Clave })
     });
 
@@ -20,7 +26,10 @@ document.getElementById('loginForm').addEventListener('submit', async function (
       resultado = await response.json();
     } catch (err) {
       const textoPlano = await response.text();
-      alert(`Error inesperado: ${textoPlano}`);
+      if (mensajeError) {
+        mensajeError.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error inesperado: ${textoPlano}`;
+        mensajeError.style.display = "flex";
+      }
       console.warn("Respuesta no es JSON:", textoPlano);
       return;
     }
@@ -33,10 +42,16 @@ document.getElementById('loginForm').addEventListener('submit', async function (
       // Mostrar modal institucional con rol
       mostrarModal(resultado.rol);
     } else {
-      alert(`Error: ${resultado.error || 'Usuario o contraseña incorrectos'}`);
+      if (mensajeError) {
+        mensajeError.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${resultado.error || 'Usuario o contraseña incorrectos'}`;
+        mensajeError.style.display = "flex";
+      }
     }
   } catch (error) {
-    alert('Error de conexión con el servidor');
+    if (mensajeError) {
+      mensajeError.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error de conexión con el servidor`;
+      mensajeError.style.display = "flex";
+    }
     console.error(error);
   }
 });

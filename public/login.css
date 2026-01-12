@@ -19,45 +19,6 @@ body::before {
   z-index: -1;
 }
 
-/* Barra institucional superior */
-.barra-social {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  padding: 10px 0;
-  background-color: #005baa;
-}
-
-/* Botones de redes sociales con íconos */
-.social-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: 2px solid white;
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 5px;
-  transition: all 0.3s ease;
-  font-size: 0.95em;
-}
-
-.social-btn i {
-  font-size: 1.1em;
-  transition: color 0.3s ease;
-}
-
-.social-btn:hover {
-  background-color: white;
-  color: #005baa;
-  border-color: #005baa;
-}
-
-.social-btn:hover i {
-  color: #005baa;
-}
-
 /* Contenedor principal con dos columnas */
 .main-container {
   display: flex;
@@ -65,7 +26,7 @@ body::before {
   align-items: center;
   justify-content: center;
   padding: 0 5%;
-  gap: 60px; /* separa visualmente los paneles */
+  gap: 60px;
 }
 
 /* Panel informativo a la izquierda */
@@ -98,16 +59,16 @@ body::before {
   padding: 20px 25px;
   border-radius: 10px;
   text-align: center;
-  width: 300px;
+  width: 320px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   border: 1px solid #ddd;
-  margin-top: -30px; /* reduce espacio blanco superior */
+  margin-top: -30px;
 }
 
 /* Logo institucional */
 .logo {
   width: 140px;
-  margin: 10px auto 8px auto; /* menos espacio arriba y abajo */
+  margin: 10px auto 8px auto;
   display: block;
 }
 
@@ -119,14 +80,30 @@ h2 {
   font-size: 1.3em;
 }
 
-/* Campos de entrada */
-input {
-  width: 94%; /* reduce ligeramente el ancho para que no toque el borde */
-  padding: 10px;
-  margin: 10px auto;
-  border: 1px solid #ccc;
+/* Grupo de inputs con iconos */
+.input-group {
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
   border-radius: 5px;
-  display: block; /* asegura que se centre */
+  padding: 6px 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+}
+
+.input-group i {
+  color: #555;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.input-group input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  width: 100%;
+  padding: 8px;
 }
 
 /* Botón de login */
@@ -139,15 +116,36 @@ button {
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-/* Enlace de recuperación */
-a {
-  display: block;
-  margin-top: 10px;
-  font-size: 0.9em;
-  color: #0077cc;
-  text-decoration: none;
+button:hover {
+  background-color: #004080;
+}
+
+/* Mensaje de error elegante */
+.error-popup {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.error-popup i {
+  color: #dc3545;
+  font-size: 16px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Modal institucional de bienvenida */
@@ -191,40 +189,6 @@ a {
   margin-top: 15px;
 }
 
-.acciones-extra {
-  margin-top: 10px;
-  text-align: center;
-}
-
-.acciones-extra a {
-  font-size: 0.85em;
-  color: #005baa;
-  text-decoration: underline;
-  margin: 0 8px;
-}
-
-.acciones-extra a:hover {
-  color: #003f7d;
-}
-
-.boton-agregar {
-  background-color: #28a745; /* verde institucional */
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 0.8em;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
-  width: 140px;
-}
-
-.boton-agregar:hover {
-  background-color: #218838;
-}
-
 /* Responsividad */
 @media screen and (max-width: 768px) {
   .main-container {
@@ -242,26 +206,16 @@ a {
     text-align: center;
   }
 
-  .info-panel h1 {
-    font-size: 1.5em;
-    margin-bottom: 15px;
-  }
-
-  .info-panel p {
-    font-size: 0.9em;
-    line-height: 1.4;
-  }
-
   .login-container {
     width: 100%;
     max-width: 350px;
     padding: 20px;
-    margin-top: -20px; /* reduce espacio blanco en móviles */
+    margin-top: -20px;
   }
 
   .logo {
     width: 120px;
-    margin: 8px auto 6px auto; /* menos separación en móviles */
+    margin: 8px auto 6px auto;
   }
 
   h2 {
@@ -269,7 +223,7 @@ a {
     margin-top: 2px;
   }
 
-  input {
+  .input-group input {
     font-size: 0.95em;
     padding: 8px;
   }
@@ -286,10 +240,6 @@ a {
 
   .checkmark {
     font-size: 40px;
-  }
-
-  .acciones-extra a {
-    font-size: 0.8em;
   }
 }
 
@@ -318,7 +268,7 @@ a {
     margin-top: 2px;
   }
 
-  input {
+  .input-group input {
     font-size: 0.9em;
   }
 
