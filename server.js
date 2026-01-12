@@ -328,6 +328,12 @@ app.post("/api/filtrar", async (req, res) => {
       params.push(usuario);
     }
 
+    // Si es administrador y se ingresó un usuario en el filtro 
+    if (rol === "Administrador" && usuario) { 
+      query += ` AND "CreadoPor" = $${idx++}`; 
+      params.push(usuario); 
+    }
+
     if (numeroFormulario) {
       query += ` AND "NumeroFormulario" = $${idx++}`;
       params.push(numeroFormulario);
