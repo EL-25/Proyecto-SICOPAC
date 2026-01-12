@@ -269,12 +269,17 @@ app.post('/api/acciones', async (req, res) => {
   try {
     let result;
 
+    // Ordenar por número final del formulario (ej. 00010 > 00001)
+    const ordenamiento = `
+      ORDER BY CAST(SUBSTRING("CodigoFormulario" FROM '[0-9]+$') AS INTEGER) DESC
+    `;
+
     if (rol === "Administrador") {
       // Administrador ve todos los formularios
       result = await pool.query(
         `SELECT "Usuario","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal"
          FROM "Acciones"
-         ORDER BY CAST(SUBSTRING("CodigoFormulario" FROM '[0-9]+') AS INTEGER) DESC
+         ${ordenamiento}
          LIMIT 50`
       );
     } else {
@@ -283,7 +288,7 @@ app.post('/api/acciones', async (req, res) => {
         `SELECT "Usuario","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal"
          FROM "Acciones"
          WHERE "Usuario" = $1
-         ORDER BY CAST(SUBSTRING("CodigoFormulario" FROM '[0-9]+') AS INTEGER) DESC
+         ${ordenamiento}
          LIMIT 20`,
         [usuario]
       );
