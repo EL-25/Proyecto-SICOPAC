@@ -52,6 +52,32 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ==============================
+// MAPEO DE DISTRITOS POR ADMINISTRADOR
+// ==============================
+const distritosPorUsuario = {
+  'Roberto_Carcamo': {
+    distrito: 'Antiguo Cuscatlán',
+    lugar: 'Antiguo Cuscatlán - La Libertad Este'
+  },
+  'Maria_Gonzalez': {
+    distrito: 'Nuevo Cuscatlán',
+    lugar: 'Nuevo Cuscatlán - La Libertad Este'
+  },
+  'Roxana_Reyes': {
+    distrito: 'Zaragoza',
+    lugar: 'Zaragoza - La Libertad Este'
+  },
+  'Sandra_Flores': {
+    distrito: 'Huizúcar',
+    lugar: 'Huizúcar - La Libertad Este'
+  },
+  'Zulma_Argueta': {
+    distrito: 'San José Villanueva',
+    lugar: 'San José Villanueva - La Libertad Este'
+  }
+};
+
+// ==============================
 // RUTAS API
 // ==============================
 
@@ -187,10 +213,11 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
 
   try {
     await pool.query(
-      `INSERT INTO "Usuarios" ("Usuario","NombreCompleto","Correo","Rol","FechaRegistro","Clave","Firma","Estado")
-       VALUES ($1,$2,$3,$4,$5,'',$6,true)`,
-      [usuario, nombreCompleto, correo, rol, fechaHora, firmaNombre]
+      `INSERT INTO "Usuarios" ("Usuario","NombreCompleto","Correo","Rol","FechaRegistro","Clave","Firma","Estado","CreadoPor")
+      VALUES ($1,$2,$3,$4,$5,'',$6,true,$7)`,
+      [usuario, nombreCompleto, correo, rol, fechaHora, firmaNombre, req.body.creadoPor]
     );
+
     res.status(200).json({ mensaje: 'Usuario registrado exitosamente' });
   } catch (err) {
     console.error('❌ Error en /api/agregar-usuario:', err);
@@ -367,12 +394,43 @@ app.listen(PORT, () => {
 // RUTA DE ENTRADA AL FORMULARIO (NUEVO)
 // ==============================
 // Esta ruta abre la PRIMERA página del formulario (index.ejs) en modo nuevo
-app.get("/formulario", (req, res) => {
-  const usuario = req.query.usuario || "Invitado";
-  res.render("index", { 
-    modo: "nuevo",   // ← importante: indica que es un formulario nuevo
-    data: { usuario }
-  });
+app.get("/formulario", async (req, res) => {
+  const usuarioActual = req.query.usuario || "Invitado";
+
+  try {
+    // Buscar datos del usuario en la BD
+    const result = await pool.query(
+      `SELECT "Rol","CreadoPor" FROM "Usuarios" WHERE "Usuario" = $1 AND "Estado" = true`,
+      [usuarioActual]
+    );
+
+    let distrito = '';
+    let lugar = '';
+
+    if (result.rows.length > 0) {
+      const { Rol, CreadoPor } = result.rows[0];
+
+      // Si es administrador → usa su propio distrito
+      // Si es trabajador → usa el distrito del administrador que lo creó
+      const baseUsuario = Rol === 'Administrador' ? usuarioActual : CreadoPor;
+
+      const datos = distritosPorUsuario[baseUsuario] || { distrito: '', lugar: '' };
+      distrito = datos.distrito;
+      lugar = datos.lugar;
+    }
+
+    res.render("index", { 
+      modo: "nuevo",
+      data: { 
+        usuario: usuarioActual,
+        distrito,
+        lugarPresentacion: lugar
+      }
+    });
+  } catch (err) {
+    console.error("❌ Error en /formulario:", err);
+    res.status(500).send("Error al cargar formulario");
+  }
 });
 
 // ==============================

@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(form);
     formData.append("fechaIngreso", fechaHoraIngreso);
 
+    // NUEVO: agregar el administrador creador 
+    const usuarioLogueado = localStorage.getItem("usuarioActivo"); 
+    formData.append("creadoPor", usuarioLogueado);
+
     const usuario = formData.get("usuario");
 
     // Validación previa: verificar si el usuario ya existe
