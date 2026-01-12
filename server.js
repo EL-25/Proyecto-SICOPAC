@@ -313,17 +313,18 @@ app.post("/api/filtrar", async (req, res) => {
 
   try {
     let query = `
-    SELECT "Usuario","NumeroFormulario","Declaraciones",
-    "Distrito","Municipio","FechaPresentacion"
-    FROM "Formularios"
-    WHERE 1=1
+      SELECT "CreadoPor" AS "Usuario",
+             "NumeroFormulario","Declaraciones",
+             "Distrito","Municipio","FechaPresentacion"
+      FROM "Formularios"
+      WHERE 1=1
     `;
     const params = [];
     let idx = 1;
 
     // Si no es administrador, limitar a sus propios formularios
     if (rol !== "Administrador") {
-      query += ` AND "Usuario" = $${idx++}`;
+      query += ` AND "CreadoPor" = $${idx++}`;
       params.push(usuario);
     }
 
