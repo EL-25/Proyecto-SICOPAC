@@ -1,10 +1,11 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     background: #f3f3f3;
     margin: 0;
     padding: 20px;
 }
 
+/* Contenedor principal */
 .container {
     width: 900px;
     margin: auto;
@@ -14,12 +15,35 @@ body {
     box-shadow: 0 0 10px #ccc;
 }
 
-/* Encabezados */
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
+/* Encabezado institucional */
+.encabezado-formulario {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px; /* más compacto */
 }
 
+.logo-esquina {
+    width: 80px;
+    height: auto;
+}
+
+.encabezado-formulario h1 {
+    font-size: 1.2em;
+    color: #005baa;
+    margin: 0;
+}
+
+/* Título principal */
+.titulo-formulario {
+    text-align: center;
+    margin-top: 4px;
+    margin-bottom: 15px;
+    font-size: 1.6em;
+    color: #005baa;
+}
+
+/* Etiquetas */
 label {
     font-weight: bold;
     display: block;
@@ -34,6 +58,22 @@ select {
     margin-top: 5px;
     border: 1px solid #bbb;
     border-radius: 5px;
+    font-size: 1em;
+}
+
+/* Bloques de nombre y domicilio */
+.bloque-nombre,
+.bloque-domicilio {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2em;
+    margin-bottom: 1em;
+}
+
+/* Botón añadir tercer apellido */
+.btn-tercer-apellido {
+    text-align: left;
+    margin-bottom: 1em;
 }
 
 /* Botones */
@@ -54,6 +94,29 @@ button:hover,
     background: rgb(40, 90, 150);
 }
 
+/* Botón Home */
+.btn-home {
+    background-color: #c62828;
+    color: white;
+    border: none;
+    padding: 0.5em 1.2em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 1em;
+}
+
+.btn-home:hover {
+    background-color: #a71d2a;
+}
+
+/* Bloque de botones finales */
+.botones-finales {
+    display: flex;
+    gap: 1em;
+    justify-content: flex-end;
+    margin-top: 1em;
+}
+
 /* Fieldset */
 fieldset {
     border: 1px solid #bbb;
@@ -64,15 +127,6 @@ fieldset {
 
 legend {
     font-weight: bold;
-}
-
-/* Bloque de botones */
-.botones {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 30px;
 }
 
 /* Firmas */
@@ -88,7 +142,7 @@ legend {
     width: 48%;
     text-align: center;
     margin-bottom: 1em;
-    position: relative; /* necesario para posicionar firma sobre la línea */
+    position: relative;
 }
 
 .linea-firma {
@@ -98,19 +152,17 @@ legend {
 }
 
 .firma-img-ref {
-  max-height: 100px;
-  max-width: 100%;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto 4px auto; /* centrada y con espacio justo antes de la línea */
+    max-height: 100px;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 4px auto;
 }
 
-/* Espacio reservado para firmas sin imagen */
 .firma-espacio {
     height: 100px;
 }
 
-/* Texto debajo de la firma */
 .firma-texto {
     margin-top: 8px;
 }
@@ -129,7 +181,11 @@ legend {
     padding: 20px;
   }
 
-  h2 {
+  .encabezado-formulario h1 {
+    font-size: 1em;
+  }
+
+  .titulo-formulario {
     font-size: 1.4em;
   }
 
@@ -154,9 +210,10 @@ legend {
     padding: 12px;
   }
 
-  .botones {
+  .botones-finales {
     flex-direction: column;
     gap: 12px;
+    justify-content: center;
   }
 
   .firmas {
@@ -175,7 +232,11 @@ legend {
     padding: 15px;
   }
 
-  h2 {
+  .encabezado-formulario h1 {
+    font-size: 0.95em;
+  }
+
+  .titulo-formulario {
     font-size: 1.2em;
   }
 
@@ -195,7 +256,7 @@ legend {
     padding: 10px;
   }
 
-  .botones {
+  .botones-finales {
     gap: 10px;
   }
 
