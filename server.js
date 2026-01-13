@@ -413,7 +413,7 @@ app.get('/api/usuarios', async (req, res) => {
               "NombreCompleto" AS nombre,
               "Correo" AS correo,
               "Rol" AS rol,
-              "FechaRegistro" AS fechaCreacion
+              TO_CHAR("FechaRegistro", 'YYYY-MM-DD"T"HH24:MI:SS') AS fechaCreacion
        FROM "Usuarios"
        WHERE "Estado" = true
        ORDER BY "Id" DESC`

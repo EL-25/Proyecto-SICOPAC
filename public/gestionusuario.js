@@ -3,8 +3,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Formatear fecha
   function formatearFecha(fechaISO) {
-    if (!fechaISO) return "No disponible";
-    const fecha = new Date(fechaISO);
+    if (!fechaISO) return "Sin registro";
+    const fecha = new Date(fechaISO.toString());
+    if (isNaN(fecha)) {
+      // Si no se puede convertir, mostrar el valor crudo
+      return fechaISO;
+    }
     return fecha.toLocaleString("es-SV", {
       year: "numeric",
       month: "2-digit",
@@ -21,15 +25,20 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(data => {
         usuariosBody.innerHTML = "";
         data.forEach(usuario => {
+          console.log("Usuario:", usuario.nombre, "Fecha:", usuario.fechaCreacion); // depuración
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${usuario.id}</td>
-            <td>${usuario.nombre || "No disponible"}</td>
-            <td>${usuario.correo || "No disponible"}</td>
-            <td>${usuario.rol || "No disponible"}</td>
+            <td>${usuario.nombre || "Sin registro"}</td>
+            <td>${usuario.correo || "Sin registro"}</td>
+            <td>${usuario.rol || "Sin registro"}</td>
             <td>${formatearFecha(usuario.fechaCreacion)}</td>
             <td>
-              <button class="btn-accion btn-editar" data-id="${usuario.id}" data-usuario="${usuario.usuario}" data-correo="${usuario.correo}" data-rol="${usuario.rol}">
+              <button class="btn-accion btn-editar" 
+                      data-id="${usuario.id}" 
+                      data-usuario="${usuario.usuario}" 
+                      data-correo="${usuario.correo}" 
+                      data-rol="${usuario.rol}">
                 <i class="fa-solid fa-pen"></i> Editar
               </button>
               <button class="btn-accion btn-eliminar" data-id="${usuario.id}">
@@ -69,12 +78,17 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmButtonText: "Guardar",
         cancelButtonText: "Cancelar",
         preConfirm: () => {
+          const nuevoUsuario = document.getElementById("swal-usuario").value.trim();
+          const correoNuevo = document.getElementById("swal-correo").value.trim();
+          const rolNuevo = document.getElementById("swal-rol").value.trim();
+          const claveNueva = document.getElementById("swal-clave").value.trim();
+
           return {
             usuario: usuario,
-            nuevoUsuario: document.getElementById("swal-usuario").value,
-            correo: document.getElementById("swal-correo").value,
-            rol: document.getElementById("swal-rol").value,
-            clave: document.getElementById("swal-clave").value
+            nuevoUsuario,
+            correo: correoNuevo,
+            rol: rolNuevo,
+            clave: claveNueva
           };
         }
       }).then((result) => {
