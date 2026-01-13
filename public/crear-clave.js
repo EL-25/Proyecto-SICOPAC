@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Activar checklist dinámico
   const input = document.getElementById("nuevaClave");
-  const toggleBtn = document.querySelector(".toggle-visibility i");
 
   const reqs = {
     length: document.getElementById("req-length"),
@@ -58,13 +57,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const icon = el.querySelector("i");
       icon.className = ok ? "fas fa-check-circle" : "fas fa-circle";
     });
-  });
-
-  // Toggle visibilidad contraseña
-  document.querySelector(".toggle-visibility").addEventListener("click", () => {
-    const isPassword = input.getAttribute("type") === "password";
-    input.setAttribute("type", isPassword ? "text" : "password");
-    toggleBtn.className = isPassword ? "fas fa-eye-slash" : "fas fa-eye";
   });
 
   // Botón para mostrar/ocultar requisitos
