@@ -65,11 +65,18 @@ body {
   background-color: #eef4fb;
 }
 
-/* Celda de acciones: separación entre botones */
+/* Celda de acciones: uniforme y centrada */
+.tabla-usuarios td:last-child,
+.tabla-usuarios th:last-child {
+  width: 220px;
+  white-space: nowrap;
+}
+
 .tabla-usuarios td:last-child {
   display: flex;
   justify-content: center;
-  gap: 12px; /* separación clara entre Editar y Eliminar */
+  align-items: center;
+  gap: 12px;
 }
 
 /* Botones de acción */
@@ -83,7 +90,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  min-width: 90px; /* ancho uniforme */
+  min-width: 90px;
 }
 
 .btn-editar {

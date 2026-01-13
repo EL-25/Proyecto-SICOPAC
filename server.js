@@ -413,7 +413,7 @@ app.get('/api/usuarios', async (req, res) => {
               "NombreCompleto" AS nombre,
               "Correo" AS correo,
               "Rol" AS rol,
-              TO_CHAR("FechaRegistro", 'YYYY-MM-DD"T"HH24:MI:SS') AS fechaCreacion
+              EXTRACT(EPOCH FROM "FechaRegistro") * 1000 AS fechaCreacionMs
        FROM "Usuarios"
        WHERE "Estado" = true
        ORDER BY "Id" DESC`

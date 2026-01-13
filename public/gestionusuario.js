@@ -1,14 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   const usuariosBody = document.getElementById("usuariosBody");
 
-  // Formatear fecha
-  function formatearFecha(fechaISO) {
-    if (!fechaISO) return "Sin registro";
-    const fecha = new Date(fechaISO.toString());
-    if (isNaN(fecha)) {
-      // Si no se puede convertir, mostrar el valor crudo
-      return fechaISO;
-    }
+  // Formatear fecha desde milisegundos
+  function formatearFechaMs(ms) {
+    if (!ms) return "Sin registro";
+    const fecha = new Date(Number(ms));
+    if (isNaN(fecha)) return "Sin registro";
     return fecha.toLocaleString("es-SV", {
       year: "numeric",
       month: "2-digit",
@@ -25,14 +22,14 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(data => {
         usuariosBody.innerHTML = "";
         data.forEach(usuario => {
-          console.log("Usuario:", usuario.nombre, "Fecha:", usuario.fechaCreacion); // depuración
+          console.log("Usuario:", usuario.nombre, "Fecha(ms):", usuario.fechaCreacionMs); // depuración
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${usuario.id}</td>
             <td>${usuario.nombre || "Sin registro"}</td>
             <td>${usuario.correo || "Sin registro"}</td>
             <td>${usuario.rol || "Sin registro"}</td>
-            <td>${formatearFecha(usuario.fechaCreacion)}</td>
+            <td>${formatearFechaMs(usuario.fechaCreacionMs)}</td>
             <td>
               <button class="btn-accion btn-editar" 
                       data-id="${usuario.id}" 
