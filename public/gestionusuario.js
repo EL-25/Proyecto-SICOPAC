@@ -1,20 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const usuariosBody = document.getElementById("usuariosBody");
 
-  // Formatear fecha desde milisegundos
-  function formatearFechaMs(ms) {
-    if (!ms) return "Sin registro";
-    const fecha = new Date(Number(ms));
-    if (isNaN(fecha)) return "Sin registro";
-    return fecha.toLocaleString("es-SV", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-  }
-
   // Cargar usuarios desde el backend
   function cargarUsuarios() {
     fetch("/api/usuarios")
@@ -22,14 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(data => {
         usuariosBody.innerHTML = "";
         data.forEach(usuario => {
-          console.log("Usuario:", usuario.nombre, "Fecha(ms):", usuario.fechaCreacionMs); // depuración
+          console.log("Usuario:", usuario.nombre); // depuración
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${usuario.id}</td>
             <td>${usuario.nombre || "Sin registro"}</td>
             <td>${usuario.correo || "Sin registro"}</td>
             <td>${usuario.rol || "Sin registro"}</td>
-            <td>${formatearFechaMs(usuario.fechaCreacionMs)}</td>
             <td>
               <button class="btn-accion btn-editar" 
                       data-id="${usuario.id}" 

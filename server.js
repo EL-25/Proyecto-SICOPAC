@@ -412,8 +412,7 @@ app.get('/api/usuarios', async (req, res) => {
               "Usuario" AS usuario,
               "NombreCompleto" AS nombre,
               "Correo" AS correo,
-              "Rol" AS rol,
-              EXTRACT(EPOCH FROM "FechaRegistro") * 1000 AS fechaCreacionMs
+              "Rol" AS rol
        FROM "Usuarios"
        WHERE "Estado" = true
        ORDER BY "Id" DESC`

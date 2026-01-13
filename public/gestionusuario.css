@@ -68,8 +68,9 @@ body {
 /* Celda de acciones: uniforme y centrada */
 .tabla-usuarios td:last-child,
 .tabla-usuarios th:last-child {
-  width: 220px;
+  width: 240px;           /* ancho fijo para consistencia */
   white-space: nowrap;
+  vertical-align: middle; /* asegura que el rectángulo se vea completo */
 }
 
 .tabla-usuarios td:last-child {
@@ -77,6 +78,7 @@ body {
   justify-content: center;
   align-items: center;
   gap: 12px;
+  min-height: 48px;       /* altura mínima para rectángulo completo */
 }
 
 /* Botones de acción */
