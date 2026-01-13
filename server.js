@@ -610,36 +610,38 @@ app.post("/guardar", async (req, res) => {
     // Aquí sigue el INSERT en PostgreSQL (segunda parte)
         // INSERT con parámetros en PostgreSQL
     await pool.query(
-      `INSERT INTO "Formularios" (
-        "NumeroFormulario","PrimerNombre","SegundoNombre","PrimerApellido","SegundoApellido","TercerApellido",
-        "PrimerNombreTitular","SegundoNombreTitular","PrimerApellidoTitular","SegundoApellidoTitular","TercerApellidoTitular",
-        "PrimerNombrePadre","SegundoNombrePadre","PrimerApellidoPadre","SegundoApellidoPadre",
-        "PrimerNombreMadre","SegundoNombreMadre","PrimerApellidoMadre","SegundoApellidoMadre","TercerApellidoMadre",
-        "Municipio","Distrito","Canton","Colonia","Calle","NumeroCasa","LugarHecho",
-        "FechaPresentacion","HoraPresentacion","Telefono","Correo","Declaraciones","DescripcionDocumentacion",
-        "RefLLE","LugarPresentacion","Contacto","Plazo","DocTipo","DUI","Pasaporte","OtroDoc",
-        "Titular","Caracter","DocTitular","DuiTitular","NuiTitular","OtroTitular","FechaHecho"
-      ) VALUES (
-        $1,$2,$3,$4,$5,$6,
-        $7,$8,$9,$10,$11,
-        $12,$13,$14,$15,
-        $16,$17,$18,$19,$20,
-        $21,$22,$23,$24,$25,$26,$27,
-        $28,$29,$30,$31,$32,$33,
-        $34,$35,$36,$37,$38,$39,$40,$41,
-        $42,$43,$44,$45,$46,$47,$48
-      )`,
-      [
-        datos.codigoFormulario, datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido,
-        datos.primerNombreTitular, datos.segundoNombreTitular, datos.primerApellidoTitular, datos.segundoApellidoTitular, datos.tercerApellidoTitular,
-        datos.primerNombrePadre, datos.segundoNombrePadre, datos.primerApellidoPadre, datos.segundoApellidoPadre,
-        datos.primerNombreMadre, datos.segundoNombreMadre, datos.primerApellidoMadre, datos.segundoApellidoMadre, datos.tercerApellidoMadre,
-        datos.municipio, datos.distrito, datos.canton, datos.colonia, datos.calle, datos.numeroCasa, datos.lugarHecho,
-        datos.fechaPresentacion, datos.horaPresentacion, datos.telefono, datos.correo, datos.declaracion, datos.descripcionDocumentacion,
-        datos.refLLE, datos.lugarPresentacion, datos.contacto, datos.plazo, datos.docTipo, datos.dui, datos.pasaporte, datos.otroDoc,
-        datos.titular, datos.caracter, datos.docTitular, datos.duiTitular, datos.nuiTitular, datos.otroTitular, datos.fechaHecho
-      ]
-    );
+  `INSERT INTO "Formularios" (
+    "NumeroFormulario","PrimerNombre","SegundoNombre","PrimerApellido","SegundoApellido","TercerApellido",
+    "PrimerNombreTitular","SegundoNombreTitular","PrimerApellidoTitular","SegundoApellidoTitular","TercerApellidoTitular",
+    "PrimerNombrePadre","SegundoNombrePadre","PrimerApellidoPadre","SegundoApellidoPadre",
+    "PrimerNombreMadre","SegundoNombreMadre","PrimerApellidoMadre","SegundoApellidoMadre","TercerApellidoMadre",
+    "Municipio","Distrito","Canton","Colonia","Calle","NumeroCasa","LugarHecho",
+    "FechaPresentacion","HoraPresentacion","Telefono","Correo","Declaraciones","DescripcionDocumentacion",
+    "RefLLE","LugarPresentacion","Contacto","Plazo","DocTipo","DUI","Pasaporte","OtroDoc",
+    "Titular","Caracter","DocTitular","DuiTitular","NuiTitular","OtroTitular","FechaHecho",
+    "CreadoPor"
+  ) VALUES (
+    $1,$2,$3,$4,$5,$6,
+    $7,$8,$9,$10,$11,
+    $12,$13,$14,$15,
+    $16,$17,$18,$19,$20,
+    $21,$22,$23,$24,$25,$26,$27,
+    $28,$29,$30,$31,$32,$33,
+    $34,$35,$36,$37,$38,$39,$40,$41,
+    $42,$43,$44,$45,$46,$47,$48,$49
+  )`,
+  [
+    datos.codigoFormulario, datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido,
+    datos.primerNombreTitular, datos.segundoNombreTitular, datos.primerApellidoTitular, datos.segundoApellidoTitular, datos.tercerApellidoTitular,
+    datos.primerNombrePadre, datos.segundoNombrePadre, datos.primerApellidoPadre, datos.segundoApellidoPadre,
+    datos.primerNombreMadre, datos.segundoNombreMadre, datos.primerApellidoMadre, datos.segundoApellidoMadre, datos.tercerApellidoMadre,
+    datos.municipio, datos.distrito, datos.canton, datos.colonia, datos.calle, datos.numeroCasa, datos.lugarHecho,
+    datos.fechaPresentacion, datos.horaPresentacion, datos.telefono, datos.correo, datos.declaracion, datos.descripcionDocumentacion,
+    datos.refLLE, datos.lugarPresentacion, datos.contacto, datos.plazo, datos.docTipo, datos.dui, datos.pasaporte, datos.otroDoc,
+    datos.titular, datos.caracter, datos.docTitular, datos.duiTitular, datos.nuiTitular, datos.otroTitular, datos.fechaHecho,
+    datos.usuario
+  ]
+);
 
     // Registrar acción en la tabla Acciones
     await pool.query(
