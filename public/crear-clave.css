@@ -54,11 +54,11 @@ p {
   box-sizing: border-box;
 }
 
-/* Botón del ojo alineado a la derecha dentro del input */
 .toggle-visibility {
   position: absolute;
-  top: 0;
+  top: 50%; /* centrado vertical */
   right: 0;
+  transform: translateY(-50%); /* ajuste fino */
   width: 44px;
   height: 44px;
   display: flex;
@@ -75,11 +75,6 @@ p {
   font-size: 18px;
   line-height: 1;
   vertical-align: middle;
-}
-
-.toggle-visibility:hover {
-  background: #e9f2ff;
-  color: #005baa;
 }
 
 /* Botón para ver requisitos */
