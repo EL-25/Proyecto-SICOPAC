@@ -79,7 +79,7 @@
 
       <div id="campoDUI" style="display:none;">
         <label>Número de DUI:</label>
-        <input type="text" id="duiInput" name="dui" value="<%= data.dui || '' %>">
+        <input type="text" id="duiInput" name="dui" value="<%= data.dui || '' %>" maxlength="10" placeholder="00000000-0">
       </div>
 
       <div id="campoPasaporte" style="display:none;">
@@ -171,7 +171,7 @@
       <br><br>
 
       <label>Correo electrónico:</label>
-      <input type="email" name="correo" value="<%= data.correo || '' %>" required>
+      <input type="email" id="correoInput" name="correo" value="<%= data.correo || '' %>" required>
       <br><br>
 
       <div class="botones-finales">
@@ -308,26 +308,58 @@
   </script>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const telefonoInput = document.getElementById("telefono");
-      const form = document.querySelector("form");
-      telefonoInput.addEventListener("input", (e) => {
-        let valor = e.target.value.replace(/\D/g, "");
-        if (valor.length > 4) {
-          valor = valor.slice(0, 4) + "-" + valor.slice(4, 8);
-        }
-        e.target.value = valor;
-      });
-      form.addEventListener("submit", (e) => {
-        const regex = /^\d{4}-\d{4}$/;
-        if (!regex.test(telefonoInput.value)) {
-          e.preventDefault();
-          alert("El teléfono debe tener el formato 0000-0000");
-          telefonoInput.focus();
-        }
-      });
-    });
-  </script>
+document.addEventListener("DOMContentLoaded", () => {
+  const telefonoInput = document.getElementById("telefono");
+  const duiInput = document.getElementById("duiInput");
+  const correoInput = document.getElementById("correoInput");
+  const form = document.querySelector("form");
+
+  // Máscara para teléfono
+  telefonoInput.addEventListener("input", (e) => {
+    let valor = e.target.value.replace(/\D/g, "");
+    if (valor.length > 4) {
+      valor = valor.slice(0, 4) + "-" + valor.slice(4, 8);
+    }
+    e.target.value = valor;
+  });
+
+  // Máscara para DUI
+  duiInput.addEventListener("input", (e) => {
+    let valor = e.target.value.replace(/\D/g, "");
+    if (valor.length > 8) {
+      valor = valor.slice(0, 8) + "-" + valor.slice(8, 9);
+    }
+    e.target.value = valor;
+  });
+
+  // Validaciones al enviar
+  form.addEventListener("submit", (e) => {
+    const regexTel = /^\d{4}-\d{4}$/;
+    const regexDui = /^\d{8}-\d{1}$/;
+
+    if (telefonoInput && !regexTel.test(telefonoInput.value)) {
+      e.preventDefault();
+      alert("El teléfono debe tener el formato 0000-0000");
+      telefonoInput.focus();
+      return;
+    }
+
+    if (duiInput && duiInput.style.display !== "none" && !regexDui.test(duiInput.value)) {
+      e.preventDefault();
+      alert("El DUI debe tener el formato ########-#");
+      duiInput.focus();
+      return;
+    }
+
+    if (correoInput && !correoInput.value.includes("@")) {
+      e.preventDefault();
+      alert("El correo debe contener '@'");
+      correoInput.focus();
+      return;
+    }
+  });
+});
+</script>
 
     <script>
     document.addEventListener("DOMContentLoaded", () => {
