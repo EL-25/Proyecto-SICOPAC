@@ -607,6 +607,9 @@ app.post("/guardar", async (req, res) => {
         : null
     };
 
+    console.log("👉 Usuario recibido:", datos.usuario); 
+    console.log("👉 Código de formulario recibido:", datos.codigoFormulario);
+
     // Aquí sigue el INSERT en PostgreSQL (segunda parte)
         // INSERT con parámetros en PostgreSQL
     await pool.query(
@@ -705,15 +708,19 @@ app.post("/guardar", async (req, res) => {
       `SELECT "Firma" FROM "Usuarios" WHERE LOWER("Usuario") = LOWER($1) AND "Estado" = true`,
       [datos.usuario]
     );
+
+    console.log("👉 Resultado consulta firma:", firmaResult.rows);
     
     let firmaUsuario = null;
     if (firmaResult.rows.length > 0) {
       // Usa encodeURIComponent y URL absoluta como en mis-datos.js
       firmaUsuario = `https://proyecto-sicopac-production.up.railway.app/img/firma/${encodeURIComponent(firmaResult.rows[0].Firma)}`;
-}
+    }
 
-// Agregar la firma al objeto datosConCodigo
-datosConCodigo.firmaUsuario = firmaUsuario;
+    console.log("👉 Ruta construida para firmaUsuario:", firmaUsuario);
+
+    // Agregar la firma al objeto datosConCodigo
+    datosConCodigo.firmaUsuario = firmaUsuario;
       
       // Renderizar vista previa con los datos completos (incluyendo la firma)
       res.render("pdf-preview", { 
