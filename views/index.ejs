@@ -13,7 +13,6 @@
     <!-- Encabezado institucional -->
     <header class="encabezado-formulario">
       <img src="/img/LogoAlcaldia.png" alt="Logo institucional" class="logo-esquina">
-      <h1>ALCALDÍA MUNICIPAL LA LIBERTAD ESTE</h1>
     </header>
 
     <!-- Título principal -->
@@ -96,64 +95,61 @@
             <br><br>
 
       <label>Nombre:</label>
-      <div class="bloque-nombre">
+      <div class="fila-nombre">
         <div>
           <label for="primerNombre">Primer Nombre:</label>
           <input type="text" name="primerNombre" id="primerNombre" value="<%= data.primerNombre || '' %>" required>
-          
-          <label for="primerApellido">Primer Apellido:</label>
-          <input type="text" name="primerApellido" id="primerApellido" value="<%= data.primerApellido || '' %>" required>
         </div>
-        
         <div>
           <label for="segundoNombre">Segundo Nombre:</label>
           <input type="text" name="segundoNombre" id="segundoNombre" value="<%= data.segundoNombre || '' %>">
-          
+        </div>
+        <div>
+          <label for="primerApellido">Primer Apellido:</label>
+          <input type="text" name="primerApellido" id="primerApellido" value="<%= data.primerApellido || '' %>" required>
+        </div>
+        <div>
           <label for="segundoApellido">Segundo Apellido:</label>
-          <input type="text" name="segundoApellido" id="segundoApellido" value="<%= data.segundoApellido || '' %>">    
-        </div>
-      </div>
+          <input type="text" name="segundoApellido" id="segundoApellido" value="<%= data.segundoApellido || '' %>">
+          <button type="button" class="btn-tercer-apellido-mini" onclick="document.getElementById('tercerApellidoContainer').style.display='block'; this.style.display='none';">
+      + Tercer Apellido
+    </button>
+  </div>
+</div>
 
-      <div class="btn-tercer-apellido">
-        <button type="button" onclick="document.getElementById('tercerApellidoContainer').style.display='block'; this.style.display='none';">
-          + Añadir Tercer Apellido
-        </button>
-      </div>
+<div id="tercerApellidoContainer" style="display: none;">
+  <label for="tercerApellido">Tercer Apellido (solo si aplica):</label>
+  <input type="text" name="tercerApellido" id="tercerApellido" value="<%= data.tercerApellido || '' %>">
+</div>
 
-      <div id="tercerApellidoContainer" style="display: none;">
-        <label for="tercerApellido">Tercer Apellido (solo si aplica):</label><br>
-        <input type="text" name="tercerApellido" id="tercerApellido" value="<%= data.tercerApellido || '' %>">
-      </div>
-
-      <!-- Domicilio -->
-      <label>Domicilio:</label>
-      <% const cantonVal = data.canton || ''; %>
-      <div class="bloque-domicilio">
-        <div>
-          <label for="canton">Cantón:</label>
-          <select name="canton" id="canton">
-            <option value="">Seleccione</option>
-            <option value="Ojos de Agua" <%= cantonVal === 'Ojos de Agua' ? 'selected' : '' %>>Ojos de Agua</option>
-            <option value="Jiñuco" <%= cantonVal === 'Jiñuco' ? 'selected' : '' %>>Jiñuco</option>
-            <option value="Madrecacao" <%= cantonVal === 'Madrecacao' ? 'selected' : '' %>>Madrecacao</option>
-            <option value="La Palma" <%= cantonVal === 'La Palma' ? 'selected' : '' %>>La Palma</option>
-            <option value="Los Naranjos" <%= cantonVal === 'Los Naranjos' ? 'selected' : '' %>>Los Naranjos</option>
-            <option value="El Carrizal" <%= cantonVal === 'El Carrizal' ? 'selected' : '' %>>El Carrizal</option>
-            <option value="Cujuapa" <%= cantonVal === 'Cujuapa' ? 'selected' : '' %>>Cujuapa</option>
-          </select>
-
-          <label for="colonia">Colonia / Barrio:</label>
-          <input type="text" name="colonia" id="colonia" value="<%= data.colonia || '' %>" placeholder="Ej. Santa Marta">
-        </div>
-
-        <div>
-          <label for="calle">Calle o Pasaje:</label>
-          <input type="text" name="calle" id="calle" value="<%= data.calle || '' %>" placeholder="Ej. Pasaje El Triunfo">
-
-          <label for="numeroCasa">Número de casa:</label>
-          <input type="text" name="numeroCasa" id="numeroCasa" value="<%= data.numeroCasa || '' %>" placeholder="Ej. #23">
-        </div>
-      </div>
+<label>Domicilio:</label>
+<div class="fila-domicilio">
+  <div>
+    <label for="canton">Cantón:</label>
+    <select name="canton" id="canton">
+      <option value="">Seleccione</option>
+      <option value="Ojos de Agua" <%= cantonVal === 'Ojos de Agua' ? 'selected' : '' %>>Ojos de Agua</option>
+      <option value="Jiñuco" <%= cantonVal === 'Jiñuco' ? 'selected' : '' %>>Jiñuco</option>
+      <option value="Madrecacao" <%= cantonVal === 'Madrecacao' ? 'selected' : '' %>>Madrecacao</option>
+      <option value="La Palma" <%= cantonVal === 'La Palma' ? 'selected' : '' %>>La Palma</option>
+      <option value="Los Naranjos" <%= cantonVal === 'Los Naranjos' ? 'selected' : '' %>>Los Naranjos</option>
+      <option value="El Carrizal" <%= cantonVal === 'El Carrizal' ? 'selected' : '' %>>El Carrizal</option>
+      <option value="Cujuapa" <%= cantonVal === 'Cujuapa' ? 'selected' : '' %>>Cujuapa</option>
+    </select>
+  </div>
+  <div>
+    <label for="calle">Calle o Pasaje:</label>
+    <input type="text" name="calle" id="calle" value="<%= data.calle || '' %>" placeholder="Ej. Pasaje El Triunfo">
+  </div>
+  <div>
+    <label for="colonia">Colonia / Barrio:</label>
+    <input type="text" name="colonia" id="colonia" value="<%= data.colonia || '' %>" placeholder="Ej. Santa Marta">
+  </div>
+  <div>
+    <label for="numeroCasa">Número de casa:</label>
+    <input type="text" name="numeroCasa" id="numeroCasa" value="<%= data.numeroCasa || '' %>" placeholder="Ej. #23">
+  </div>
+</div>
 
             <label>¿Es el mismo titular del asiento?</label>
       <% const titularVal = data.titular || ''; %>

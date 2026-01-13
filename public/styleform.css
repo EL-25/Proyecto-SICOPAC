@@ -28,12 +28,6 @@ body {
     height: auto;
 }
 
-.encabezado-formulario h1 {
-    font-size: 1.2em;
-    color: #005baa;
-    margin: 0;
-}
-
 /* Título principal */
 .titulo-formulario {
     text-align: center;
@@ -61,19 +55,35 @@ select {
     font-size: 1em;
 }
 
-/* Bloques de nombre y domicilio */
-.bloque-nombre,
-.bloque-domicilio {
+/* Bloques horizontales de nombre y domicilio */
+.fila-nombre,
+.fila-domicilio {
     display: flex;
     flex-wrap: wrap;
-    gap: 2em;
+    gap: 1em;
     margin-bottom: 1em;
 }
 
-/* Botón añadir tercer apellido */
-.btn-tercer-apellido {
-    text-align: left;
-    margin-bottom: 1em;
+.fila-nombre > div,
+.fila-domicilio > div {
+    flex: 1 1 22%;
+    min-width: 180px;
+}
+
+/* Botón añadir tercer apellido pequeño */
+.btn-tercer-apellido-mini {
+    margin-top: 6px;
+    padding: 4px 8px;
+    font-size: 0.85em;
+    background-color: #005baa;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-tercer-apellido-mini:hover {
+    background-color: #003f7d;
 }
 
 /* Botones */
@@ -181,10 +191,6 @@ legend {
     padding: 20px;
   }
 
-  .encabezado-formulario h1 {
-    font-size: 1em;
-  }
-
   .titulo-formulario {
     font-size: 1.4em;
   }
@@ -224,16 +230,18 @@ legend {
   .firma-bloque {
     width: 100%;
   }
+
+  .fila-nombre > div,
+  .fila-domicilio > div {
+    flex: 1 1 45%;
+    min-width: 160px;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .container {
     width: 100%;
     padding: 15px;
-  }
-
-  .encabezado-formulario h1 {
-    font-size: 0.95em;
   }
 
   .titulo-formulario {
@@ -263,5 +271,10 @@ legend {
   .firma-img-ref {
     max-width: 90%;
     height: auto;
+  }
+
+  .fila-nombre > div,
+  .fila-domicilio > div {
+    flex: 1 1 100%;
   }
 }
