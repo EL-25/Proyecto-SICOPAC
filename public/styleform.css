@@ -72,14 +72,17 @@ select {
 
 /* Botón añadir tercer apellido pequeño */
 .btn-tercer-apellido-mini {
-    margin-top: 6px;
-    padding: 4px 8px;
-    font-size: 0.85em;
-    background-color: #005baa;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-top: 6px;
+  padding: 4px 8px;
+  font-size: 0.85em;
+  background-color: #005baa;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: right;
 }
 
 .btn-tercer-apellido-mini:hover {
