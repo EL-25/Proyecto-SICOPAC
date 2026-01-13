@@ -424,22 +424,59 @@ app.get('/api/usuarios', async (req, res) => {
   }
 });
 
-// Eliminar usuario por ID
+// Actualizar usuario
+app.post('/api/actualizar-usuario', async (req, res) => {
+  const { usuario, nuevoUsuario, correo, rol, clave } = req.body;
+
+  try {
+    if (clave && clave.trim() !== "") {
+      // Actualizar incluyendo la clave
+      await pool.query(
+        `UPDATE "Usuarios"
+         SET "Usuario" = $1,
+             "Correo" = $2,
+             "Rol" = $3,
+             "Clave" = crypt($4, gen_salt('bf'))
+         WHERE "Usuario" = $5`,
+        [nuevoUsuario, correo, rol, clave, usuario]
+      );
+    } else {
+      // Actualizar sin tocar la clave
+      await pool.query(
+        `UPDATE "Usuarios"
+         SET "Usuario" = $1,
+             "Correo" = $2,
+             "Rol" = $3
+         WHERE "Usuario" = $4`,
+        [nuevoUsuario, correo, rol, usuario]
+      );
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ Error al actualizar usuario:", err);
+    res.status(500).json({ error: "Error al actualizar usuario" });
+  }
+});
+
+// Eliminar usuario por ID (hard delete)
 app.delete('/api/usuarios/:id', async (req, res) => {
   const { id } = req.params;
+
   try {
     const result = await pool.query(
-      `UPDATE "Usuarios"
-       SET "Estado" = false
+      `DELETE FROM "Usuarios"
        WHERE "Id" = $1`,
       [id]
     );
 
     if (result.rowCount === 0) {
+      // No se encontró ningún usuario con ese Id
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    res.status(200).json({ mensaje: "Usuario eliminado correctamente" });
+    // Usuario eliminado definitivamente
+    res.json({ success: true, mensaje: "Usuario eliminado definitivamente" });
   } catch (err) {
     console.error("❌ Error en DELETE /api/usuarios/:id:", err);
     res.status(500).json({ error: "Error al eliminar usuario" });

@@ -53,17 +53,29 @@ document.addEventListener("DOMContentLoaded", () => {
           <input id="swal-usuario" class="swal2-input" placeholder="Usuario" value="${usuario}">
           <input id="swal-correo" class="swal2-input" placeholder="Correo" value="${correo}">
           <input id="swal-rol" class="swal2-input" placeholder="Rol" value="${rol}">
-          <input id="swal-clave" type="password" class="swal2-input" placeholder="Nueva clave">
+          <button id="btn-toggle-clave" class="swal2-confirm swal2-styled" style="background-color:#005baa; margin-top:10px;">
+            Cambiar clave
+          </button>
+          <div id="clave-container" style="display:none; margin-top:10px;">
+            <input id="swal-clave" type="password" class="swal2-input" placeholder="Nueva clave">
+          </div>
         `,
         focusConfirm: false,
         showCancelButton: true,
         confirmButtonText: "Guardar",
         cancelButtonText: "Cancelar",
+        didOpen: () => {
+          const btnToggle = document.getElementById("btn-toggle-clave");
+          const claveContainer = document.getElementById("clave-container");
+          btnToggle.addEventListener("click", () => {
+            claveContainer.style.display = claveContainer.style.display === "none" ? "block" : "none";
+          });
+        },
         preConfirm: () => {
           const nuevoUsuario = document.getElementById("swal-usuario").value.trim();
           const correoNuevo = document.getElementById("swal-correo").value.trim();
           const rolNuevo = document.getElementById("swal-rol").value.trim();
-          const claveNueva = document.getElementById("swal-clave").value.trim();
+          const claveNueva = document.getElementById("swal-clave") ? document.getElementById("swal-clave").value.trim() : "";
 
           return {
             usuario: usuario,
