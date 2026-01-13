@@ -92,6 +92,47 @@
     .btn-verde-header:hover {
       background-color: #1b5e20;
     }
+
+    /* Contenedor de botones en perfil */
+    .botones-perfil {
+      display: flex;
+      justify-content: space-between; /* Editar a la izquierda, Gestionar a la derecha */
+      margin-top: 1em;
+    }
+
+    .btn-editar {
+      background-color: steelblue;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-editar:hover {
+      background-color: rgb(40, 90, 150);
+    }
+
+    .btn-gestion {
+      background-color: #005baa;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-gestion:hover {
+      background-color: #003f73;
+    }
   </style>
 </head>
 <body class="fondo-datos">
@@ -133,10 +174,18 @@
       <img src="" alt="Firma Digital" class="firma-img" id="firma-img" />
     </div>
 
-    <!-- Botón Editar datos --> 
-     <button class="btn-editar" onclick="activarEdicion()"> 
-      <i class="fas fa-edit"></i> Editar datos 
-    </button>
+    <!-- Contenedor de botones -->
+    <div class="botones-perfil">
+      <!-- Botón Editar datos -->
+      <button class="btn-editar" onclick="activarEdicion()"> 
+        <i class="fas fa-edit"></i> Editar datos 
+      </button>
+
+      <!-- Botón Gestionar Usuarios (solo visible para admin) -->
+      <button class="btn-gestion" id="btnGestionUsuarios" style="display:none;" onclick="window.location.href='gestionusuarios.html'"> 
+        <i class="fas fa-users-cog"></i> Gestionar Usuarios 
+      </button>
+    </div>
   </section>
 
   <!-- Scripts -->
@@ -156,10 +205,11 @@
       window.location.href = "login.html";
     }
 
-    // Mostrar botón solo si el rol es Administrador
+    // Mostrar botones solo si el rol es Administrador
     document.addEventListener("DOMContentLoaded", () => {
       const rol = localStorage.getItem("rolActivo");
       if (rol === "Administrador") {
+        // Botón en header
         const contenedor = document.getElementById("botonAdminHeader");
         if (contenedor) {
           const btn = document.createElement("button");
@@ -168,6 +218,8 @@
           btn.onclick = () => window.location.href = "agregar-usuario.html";
           contenedor.appendChild(btn);
         }
+        // Botón Gestionar Usuarios en perfil
+        document.getElementById("btnGestionUsuarios").style.display = "inline-flex";
       }
     });
   </script>

@@ -1,0 +1,205 @@
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f3f3f3;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Contenedor principal */
+.container {
+  max-width: 1000px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+}
+
+/* Encabezado institucional */
+.encabezado-formulario {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.logo-esquina {
+  width: 120px;
+  height: auto;
+}
+
+.titulo-formulario {
+  text-align: center;
+  flex: 1;
+  font-size: 1.6em;
+  color: #005baa;
+  margin: 0;
+}
+
+/* Tabla de usuarios */
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.95em;
+}
+
+.tabla-usuarios th,
+.tabla-usuarios td {
+  border: 1px solid #bbb;
+  padding: 10px;
+  text-align: center;
+}
+
+.tabla-usuarios th {
+  background-color: #005baa;
+  color: white;
+  font-weight: bold;
+}
+
+.tabla-usuarios tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tabla-usuarios tr:hover {
+  background-color: #eef4fb;
+}
+
+/* Botones de acción */
+.btn-accion {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-editar {
+  background-color: steelblue;
+  color: white;
+}
+
+.btn-editar:hover {
+  background-color: rgb(40, 90, 150);
+}
+
+.btn-eliminar {
+  background-color: #c62828;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background-color: #a71d2a;
+}
+
+/* Íconos dentro de botones */
+.btn-accion i {
+  font-size: 0.95em;
+  vertical-align: middle;
+}
+
+/* Botón volver */
+.btn-home {
+  background-color: #c62828;
+  color: white;
+  border: none;
+  padding: 0.6em 1.4em;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-home:hover {
+  background-color: #a71d2a;
+}
+
+/* Bloque de botones finales */
+.botones-finales {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Accesibilidad: foco visible */
+.btn-accion:focus,
+.btn-home:focus {
+  outline: 2px solid #005baa;
+  outline-offset: 2px;
+}
+
+/* Animación suave en hover */
+.btn-accion,
+.btn-home {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-accion:hover,
+.btn-home:hover {
+  transform: scale(1.05);
+}
+
+/* 🔹 Responsividad */
+@media (max-width: 768px) {
+  .tabla-usuarios {
+    font-size: 0.85em;
+  }
+
+  .tabla-usuarios th,
+  .tabla-usuarios td {
+    padding: 6px;
+  }
+
+  .encabezado-formulario {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .logo-esquina {
+    width: 100px;
+    margin-bottom: 10px;
+  }
+
+  .titulo-formulario {
+    font-size: 1.3em;
+  }
+
+  .btn-accion {
+    display: block;
+    width: 100%;
+    margin: 4px 0;
+  }
+
+  .botones-finales {
+    justify-content: center;
+  }
+
+  .btn-home {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .tabla-usuarios {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .tabla-usuarios th,
+  .tabla-usuarios td {
+    font-size: 0.8em;
+  }
+
+  .titulo-formulario {
+    font-size: 1.1em;
+  }
+}

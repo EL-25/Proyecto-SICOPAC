@@ -129,6 +129,13 @@ body.fondo-datos::before {
   margin-top: 20px;
 }
 
+/* Contenedor de botones en perfil */
+.botones-perfil {
+  display: flex;
+  justify-content: space-between; /* Editar a la izquierda, Gestionar a la derecha */
+  margin-top: 1em;
+}
+
 /* Botón editar */
 .btn-editar {
   background-color: #0077cc;
@@ -138,7 +145,6 @@ body.fondo-datos::before {
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 20px;
   transition: background-color 0.3s ease, transform 0.2s ease;
   display: inline-flex;
   align-items: center;
@@ -146,6 +152,25 @@ body.fondo-datos::before {
 }
 .btn-editar:hover {
   background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Botón gestionar usuarios */
+.btn-gestion {
+  background-color: #005baa;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-gestion:hover {
+  background-color: #003f73;
   transform: scale(1.05);
 }
 
@@ -342,12 +367,15 @@ body.fondo-datos::before {
   .modal-contenido { width: 90%; padding: 1.5em; }
 
   /* Botones apilados en pantallas medianas */
-  .botones-edicion {
+  .botones-edicion,
+  .botones-perfil {
     flex-direction: column;
     gap: 10px;
   }
   .btn-guardar,
-  .btn-volver {
+  .btn-volver,
+  .btn-editar,
+  .btn-gestion {
     width: 100%;
     justify-content: center;
   }

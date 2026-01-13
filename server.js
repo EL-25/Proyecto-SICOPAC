@@ -401,6 +401,52 @@ app.get("/api/nuevo-codigo", async (req, res) => {
 });
 
 // ==============================
+// Gestión de Usuarios
+// ==============================
+
+// Obtener todos los usuarios (para gestión)
+app.get('/api/usuarios', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT "Id" AS id,
+              "Usuario" AS usuario,
+              "Correo" AS correo,
+              "Rol" AS rol,
+              "FechaRegistro" AS fechaCreacion
+       FROM "Usuarios"
+       WHERE "Estado" = true
+       ORDER BY "Id" DESC`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("❌ Error en /api/usuarios:", err);
+    res.status(500).json({ error: "Error al obtener usuarios" });
+  }
+});
+
+// Eliminar usuario por ID
+app.delete('/api/usuarios/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      `UPDATE "Usuarios"
+       SET "Estado" = false
+       WHERE "Id" = $1`,
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    res.status(200).json({ mensaje: "Usuario eliminado correctamente" });
+  } catch (err) {
+    console.error("❌ Error en DELETE /api/usuarios/:id:", err);
+    res.status(500).json({ error: "Error al eliminar usuario" });
+  }
+});
+
+// ==============================
 // INICIO DEL SERVIDOR
 // ==============================
 app.listen(PORT, () => {

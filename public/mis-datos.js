@@ -40,8 +40,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       firmaImg.style.display = "none";
     }
 
-    // Mostrar botón solo si el rol es Administrador (en header)
+    // Mostrar botones solo si el rol es Administrador
     if (datos.rol === "Administrador") {
+      // Botón en header
       const contenedor = document.getElementById("botonAdminHeader");
       if (contenedor) {
         const btn = document.createElement("button");
@@ -49,6 +50,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         btn.className = "btn-verde-header";
         btn.onclick = () => window.location.href = "agregar-usuario.html";
         contenedor.appendChild(btn);
+      }
+
+      // Botón Gestionar Usuarios en perfil
+      const btnGestion = document.getElementById("btnGestionUsuarios");
+      if (btnGestion) {
+        btnGestion.style.display = "inline-flex";
       }
     }
 
@@ -159,7 +166,7 @@ function activarEdicion() {
     </form>
   `;
 
-  // ✅ Evento para enviar cambios
+  // Evento para enviar cambios
   document.getElementById("formEditarUsuario").addEventListener("submit", async function(e) {
     e.preventDefault();
 
@@ -196,7 +203,7 @@ function activarEdicion() {
     }
   });
 
-  // ✅ Evento para volver sin guardar (restaurar contenido original)
+  // Evento para volver sin guardar (restaurar contenido original)
   document.getElementById("btnVolverPerfil").addEventListener("click", () => {
     perfil.innerHTML = contenidoOriginal;
   });
