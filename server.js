@@ -702,17 +702,18 @@ app.post("/guardar", async (req, res) => {
 
     // Obtener firma del usuario que llenó el formulario
     const firmaResult = await pool.query(
-      `SELECT "Firma" FROM "Usuarios" WHERE "Usuario" = $1 AND "Estado" = true`,
+      `SELECT "Firma" FROM "Usuarios" WHERE LOWER("Usuario") = LOWER($1) AND "Estado" = true`,
       [datos.usuario]
     );
     
     let firmaUsuario = null;
     if (firmaResult.rows.length > 0) {
-      firmaUsuario = '/img/firma/' + firmaResult.rows[0].Firma; // ruta accesible
-      }
-      
-      // Agregar la firma al objeto datosConCodigo
-      datosConCodigo.firmaUsuario = firmaUsuario;
+      // Usa encodeURIComponent y URL absoluta como en mis-datos.js
+      firmaUsuario = `https://proyecto-sicopac-production.up.railway.app/img/firma/${encodeURIComponent(firmaResult.rows[0].Firma)}`;
+}
+
+// Agregar la firma al objeto datosConCodigo
+datosConCodigo.firmaUsuario = firmaUsuario;
       
       // Renderizar vista previa con los datos completos (incluyendo la firma)
       res.render("pdf-preview", { 
