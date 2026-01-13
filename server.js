@@ -410,6 +410,7 @@ app.get('/api/usuarios', async (req, res) => {
     const result = await pool.query(
       `SELECT "Id" AS id,
               "Usuario" AS usuario,
+              "NombreCompleto" AS nombre,
               "Correo" AS correo,
               "Rol" AS rol,
               "FechaRegistro" AS fechaCreacion
