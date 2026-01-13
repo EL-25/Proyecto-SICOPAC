@@ -75,6 +75,7 @@ p {
   font-size: 18px;
   line-height: 1;
   vertical-align: middle;
+  transform: translateY(-1px); /* ajuste fino */
 }
 
 /* Botón para ver requisitos */
