@@ -74,19 +74,19 @@
     .btn {
       background-color: #2e7d32;
       color: white;
-      padding: 0.5em 1.2em;
+      padding: 0.7em 1.5em; /* más grande */
       border-radius: 6px;
       text-decoration: none;
-      font-size: 10pt;
+      font-size: 11pt; /* más grande */
     }
     button {
       background-color: #1976d2;
       color: white;
       border: none;
-      padding: 0.5em 1.2em;
+      padding: 0.7em 1.5em; /* más grande */
       border-radius: 6px;
       cursor: pointer;
-      font-size: 10pt;
+      font-size: 11pt; /* más grande */
     }
     @media print {
       @page {
@@ -161,7 +161,39 @@
       <p><strong>No. de Presentación REF/LLE:</strong> <%= data.refLLE || '—' %></p>
     </div>
 
-    <!-- Bloque datos titular -->
+    <!-- Bloque datos solicitante -->
+    <div class="bloque">
+      <h3>Datos del solicitante</h3>
+      <div class="grid-2">
+        <p><strong>Nombre:</strong> <%= data.nombreSolicitante || '—' %></p>
+        <p><strong>Número de documento:</strong>
+          <% if (data.docTipo === 'DUI') { %>
+            <%= data.dui || '—' %>
+          <% } else if (data.docTipo === 'Pasaporte') { %>
+            <%= data.pasaporte || '—' %>
+          <% } else if (data.docTipo === 'Otro') { %>
+            <%= data.otroDoc || '—' %>
+          <% } else { %>—<% } %>
+        </p>
+        <p><strong>Teléfono:</strong> <%= data.telefono || '—' %></p>
+        <p><strong>Correo electrónico:</strong> <%= data.correo || '—' %></p>
+        <p><strong>Municipio:</strong> <%= data.municipio || '—' %></p>
+        <p><strong>Distrito:</strong> <%= data.distrito || '—' %></p>
+        <p class="full"><strong>Domicilio:</strong> <%= data.domicilio || '—' %></p>
+        <p><strong>Lugar de presentación:</strong> <%= data.lugarPresentacion || '—' %></p>
+        <p><strong>Fecha de presentación:</strong> <%= data.fechaPresentacion || '—' %></p>
+        <p><strong>Hora:</strong> <%= data.horaPresentacion || '—' %></p>
+        <p><strong>Contacto trámite:</strong> <%= data.contacto || '—' %></p>
+        <p><strong>Plazo de respuesta:</strong> <%= data.plazo || '—' %></p>
+        <p><strong>Tipo de documento:</strong> <%= data.docTipo || '—' %></p>
+        <p><strong>¿Titular del asiento?:</strong> <%= data.titular || '—' %></p>
+        <p><strong>Carácter en que comparece:</strong>
+          <%= (data.caracter || '—').toString().split(',').map(c => c.trim()).filter(Boolean).join(', ') %>
+        </p>
+      </div>
+    </div>
+
+        <!-- Bloque datos titular -->
     <div class="bloque">
       <h3>Datos del titular del asiento</h3>
       <div class="grid-2">
@@ -207,7 +239,7 @@
       <p><%= data.declaracion || '—' %></p>
     </div>
 
-        <!-- Segunda página: documentación y firmas -->
+    <!-- Segunda página: documentación y firmas -->
     <div class="segunda-pagina">
       <!-- Bloque documentación presentada -->
       <div class="bloque">
