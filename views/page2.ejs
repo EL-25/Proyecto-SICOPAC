@@ -106,27 +106,26 @@
     <% }) %>
   </fieldset>
 
-  <div class="botones">
-  <a href="/formulario" class="btn">← Regresar</a>
+  <div class="botones-finales">
+  <!-- Botón regresar en rojo -->
+  <a href="/formulario" class="btn-rojo">← Regresar</a>
 
   <% if (modoEdicion) { %>
-    <!-- Este botón solo aparece si el usuario está editando -->
-    <button type="submit" formaction="/actualizar"
-      style="background-color:#2e7d32; color:white; border:none; padding:0.5em 1.2em; border-radius:6px; cursor:pointer;">
+    <!-- Botón guardar cambios en verde -->
+    <button type="submit" formaction="/actualizar" class="btn-verde">
       Guardar cambios
     </button>
   <% } %>
 
-  <!-- Este botón siempre envía al endpoint /guardar -->
-  <button type="submit"
-    formaction="/guardar"
-    style="background-color:#0074D9; color:white; border:none; padding:0.5em 1.2em; border-radius:6px; cursor:pointer;">
+  <!-- Botón enviar en verde -->
+  <button type="submit" formaction="/guardar" class="btn-verde">
     Enviar
   </button>
 </div>
 </form>
 
- <script>
+ <script src="https://unpkg.com/imask"></script>
+<script>
   document.addEventListener("DOMContentLoaded", () => {
     const $ = (id) => document.getElementById(id);
 
@@ -166,7 +165,6 @@
     // --- Capturar hora local del navegador ---
     const fechaHoraLocalInput = document.getElementById("fechaHoraLocal");
     if (fechaHoraLocalInput) {
-      // Usar formato ISO para consistencia
       fechaHoraLocalInput.value = new Date().toISOString();
     }
 
@@ -180,7 +178,16 @@
       });
     }
 
-        // --- Validación manual al enviar ---
+    // --- Máscara DUI ---
+    const duiInput = document.getElementById("duiTitularInput");
+    let duiMask;
+    if (duiInput) {
+      duiMask = IMask(duiInput, {
+        mask: '00000000-0'
+      });
+    }
+
+    // --- Validación manual al enviar ---
     const form = document.querySelector("form");
     form.addEventListener("submit", (e) => {
       console.log("🚀 Evento submit disparado, enviando formulario...");
@@ -190,6 +197,19 @@
         e.preventDefault();
         alert("Debe completar al menos el primer nombre y primer apellido del titular.");
         nombre.focus();
+        return;
+      }
+
+      // Validar DUI si está seleccionado
+      const duiRadio = document.getElementById("duiTitularRadio");
+      if (duiRadio && duiRadio.checked) {
+        const valorDUI = duiInput.value.trim();
+        const patronDUI = /^\d{8}-\d$/;
+        if (!patronDUI.test(valorDUI)) {
+          e.preventDefault();
+          alert("El número de DUI debe tener el formato 00000000-0.");
+          duiInput.focus();
+        }
       }
     });
 
@@ -222,9 +242,9 @@
       radio.addEventListener("change", actualizarLugarHecho);
     });
 
-    // Ejecutar al cargar para autocompletar si ya hay una declaración marcada
     actualizarLugarHecho();
   });
 </script>
+
 </body>
 </html>

@@ -180,6 +180,37 @@ legend {
     margin-top: 8px;
 }
 
+/* Botón regresar en rojo */
+.btn-rojo {
+  background-color: #c62828;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 1em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.btn-rojo:hover {
+  background-color: #a71d2a;
+}
+
+/* Botón enviar/guardar en verde */
+.btn-verde {
+  background-color: #2e7d32;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 1em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.btn-verde:hover {
+  background-color: #1b5e20;
+}
+
 /* Responsividad */
 @media screen and (max-width: 1024px) {
   .container {
