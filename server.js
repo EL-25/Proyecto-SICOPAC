@@ -645,7 +645,6 @@ app.post("/guardar", async (req, res) => {
     datos.usuario
   ]
 );
-
     // Registrar acción en la tabla Acciones
     await pool.query(
       `INSERT INTO "Acciones" ("Usuario","TipoAccion","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal")
@@ -724,7 +723,8 @@ app.post("/guardar", async (req, res) => {
       
       // Renderizar vista previa con los datos completos (incluyendo la firma)
       res.render("pdf-preview", { 
-        data: datosConCodigo
+        data: datosConCodigo,
+        modoEdicion: false
       });
     
     } catch (err) {

@@ -107,10 +107,23 @@
   </fieldset>
 
   <div class="botones">
-    <a href="/formulario" class="btn">← Regresar</a>
-    <button type="submit" formaction="/actualizar" style="background-color:#2e7d32; color:white; border:none; padding:0.5em 1.2em; border-radius:6px; cursor:pointer;">Guardar cambios</button>
-    <button type="submit">Enviar</button>
-  </div>
+  <a href="/formulario" class="btn">← Regresar</a>
+
+  <% if (modoEdicion) { %>
+    <!-- Este botón solo aparece si el usuario está editando -->
+    <button type="submit" formaction="/actualizar"
+      style="background-color:#2e7d32; color:white; border:none; padding:0.5em 1.2em; border-radius:6px; cursor:pointer;">
+      Guardar cambios
+    </button>
+  <% } %>
+
+  <!-- Este botón siempre envía al endpoint /guardar -->
+  <button type="submit"
+    formaction="/guardar"
+    style="background-color:#0074D9; color:white; border:none; padding:0.5em 1.2em; border-radius:6px; cursor:pointer;">
+    Enviar
+  </button>
+</div>
 </form>
 
  <script>
@@ -153,7 +166,8 @@
     // --- Capturar hora local del navegador ---
     const fechaHoraLocalInput = document.getElementById("fechaHoraLocal");
     if (fechaHoraLocalInput) {
-      fechaHoraLocalInput.value = new Date().toLocaleString();
+      // Usar formato ISO para consistencia
+      fechaHoraLocalInput.value = new Date().toISOString();
     }
 
     // --- Mostrar campo de tercer apellido del titular ---
@@ -166,9 +180,10 @@
       });
     }
 
-    // --- Validación manual al enviar ---
+        // --- Validación manual al enviar ---
     const form = document.querySelector("form");
     form.addEventListener("submit", (e) => {
+      console.log("🚀 Evento submit disparado, enviando formulario...");
       const nombre = document.querySelector("[name='primerNombreTitular']");
       const apellido = document.querySelector("[name='primerApellidoTitular']");
       if (!nombre.value.trim() || !apellido.value.trim()) {
