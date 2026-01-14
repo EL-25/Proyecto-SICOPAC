@@ -540,7 +540,8 @@ app.get("/formulario", async (req, res) => {
 app.post("/page2", (req, res) => {
   res.render("page2", { 
     data: req.body,
-    modo: "nuevo"
+    modo: "nuevo",
+    modoEdicion: false   //gregado para evitar ReferenceError en page2.ejs
   });
 });
 
@@ -880,7 +881,8 @@ app.get("/editar-formulario-p2", async (req, res) => {
         telefono: f.Telefono,
         correo: f.Correo
       },
-      modo: "editar"
+      modo: "editar",
+      modoEdicion: true   //agregado para que page2.ejs sepa que está en edición
     });
   } catch (err) {
     console.error("❌ Error en /editar-formulario-p2:", err);
@@ -1043,8 +1045,23 @@ app.post("/actualizar", async (req, res) => {
       declaracion: normalizar(req.body.declaracion)
     };
 
-    // Renderizar vista previa con los datos actualizados
-    res.render("pdf-preview", { data: datosConCodigo });
+    // Obtener firma del REF (usuario que llena el formulario)
+    const firmaResult = await pool.query(
+      `SELECT "Firma" FROM "Usuarios" WHERE LOWER("Usuario") = LOWER($1) AND "Estado" = true`,
+      [normalizar(req.body.usuario)]
+    );
+
+    let firmaUsuario = null;
+    if (firmaResult.rows.length > 0) {
+      firmaUsuario = `https://proyecto-sicopac-production.up.railway.app/img/firma/${encodeURIComponent(firmaResult.rows[0].Firma)}`;
+    }
+    datosConCodigo.firmaUsuario = firmaUsuario;
+
+        // Renderizar vista previa con los datos actualizados en modo edición
+    res.render("pdf-preview", { 
+      data: datosConCodigo,
+      modoEdicion: true   // 👈 agregado para que pdf-preview muestre botón Editar
+    });
   } catch (err) {
     console.error("❌ Error en /actualizar:", err);
     res.status(500).send("Error al actualizar el formulario");
