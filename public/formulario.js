@@ -33,7 +33,7 @@ function mapFormulario(f) {
     codigo: f.CodigoFormulario || f.NumeroFormulario || "—",
     declaracion: f.Declaracion || f.Declaraciones || "—",
     municipio: "La Libertad Este",
-    distrito: f.Distrito || "—",
+    distrito: f.Distrito || "",
     fecha: f.FechaHoraLocal || f.FechaPresentacion || null
   };
 }
@@ -45,6 +45,11 @@ function formatFecha(fecha) {
   } catch {
     return "—";
   }
+}
+
+//Nueva función para evitar separadores sobrantes
+function formatUbicacion(municipio, distrito) {
+  return [municipio, distrito].filter(v => v && v !== "—").join(" / ") || "—";
 }
 
 // Cargar formularios recientes
@@ -76,11 +81,11 @@ async function cargarFormularios(usuario, rol) {
       if (rol === "Administrador") {
         li.innerHTML = `
           <strong>${f.usuario}</strong> — Formulario ${f.codigo}<br>
-          ${f.declaracion} - ${f.municipio}/${f.distrito}<br>
+          ${f.declaracion} - ${formatUbicacion(f.municipio, f.distrito)}<br>
           Fecha: ${formatFecha(f.fecha)}
         `;
       } else {
-        li.textContent = `Formulario ${f.codigo} - ${f.declaracion} - ${f.municipio}/${f.distrito} - Fecha: ${formatFecha(f.fecha)}`;
+        li.textContent = `Formulario ${f.codigo} - ${f.declaracion} - ${formatUbicacion(f.municipio, f.distrito)} - Fecha: ${formatFecha(f.fecha)}`;
       }
 
       lista.appendChild(li);
@@ -140,11 +145,11 @@ async function aplicarFiltro() {
       if (rol === "Administrador") {
         li.innerHTML = `
           <strong>${f.usuario}</strong> — Formulario ${f.codigo}<br>
-          ${f.declaracion} - ${f.municipio}/${f.distrito}<br>
+          ${f.declaracion} - ${formatUbicacion(f.municipio, f.distrito)}<br>
           Fecha: ${formatFecha(f.fecha)}
         `;
       } else {
-        li.textContent = `Formulario ${f.codigo} - ${f.declaracion} - ${f.municipio}/${f.distrito} - Fecha: ${formatFecha(f.fecha)}`;
+        li.textContent = `Formulario ${f.codigo} - ${f.declaracion} - ${formatUbicacion(f.municipio, f.distrito)} - Fecha: ${formatFecha(f.fecha)}`;
       }
 
       lista.appendChild(li);
