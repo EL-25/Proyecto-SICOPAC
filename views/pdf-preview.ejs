@@ -21,22 +21,17 @@
     .logo-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       margin-bottom: 0.5em;
     }
     .logo-header img {
       width: 100px;
       height: auto;
+      margin-right: auto;
     }
     .titulo-formulario {
       text-align: center;
       flex-grow: 1;
-      margin-left: -100px;
-    }
-    .titulo-formulario h2 {
-      font-size: 16pt;
-      margin: 0;
-      line-height: 1.2;
     }
     .titulo-formulario h3 {
       font-size: 13pt;
@@ -72,34 +67,6 @@
     .botones {
       margin-top: 1.5em;
     }
-    .pie-firma {
-      margin-top: 2em;
-      text-align: center;
-      font-size: 10pt;
-    }
-    .firmas {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 1em;
-    }
-    .firma-bloque {
-      width: 48%;
-    }
-    .linea-firma {
-      border-bottom: 1px solid #000;
-      height: 2em;
-      margin-bottom: 0.3em;
-    }
-    .separador-legal {
-      border-top: 2px solid #000;
-      margin: 1em auto;
-      width: 100%;
-    }
-    .texto-legal {
-      margin-top: 0.5em;
-      font-size: 9pt;
-      text-align: justify;
-    }
     @media print {
       @page {
         margin: 1.5cm;
@@ -125,10 +92,36 @@
         grid-template-columns: 1fr;
       }
     }
-    /* Firma: limitar tamaño para no romper layout */
     .firma-img-ref {
       max-height: 80px;
       width: auto;
+    }
+    .segunda-pagina {
+      page-break-before: always;
+    }
+    .firmas {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 1em;
+    }
+    .firma-bloque {
+      width: 48%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .linea-firma {
+      border-bottom: 1px solid #000;
+      height: 2em;
+      width: 100%;
+      margin-bottom: 0.3em;
+    }
+    .firma-texto {
+      margin: 0;
+      font-size: 10pt;
+      text-align: center;
     }
   </style>
 </head>
@@ -138,7 +131,6 @@
     <div class="logo-header">
       <img src="/img/LogoAlcaldia.png" alt="Logo institucional">
       <div class="titulo-formulario">
-        <h2>ALCALDÍA MUNICIPAL LA LIBERTAD ESTE</h2>
         <h3>FORMULARIO ÚNICO DE SOLICITUD</h3>
       </div>
     </div>
@@ -146,38 +138,6 @@
     <div class="codigo-ref">
       <p><strong>Código del formulario:</strong> <%= data.codigoFormulario || '—' %></p>
       <p><strong>No. de Presentación REF/LLE:</strong> <%= data.refLLE || '—' %></p>
-    </div>
-
-        <!-- Bloque datos solicitante -->
-    <div class="bloque">
-      <h3>Datos del solicitante</h3>
-      <div class="grid-2">
-        <p><strong>Nombre:</strong> <%= data.nombreSolicitante || '—' %></p>
-        <p><strong>Número de documento:</strong>
-          <% if (data.docTipo === 'DUI') { %>
-            <%= data.dui || '—' %>
-          <% } else if (data.docTipo === 'Pasaporte') { %>
-            <%= data.pasaporte || '—' %>
-          <% } else if (data.docTipo === 'Otro') { %>
-            <%= data.otroDoc || '—' %>
-          <% } else { %>—<% } %>
-        </p>
-        <p><strong>Teléfono:</strong> <%= data.telefono || '—' %></p>
-        <p><strong>Correo electrónico:</strong> <%= data.correo || '—' %></p>
-        <p><strong>Municipio:</strong> <%= data.municipio || '—' %></p>
-        <p><strong>Distrito:</strong> <%= data.distrito || '—' %></p>
-        <p class="full"><strong>Domicilio:</strong> <%= data.domicilio || '—' %></p>
-        <p><strong>Lugar de presentación:</strong> <%= data.lugarPresentacion || '—' %></p>
-        <p><strong>Fecha de presentación:</strong> <%= data.fechaPresentacion || '—' %></p>
-        <p><strong>Hora:</strong> <%= data.horaPresentacion || '—' %></p>
-        <p><strong>Contacto trámite:</strong> <%= data.contacto || '—' %></p>
-        <p><strong>Plazo de respuesta:</strong> <%= data.plazo || '—' %></p>
-        <p><strong>Tipo de documento:</strong> <%= data.docTipo || '—' %></p>
-        <p><strong>¿Titular del asiento?:</strong> <%= data.titular || '—' %></p>
-        <p><strong>Carácter en que comparece:</strong>
-          <%= (data.caracter || '—').toString().split(',').map(c => c.trim()).filter(Boolean).join(', ') %>
-        </p>
-      </div>
     </div>
 
         <!-- Bloque datos titular -->
@@ -226,62 +186,56 @@
       <p><%= data.declaracion || '—' %></p>
     </div>
 
-    <!-- Bloque documentación presentada -->
-    <div class="bloque">
-      <h3>Documentación presentada</h3>
-      <% const documentos = [].concat(data.doc || [], data.doc2 || []); %>
-      <% if (documentos && documentos.length) { %>
-        <ul>
-          <% documentos.forEach(d => { %>
-            <li><%= d %></li>
-          <% }) %>
-        </ul>
-      <% } else { %>
-        <p>—</p>
-      <% } %>
-    </div>
-
-        <!-- Botones -->
-    <div class="botones">
-      <button onclick="window.print()">🖨️ Imprimir</button>
-      <a href="/formulario" class="btn">Nuevo formulario</a>
-      <% if (typeof modoEdicion !== 'undefined' && modoEdicion) { %>
-        <a href="/editar-formulario?codigo=<%= data.codigoFormulario %>" class="btn" style="background-color:#2e7d32; color:white; padding:0.5em 1.2em; border-radius:6px;">Editar</a>
-      <% } %>
-    </div>
-
-    <!-- Firmas -->
-    <div class="pie-firma">
-      <div class="firmas">
-        <!-- Bloque Usuario solicitante -->
-        <div class="firma-bloque firma-contenedor">
-          <% if (data.firmaSolicitante) { %>
-            <img src="<%= data.firmaSolicitante %>" alt="Firma solicitante" class="firma-img-ref firma-sobre-linea">
-          <% } else { %>
-            <div class="firma-espacio"></div>
-          <% } %>
-          <div class="linea-firma"></div>
-          <p class="firma-texto"><strong>Usuario solicitante</strong><br>(Firma o huella)</p>
-        </div>
-
-        <!-- Bloque REF -->
-        <div class="firma-bloque firma-contenedor">
-          <% if (data.firmaUsuario) { %>
-            <img src="<%= data.firmaUsuario %>" alt="Firma REF" class="firma-img-ref firma-sobre-linea">
-          <% } else { %>
-            <div class="firma-espacio"></div>
-          <% } %>
-          <div class="linea-firma"></div>
-          <p class="firma-texto"><strong>REF</strong><br>(Nombre y firma)</p>
-        </div>
+    <!-- Segunda página: documentación y firmas -->
+    <div class="segunda-pagina">
+      <!-- Bloque documentación presentada -->
+      <div class="bloque">
+        <h3>Documentación presentada</h3>
+        <% const documentos = [].concat(data.doc || [], data.doc2 || []); %>
+        <% if (documentos && documentos.length) { %>
+          <ul>
+            <% documentos.forEach(d => { %>
+              <li><%= d %></li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p>—</p>
+        <% } %>
       </div>
 
-      <div class="separador-legal"></div>
-      <p class="texto-legal">
-        La información contenida en esta solicitud es de exclusiva responsabilidad de quien la complete...
-      </p>
-    </div>
+            <!-- Firmas -->
+      <div class="pie-firma">
+        <div class="firmas">
+          <!-- Bloque Usuario solicitante -->
+          <div class="firma-bloque firma-contenedor">
+            <% if (data.firmaSolicitante) { %>
+              <img src="<%= data.firmaSolicitante %>" alt="Firma solicitante" class="firma-img-ref">
+            <% } else { %>
+              <div class="firma-espacio"></div>
+            <% } %>
+            <div class="linea-firma"></div>
+            <p class="firma-texto"><strong>Usuario solicitante</strong><br>(Firma o huella)</p>
+          </div>
 
-  </div>
+          <!-- Bloque REF -->
+          <div class="firma-bloque firma-contenedor">
+            <% if (data.firmaUsuario) { %>
+              <img src="<%= data.firmaUsuario %>" alt="Firma REF" class="firma-img-ref">
+            <% } else { %>
+              <div class="firma-espacio"></div>
+            <% } %>
+            <div class="linea-firma"></div>
+            <p class="firma-texto"><strong>REF</strong><br>(Nombre y firma)</p>
+          </div>
+        </div>
+
+        <div class="separador-legal"></div>
+        <p class="texto-legal">
+          La información contenida en esta solicitud es de exclusiva responsabilidad de quien la complete...
+        </p>
+      </div>
+
+    </div> <!-- cierre segunda-pagina -->
+  </div> <!-- cierre container -->
 </body>
 </html>
