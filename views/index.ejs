@@ -60,9 +60,19 @@
           <input type="time" id="horaPresentacion" name="horaPresentacion" value="<%= data.horaPresentacion || '' %>">
         </p>
 
-        <p>Contacto para consultar estado de trámite:
-          <input type="text" name="contacto" value="<%= data.contacto || '' %>">
-        </p>
+        <p>
+          <label for="contacto">Contacto para consultar estado de trámite:</label>
+          <select id="contacto" name="contacto" required>
+            <option value="">Seleccione un contacto</option>
+            <% if (typeof usuarios !== 'undefined' && Array.isArray(usuarios)) { %>
+              <% usuarios.forEach(u => { %>
+                <option value="<%= u.nombreUsuario %>" <%= data.contacto === u.nombreUsuario ? 'selected' : '' %>>
+                  <%= u.nombreUsuario %>
+                </option>
+                <% }) %>
+                <% } %>
+              </select>
+            </p>
 
         <p>Plazo de respuesta:
           <input type="text" name="plazo" value="<%= data.plazo || '' %>">
@@ -357,6 +367,13 @@ document.addEventListener("DOMContentLoaded", () => {
       correoInput.focus();
       return;
     }
+
+    const contactoSelect = document.getElementById("contacto"); 
+    if (contactoSelect && !contactoSelect.value) { 
+    e.preventDefault(); 
+    alert("Debe seleccionar un contacto válido"); 
+    contactoSelect.focus(); 
+    return; }
   });
 });
 </script>

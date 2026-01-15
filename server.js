@@ -519,13 +519,22 @@ app.get("/formulario", async (req, res) => {
       lugar = datos.lugar;
     }
 
+    // Nueva consulta: obtener todos los usuarios activos
+    const usuariosResult = await pool.query(
+      `SELECT "Usuario" AS "nombreUsuario" FROM "Usuarios" WHERE "Estado" = true ORDER BY "Usuario" ASC`
+    );
+
+    const usuarios = usuariosResult.rows;
+
+    // Render con lista de usuarios incluida
     res.render("index", { 
       modo: "nuevo",
       data: { 
         usuario: usuarioActual,
         distrito,
         lugarPresentacion: lugar
-      }
+      },
+      usuarios //aquí se pasa al EJS
     });
   } catch (err) {
     console.error("❌ Error en /formulario:", err);
