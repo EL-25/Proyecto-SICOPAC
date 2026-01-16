@@ -5,6 +5,20 @@ const { Pool } = require('pg');   // ← usamos pg en lugar de mssql
 const multer = require('multer');
 const path = require('path');
 
+// Conexión con Google Sheets
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const creds = require('./credenciales.json'); // archivo JSON que guardaste en la raíz
+
+// ID del documento (el largo que está en la URL de tu Sheet)
+const doc = new GoogleSpreadsheet('1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc');
+
+// Función para conectar
+async function conectarSheets() {
+  await doc.useServiceAccountAuth(creds);
+  await doc.loadInfo(); // carga la info del libro
+  console.log("✅ Conexión establecida con Google Sheets");
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -661,6 +675,66 @@ app.post("/guardar", async (req, res) => {
        VALUES ($1,$2,$3,$4,$5,$6,$7)`,
       [datos.usuario, 'Formulario enviado', datos.declaracion, datos.codigoFormulario, datos.municipio, datos.distrito, req.body.fechaHoraLocal]
     );
+    
+// ==============================
+// VOLCADO A GOOGLE SHEETS
+// ==============================
+await conectarSheets();
+
+// Determinar hoja destino según la declaración
+let hojaDestino;
+switch (datos.declaracion) {
+  case 'Nacimiento': hojaDestino = 'NACIMIENTOS'; break;
+  case 'Defuncion': hojaDestino = 'DEFUNCIONES'; break;
+  case 'Bodas': hojaDestino = 'BODAS'; break;
+  case 'Marginacion Bodas': hojaDestino = 'MAR.BODAS'; break;
+  case 'Marginacion Defunciones': hojaDestino = 'MAR.DEFUNCIONES'; break;
+  case 'Divorcios C.P.M': hojaDestino = 'DIVORCIOS C.P.M'; break;
+  case 'Marginacion Divorcios': hojaDestino = 'MAR.DIVORCIOS'; break;
+  case 'Marginacion Viudez': hojaDestino = 'MAR.VIUDEZ'; break;
+  case 'REC.Alcaldia': hojaDestino = 'REC.ALCALDIA'; break;
+  case 'REC.Notario': hojaDestino = 'REC.NOTARIO'; break;
+  case 'Reposiciones': hojaDestino = 'REPO'; break;
+  case 'Identidades': hojaDestino = 'IDENTIDADES'; break;
+  case 'Adecuaciones': hojaDestino = 'ADECUA'; break;
+  case 'Adopciones': hojaDestino = 'ADOP'; break;
+  case 'Cancelacion por Recon.': hojaDestino = 'CANC.POR.RECON'; break;
+  case 'Union no matrimonial': hojaDestino = 'UNION NO MATRI'; break;
+  case 'Nom.Tutor': hojaDestino = 'NOM.TUTOR'; break;
+  default: hojaDestino = 'GENERAL';
+}
+
+// ✅ Validar que la hoja exista
+const hoja = doc.sheetsByTitle[hojaDestino];
+if (!hoja) {
+  console.error(`❌ No existe la hoja destino: ${hojaDestino}`);
+  return res.status(500).send(`Error: No existe la hoja destino ${hojaDestino}`);
+}
+
+// Obtener filas
+const rows = await hoja.getRows();
+
+// ✅ Validar correlativo vacío
+let ultimoCorrelativo = 0;
+if (rows.length > 0 && rows[rows.length - 1].CORRELATIVO) {
+  const ultimoValor = rows[rows.length - 1].CORRELATIVO;
+  ultimoCorrelativo = parseInt(ultimoValor.split('/')[0]) || 0;
+}
+
+const nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
+
+// Insertar fila en Google Sheets
+await hoja.addRow({
+  CORRELATIVO: nuevoCorrelativo,
+  FECHA: datos.fechaPresentacion,
+  'NOMBRE DEL ASENTADO': [
+    datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido
+  ].filter(Boolean).join(" "),
+  DISTRITO: datos.distrito,
+  DOCUMENTACION: datos.descripcionDocumentacion
+});
+
+console.log(`✅ Volcado en hoja ${hojaDestino} con correlativo ${nuevoCorrelativo}`);
 
     // Construir objeto para vista previa
     const documentos = [...(req.body.doc || []), ...(req.body.doc2 || [])];

@@ -77,12 +77,33 @@
   </fieldset>
 
   <fieldset>
-    <legend>Declaración de la solicitud</legend>
-    <% const declaracionVal = data.declaracion || ''; %>
-    <label><input type="radio" name="declaracion" value="Nacimiento" <%= declaracionVal === 'Nacimiento' ? 'checked' : '' %>> Nacimiento</label>
-    <label><input type="radio" name="declaracion" value="Matrimonio" <%= declaracionVal === 'Matrimonio' ? 'checked' : '' %>> Matrimonio</label>
-    <label><input type="radio" name="declaracion" value="Union" <%= declaracionVal === 'Union' ? 'checked' : '' %>> Unión no matrimonial</label>
-  </fieldset>
+  <legend>Declaración de la solicitud</legend>
+  <% const declaracionVal = data.declaracion || ''; %>
+
+  <!-- Registros principales -->
+  <label><input type="radio" name="declaracion" value="Nacimiento" <%= declaracionVal === 'Nacimiento' ? 'checked' : '' %>> Nacimiento</label>
+  <label><input type="radio" name="declaracion" value="Defuncion" <%= declaracionVal === 'Defuncion' ? 'checked' : '' %>> Defunción</label>
+  <label><input type="radio" name="declaracion" value="Bodas" <%= declaracionVal === 'Bodas' ? 'checked' : '' %>> Bodas</label>
+
+  <!-- Marginaciones -->
+  <label><input type="radio" name="declaracion" value="Marginacion Bodas" <%= declaracionVal === 'Marginacion Bodas' ? 'checked' : '' %>> Marginación Bodas</label>
+  <label><input type="radio" name="declaracion" value="Marginacion Defunciones" <%= declaracionVal === 'Marginacion Defunciones' ? 'checked' : '' %>> Marginación Defunciones</label>
+  <label><input type="radio" name="declaracion" value="Marginacion Divorcios" <%= declaracionVal === 'Marginacion Divorcios' ? 'checked' : '' %>> Marginación Divorcios</label>
+  <label><input type="radio" name="declaracion" value="Marginacion Viudez" <%= declaracionVal === 'Marginacion Viudez' ? 'checked' : '' %>> Marginación Viudez</label>
+  <label><input type="radio" name="declaracion" value="Cancelacion por Recon." <%= declaracionVal === 'Cancelacion por Recon.' ? 'checked' : '' %>> Cancelación por Reconocimiento</label>
+
+  <!-- Rectificaciones -->
+  <label><input type="radio" name="declaracion" value="REC.Alcaldia" <%= declaracionVal === 'REC.Alcaldia' ? 'checked' : '' %>> Rectificación por Alcaldía</label>
+  <label><input type="radio" name="declaracion" value="REC.Notario" <%= declaracionVal === 'REC.Notario' ? 'checked' : '' %>> Rectificación por Notario</label>
+
+  <!-- Otros -->
+  <label><input type="radio" name="declaracion" value="Reposiciones" <%= declaracionVal === 'Reposiciones' ? 'checked' : '' %>> Reposiciones</label>
+  <label><input type="radio" name="declaracion" value="Identidades" <%= declaracionVal === 'Identidades' ? 'checked' : '' %>> Identidades</label>
+  <label><input type="radio" name="declaracion" value="Adecuaciones" <%= declaracionVal === 'Adecuaciones' ? 'checked' : '' %>> Adecuaciones</label>
+  <label><input type="radio" name="declaracion" value="Adopciones" <%= declaracionVal === 'Adopciones' ? 'checked' : '' %>> Adopciones</label>
+  <label><input type="radio" name="declaracion" value="Union no matrimonial" <%= declaracionVal === 'Union no matrimonial' ? 'checked' : '' %>> Unión no matrimonial</label>
+  <label><input type="radio" name="declaracion" value="Nom.Tutor" <%= declaracionVal === 'Nom.Tutor' ? 'checked' : '' %>> Nominación de Tutor</label>
+</fieldset>
 
   <fieldset>
     <legend>Descripción de la Documentación Presentada</legend>
