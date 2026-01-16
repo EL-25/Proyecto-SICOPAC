@@ -20,7 +20,9 @@ async function conectarSheets() {
     scopes: ['https://www.googleapis.com/auth/spreadsheets']
   });
 
-  await doc.useOAuth2Client(auth);
+  // ✅ Este es el método correcto en v5
+  await doc.useServiceAccountAuth(auth);
+
   await doc.loadInfo();    // carga la info del libro
   console.log("✅ Conexión establecida con Google Sheets");
 }
