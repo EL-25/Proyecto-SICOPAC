@@ -7,7 +7,10 @@ const path = require('path');
 
 // Conexión con Google Sheets
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const creds = require('./credenciales.json'); // archivo JSON que guardaste en la raíz
+const creds = {
+  client_email: process.env.GOOGLE_CLIENT_EMAIL,
+  private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
+};
 
 // ID del documento (el largo que está en la URL de tu Sheet)
 const doc = new GoogleSpreadsheet('1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc');
