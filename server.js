@@ -17,7 +17,10 @@ const doc = new GoogleSpreadsheet('1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc'
 
 // Función para conectar
 async function conectarSheets() {
-  await doc.auth(creds);   // 🔑 aquí el cambio
+  await doc.useServiceAccountAuth({
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
+  });
   await doc.loadInfo();    // carga la info del libro
   console.log("✅ Conexión establecida con Google Sheets");
 }
