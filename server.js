@@ -17,8 +17,8 @@ const doc = new GoogleSpreadsheet('1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc'
 
 // Función para conectar
 async function conectarSheets() {
-  await doc.useServiceAccountAuth(creds);
-  await doc.loadInfo(); // carga la info del libro
+  await doc.auth(creds);   // 🔑 aquí el cambio
+  await doc.loadInfo();    // carga la info del libro
   console.log("✅ Conexión establecida con Google Sheets");
 }
 
@@ -719,8 +719,8 @@ const rows = await hoja.getRows();
 
 // ✅ Validar correlativo vacío
 let ultimoCorrelativo = 0;
-if (rows.length > 0 && rows[rows.length - 1].CORRELATIVO) {
-  const ultimoValor = rows[rows.length - 1].CORRELATIVO;
+if (rows.length > 0 && rows[rows.length - 1]['CORRELATIVO']) {
+  const ultimoValor = rows[rows.length - 1]['CORRELATIVO'];
   ultimoCorrelativo = parseInt(ultimoValor.split('/')[0]) || 0;
 }
 
