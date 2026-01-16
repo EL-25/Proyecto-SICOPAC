@@ -5,22 +5,20 @@ const { Pool } = require('pg');   // ← usamos pg en lugar de mssql
 const multer = require('multer');
 const path = require('path');
 
+// Conexión con Google Sheets
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { JWT } = require('google-auth-library');
 
+// ID del documento (el largo que está en la URL de tu Sheet)
 const doc = new GoogleSpreadsheet('1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc');
 
+// Función para conectar
 async function conectarSheets() {
-  const auth = new JWT({
-    email: process.env.GOOGLE_CLIENT_EMAIL,
-    key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    scopes: ['https://www.googleapis.com/auth/spreadsheets']
+  await doc.useServiceAccountAuth({
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
   });
 
-  // ✅ Este método sí existe en v5
-  await doc.useServiceAccountAuth(auth);
-
-  await doc.loadInfo();
+  await doc.loadInfo();    // carga la info del libro
   console.log("✅ Conexión establecida con Google Sheets");
 }
 
