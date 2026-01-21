@@ -1,3 +1,8 @@
+require('dotenv').config();
+
+console.log("👉 GOOGLE_CLIENT_EMAIL:", process.env.GOOGLE_CLIENT_EMAIL);
+console.log("👉 GOOGLE_PRIVATE_KEY (primeros 50 chars):", process.env.GOOGLE_PRIVATE_KEY?.substring(0, 50));
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
