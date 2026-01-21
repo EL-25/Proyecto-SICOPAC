@@ -10,22 +10,23 @@ const { Pool } = require('pg');   // ← usamos pg en lugar de mssql
 const multer = require('multer');
 const path = require('path');
 
-// Conexión con Google Sheets
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
-// ID del documento (el largo que está en la URL de tu Sheet)
 const doc = new GoogleSpreadsheet('1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc');
 
-// Función para conectar
 async function conectarSheets() {
   await doc.useServiceAccountAuth({
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
     private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
   });
 
-  await doc.loadInfo();    // carga la info del libro
+  await doc.loadInfo();
   console.log("✅ Conexión establecida con Google Sheets");
 }
+
+conectarSheets()
+  .then(() => console.log("✅ Conexión con Google Sheets completada"))
+  .catch((err) => console.error("❌ Error al conectar con Google Sheets:", err));
 
 const app = express();
 const PORT = process.env.PORT || 3000;
