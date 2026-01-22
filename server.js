@@ -1,7 +1,10 @@
 require('dotenv').config();
 
+console.log("👉 Node version:", process.version);
+console.log("👉 NODE_OPTIONS:", process.env.NODE_OPTIONS);
 console.log("👉 GOOGLE_CLIENT_EMAIL:", process.env.GOOGLE_CLIENT_EMAIL);
-console.log("👉 GOOGLE_PRIVATE_KEY (primeros 50 chars):", process.env.GOOGLE_PRIVATE_KEY?.substring(0, 50));
+console.log("👉 GOOGLE_PRIVATE_KEY inicio:", process.env.GOOGLE_PRIVATE_KEY?.slice(0, 30));
+console.log("👉 GOOGLE_PRIVATE_KEY fin:", process.env.GOOGLE_PRIVATE_KEY?.slice(-30));
 
 const express = require('express');
 const cors = require('cors');
