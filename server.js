@@ -1,35 +1,80 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 console.log("👉 Node version:", process.version);
 console.log("👉 NODE_OPTIONS:", process.env.NODE_OPTIONS);
 console.log("👉 GOOGLE_CLIENT_EMAIL:", process.env.GOOGLE_CLIENT_EMAIL);
-console.log("👉 GOOGLE_PRIVATE_KEY inicio:", process.env.GOOGLE_PRIVATE_KEY?.slice(0, 30));
-console.log("👉 GOOGLE_PRIVATE_KEY fin:", process.env.GOOGLE_PRIVATE_KEY?.slice(-30));
+console.log("👉 GOOGLE_PRIVATE_KEY length:", process.env.GOOGLE_PRIVATE_KEY?.length);
 
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const { Pool } = require('pg');   // ← usamos pg en lugar de mssql
-const multer = require('multer');
-const path = require('path');
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import { Pool } from 'pg';
+import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const { GoogleSpreadsheet } = require('google-spreadsheet');
+import { google } from 'googleapis';
 
-const doc = new GoogleSpreadsheet('1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function conectarSheets() {
-  await doc.useServiceAccountAuth({
-    client_email: process.env.GOOGLE_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
+  const auth = new google.auth.GoogleAuth({
+    credentials: {
+      client_email: process.env.GOOGLE_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    },
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
 
-  await doc.loadInfo();
-  console.log("✅ Conexión establecida con Google Sheets");
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  const spreadsheetId = '1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc';
+
+  // Lista de todas tus pestañas
+  const hojas = [
+    'NACIMIENTOS',
+    'DEFUNCIONES',
+    'BODAS',
+    'MAR. BODAS',
+    'MAR. DEFUNCIONES',
+    'DIVORCIOS C.P.M',
+    'MAR. DIVORCIOS',
+    'MAR. VIUDEZ',
+    'REC.ALCALDIA',
+    'REC. NOTARIO',
+    'REPO.',
+    'IDENTIDADES',
+    'ADECUA.',
+    'ADOP.',
+    'CANC. POR RECON',
+    'UNION NO MATRI',
+    'NOM. TUTOR'
+  ];
+
+  console.log("✅ Conexión establecida con Google Sheets:", spreadsheetId);
+
+  // Leer un rango inicial de cada hoja
+  for (const hoja of hojas) {
+    try {
+      // Para NACIMIENTOS ya sabemos que va de A a E
+      const rango = hoja === 'NACIMIENTOS' ? 'NACIMIENTOS!A1:E10' : `${hoja}!A1:B5`;
+
+      const valores = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: rango,
+      });
+      console.log(`📄 Valores de ${hoja}:`, valores.data.values);
+    } catch (err) {
+      console.error(`❌ Error leyendo la hoja ${hoja}:`, err.message);
+    }
+  }
 }
 
 conectarSheets()
-  .then(() => console.log("✅ Conexión con Google Sheets completada"))
-  .catch((err) => console.error("❌ Error al conectar con Google Sheets:", err));
+  .then(() => console.log("✅ Lectura de todas las hojas completada"))
+  .catch((err) => console.error("❌ Error general:", err));
 
 const app = express();
 const PORT = process.env.PORT || 3000;
