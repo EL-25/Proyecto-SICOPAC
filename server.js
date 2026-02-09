@@ -757,36 +757,44 @@ switch (datos.declaracion) {
   default: hojaDestino = 'GENERAL';
 }
 
-// Leer todos los correlativos de la hoja destino (forzar rango amplio)
+// Leer correlativos y números de partida
 const existing = await sheets.spreadsheets.values.get({
   spreadsheetId,
-  range: `${hojaDestino}!A1:A1000`, // fuerza lectura hasta fila 1000
+  range: `${hojaDestino}!A1:B2000`, // leer columnas A y B
 });
 
 const rows = existing.data.values || [];
-let ultimoCorrelativo = 0;
 
-if (rows.length > 1) {
-  // Buscar el último correlativo válido en la columna A
-  for (let i = rows.length - 1; i >= 0; i--) {
-    const valor = (rows[i][0] || "").trim();
-    if (/^\d+\/2026$/.test(valor)) { // acepta cualquier número antes de /2026
-      ultimoCorrelativo = parseInt(valor.split('/')[0], 10);
-      break;
-    }
-  }
-}
+// Correlativos válidos en columna A
+const correlativos = rows
+  .map(r => (r[0] || "").trim())
+  .filter(v => /^\d+\/2026$/.test(v));
 
+let ultimoCorrelativo = correlativos.length > 0
+  ? Math.max(...correlativos.map(v => parseInt(v.split('/')[0], 10)))
+  : 0;
+
+// Números de partida válidos en columna B
+const partidas = rows
+  .map(r => parseInt(r[1], 10))
+  .filter(n => !isNaN(n));
+
+let ultimaPartida = partidas.length > 0
+  ? Math.max(...partidas)
+  : 0;
+
+// Generar nuevos valores
 const nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
+const nuevaPartida = String(ultimaPartida + 1);
 
-// Construir nueva fila alineada con las 5 columnas de NACIMIENTOS
+// Construir nueva fila
 const nuevaFila = [
-  nuevoCorrelativo, // Columna A: correlativo
-  String(ultimoCorrelativo + 1), // Columna B: NO. DE PARTIDA
+  nuevoCorrelativo,        // Columna A: correlativo
+  nuevaPartida,            // Columna B: NO. DE PARTIDA
   datos.fechaPresentacion, // Columna C: FECHA
   [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
     .filter(Boolean).join(" "), // Columna D: NOMBRE DEL ASENTADO
-  datos.distrito // Columna E: DISTRITO
+  datos.distrito           // Columna E: DISTRITO
 ];
 
 // Insertar fila en la hoja
@@ -799,8 +807,7 @@ await sheets.spreadsheets.values.append({
   },
 });
 
-console.log(`✅ Volcado en hoja ${hojaDestino} con correlativo ${nuevoCorrelativo}`);
-
+console.log(`✅ Volcado en hoja ${hojaDestino} con correlativo ${nuevoCorrelativo} y partida ${nuevaPartida}`);
 
     // Construir objeto para vista previa
     const documentos = [...(req.body.doc || []), ...(req.body.doc2 || [])];
