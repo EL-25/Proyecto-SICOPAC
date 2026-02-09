@@ -757,21 +757,23 @@ switch (datos.declaracion) {
   default: hojaDestino = 'GENERAL';
 }
 
-// Leer todas las filas actuales de la hoja destino
+// Leer todos los correlativos de la hoja destino (solo columna A)
 const existing = await sheets.spreadsheets.values.get({
   spreadsheetId,
-  range: `${hojaDestino}!A:E`, // columnas A a E
+  range: `${hojaDestino}!A:A`, // solo columna A
 });
 
 const rows = existing.data.values || [];
 let ultimoCorrelativo = 0;
-if (rows.length > 1) { // hay encabezados + datos
-  const ultimaFila = rows[rows.length - 1][0]; // Columna A = correlativo
+
+if (rows.length > 1) { // hay encabezado + datos
+  const ultimaFila = rows[rows.length - 1][0]; // último valor en columna A
   if (ultimaFila) {
     ultimoCorrelativo = parseInt(ultimaFila.split('/')[0]) || 0;
   }
 }
 
+// Generar el nuevo correlativo
 const nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
 
 // Construir nueva fila
