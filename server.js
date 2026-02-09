@@ -770,7 +770,7 @@ if (rows.length > 1) {
   // Buscar el último correlativo válido en la columna A
   for (let i = rows.length - 1; i >= 0; i--) {
     const valor = rows[i][0];
-    if (valor && /^\d{3}\/2026$/.test(valor)) { // formato tipo 039/2026
+    if (valor && /^\d+\/2026$/.test(valor)) { // acepta cualquier número antes de /2026
       ultimoCorrelativo = parseInt(valor.split('/')[0]) || 0;
       break;
     }
