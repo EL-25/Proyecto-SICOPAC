@@ -779,6 +779,16 @@ if (rows.length > 1) {
 
 const nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
 
+// Construir nueva fila alineada con las 5 columnas de NACIMIENTOS
+const nuevaFila = [
+  nuevoCorrelativo, // Columna A: correlativo
+  String(ultimoCorrelativo + 1), // Columna B: NO. DE PARTIDA
+  datos.fechaPresentacion, // Columna C: FECHA
+  [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
+    .filter(Boolean).join(" "), // Columna D: NOMBRE DEL ASENTADO
+  datos.distrito // Columna E: DISTRITO
+];
+
 // Insertar fila en la hoja
 await sheets.spreadsheets.values.append({
   spreadsheetId,
