@@ -785,7 +785,7 @@ let ultimaPartida = partidas.length > 0
 
 // Generar nuevos valores
 const nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
-const nuevaPartida = String(ultimaPartida + 1);
+const nuevaPartida = String(ultimoCorrelativo + 1);
 
 // Construir nueva fila
 const nuevaFila = [
