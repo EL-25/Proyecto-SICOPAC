@@ -757,10 +757,10 @@ switch (datos.declaracion) {
   default: hojaDestino = 'GENERAL';
 }
 
-// Leer todos los correlativos de la hoja destino (solo columna A)
+// Leer todos los correlativos de la hoja destino (forzar rango amplio)
 const existing = await sheets.spreadsheets.values.get({
   spreadsheetId,
-  range: `${hojaDestino}!A:A`, // solo columna A
+  range: `${hojaDestino}!A1:A1000`, // fuerza lectura hasta fila 1000
 });
 
 const rows = existing.data.values || [];
@@ -769,9 +769,9 @@ let ultimoCorrelativo = 0;
 if (rows.length > 1) {
   // Buscar el último correlativo válido en la columna A
   for (let i = rows.length - 1; i >= 0; i--) {
-    const valor = rows[i][0];
-    if (valor && /^\d+\/2026$/.test(valor)) { // acepta cualquier número antes de /2026
-      ultimoCorrelativo = parseInt(valor.split('/')[0]) || 0;
+    const valor = (rows[i][0] || "").trim();
+    if (/^\d+\/2026$/.test(valor)) { // acepta cualquier número antes de /2026
+      ultimoCorrelativo = parseInt(valor.split('/')[0], 10);
       break;
     }
   }
@@ -800,6 +800,7 @@ await sheets.spreadsheets.values.append({
 });
 
 console.log(`✅ Volcado en hoja ${hojaDestino} con correlativo ${nuevoCorrelativo}`);
+
 
     // Construir objeto para vista previa
     const documentos = [...(req.body.doc || []), ...(req.body.doc2 || [])];
