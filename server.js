@@ -797,17 +797,17 @@ const nuevaFila = [
   datos.distrito           // Columna E: DISTRITO
 ];
 
-// Insertar fila en la hoja
-await sheets.spreadsheets.values.append({
+// Actualizar la fila existente en lugar de agregar al final
+await sheets.spreadsheets.values.update({
   spreadsheetId,
-  range: hojaDestino,
+  range: `${hojaDestino}!A${nuevaPartida}:E${nuevaPartida}`, // fila según NO. DE PARTIDA
   valueInputOption: 'USER_ENTERED',
   requestBody: {
     values: [nuevaFila],
   },
 });
 
-console.log(`✅ Volcado en hoja ${hojaDestino} con correlativo ${nuevoCorrelativo} y partida ${nuevaPartida}`);
+console.log(`✅ Actualizado en hoja ${hojaDestino} correlativo ${nuevoCorrelativo} en partida ${nuevaPartida}`);
 
     // Construir objeto para vista previa
     const documentos = [...(req.body.doc || []), ...(req.body.doc2 || [])];
