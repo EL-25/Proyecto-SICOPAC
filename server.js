@@ -766,25 +766,18 @@ const existing = await sheets.spreadsheets.values.get({
 const rows = existing.data.values || [];
 let ultimoCorrelativo = 0;
 
-if (rows.length > 1) { // hay encabezado + datos
-  const ultimaFila = rows[rows.length - 1][0]; // último valor en columna A
-  if (ultimaFila) {
-    ultimoCorrelativo = parseInt(ultimaFila.split('/')[0]) || 0;
+if (rows.length > 1) {
+  // Buscar el último correlativo válido en la columna A
+  for (let i = rows.length - 1; i >= 0; i--) {
+    const valor = rows[i][0];
+    if (valor && /^\d{3}\/2026$/.test(valor)) { // formato tipo 039/2026
+      ultimoCorrelativo = parseInt(valor.split('/')[0]) || 0;
+      break;
+    }
   }
 }
 
-// Generar el nuevo correlativo
 const nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
-
-// Construir nueva fila
-const nuevaFila = [
-  nuevoCorrelativo, // Columna A: correlativo
-  String(ultimoCorrelativo + 1), // Columna B: NO. DE PARTIDA
-  datos.fechaPresentacion, // Columna C: FECHA
-  [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
-    .filter(Boolean).join(" "), // Columna D: NOMBRE DEL ASENTADO
-  datos.distrito // Columna E: DISTRITO
-];
 
 // Insertar fila en la hoja
 await sheets.spreadsheets.values.append({
