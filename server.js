@@ -19,7 +19,9 @@ import { google } from 'googleapis';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-async function conectarSheets() {
+async function conectarSheets() 
+//Bloque de credenciales para hacer el volcado hacia el sheet//
+{
   const auth = new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
@@ -29,8 +31,10 @@ async function conectarSheets() {
   });
 
   const sheets = google.sheets({ version: 'v4', auth });
-
+  //Esta linea es la más impornate debemos cambiarlo a la url del sheet que utilizan en la alcaldia//
   const spreadsheetId = '1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc';
+  //Cierre de la linea importante
+  //Cierre del bloque de las credenciales del volcado
 
   // Lista de todas tus pestañas
   const hojas = [
@@ -87,7 +91,7 @@ const PORT = process.env.PORT || 3000;
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Configuración de conexión a PostgreSQL (Railway)
+// Estas son las credenciales que cambiaremos para conectarnos al servidor de la alcaldia//
 const pool = new Pool({
   host: process.env.PGHOST,
   port: process.env.PGPORT,
@@ -96,6 +100,7 @@ const pool = new Pool({
   database: process.env.PGDATABASE,
   ssl: { rejectUnauthorized: false }
 });
+//Cierre del bloque que contiene las credenciales que cambiaremos//
 
 // Middleware
 app.use(cors());
