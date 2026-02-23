@@ -758,7 +758,20 @@ switch (datos.declaracion) {
   case 'Nacimiento': hojaDestino = 'NACIMIENTOS'; break;
   case 'Defuncion': hojaDestino = 'DEFUNCIONES'; break;
   case 'Bodas': hojaDestino = 'BODAS'; break;
-  // ... demás casos igual que antes ...
+  case 'MAR. BODAS': hojaDestino = 'MAR. BODAS'; break;
+  case 'MAR. DEFUNCIONES': hojaDestino = 'MAR. DEFUNCIONES'; break;
+  case 'Divorcios CPM': hojaDestino = 'DIVORCIOS C.P.M'; break;
+  case 'MAR. DIVORCIOS': hojaDestino = 'MAR. DIVORCIOS'; break;
+  case 'MAR. VIUDEZ': hojaDestino = 'MAR. VIUDEZ'; break;
+  case 'REC. ALCALDIA': hojaDestino = 'REC.ALCALDIA'; break;
+  case 'REC. NOTARIO': hojaDestino = 'REC. NOTARIO'; break;
+  case 'REPO': hojaDestino = 'REPO.'; break;
+  case 'IDENTIDADES': hojaDestino = 'IDENTIDADES'; break;
+  case 'ADECUA': hojaDestino = 'ADECUA.'; break;
+  case 'ADOP': hojaDestino = 'ADOP.'; break;
+  case 'CANC. POR RECON': hojaDestino = 'CANC. POR RECON'; break;
+  case 'UNION NO MATRI': hojaDestino = 'UNION NO MATRI'; break;
+  case 'NOM. TUTOR': hojaDestino = 'NOM. TUTOR'; break;
   default: hojaDestino = 'GENERAL';
 }
 
