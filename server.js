@@ -275,7 +275,8 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
     tercerApellido,
     correo,
     rol,
-    fechaIngreso
+    fechaIngreso,
+    creadoPor
   } = req.body;
 
   if (!usuario || !primerNombre || !primerApellido || !correo || !rol || !fechaIngreso) {
@@ -287,11 +288,14 @@ app.post('/api/agregar-usuario', upload.single("firma"), async (req, res) => {
   const fechaHora = new Date(fechaIngreso);
   const firmaNombre = req.file.filename;
 
+  // Obtener distrito del admin creador
+  const distritoAdmin = distritosPorUsuario[creadoPor]?.distrito || "";
+
   try {
     await pool.query(
-      `INSERT INTO "Usuarios" ("Usuario","NombreCompleto","Correo","Rol","FechaRegistro","Clave","Firma","Estado","CreadoPor")
-      VALUES ($1,$2,$3,$4,$5,'',$6,true,$7)`,
-      [usuario, nombreCompleto, correo, rol, fechaHora, firmaNombre, req.body.creadoPor]
+      `INSERT INTO "Usuarios" ("Usuario","NombreCompleto","Correo","Rol","FechaRegistro","Clave","Firma","Estado","CreadoPor","Distrito")
+       VALUES ($1,$2,$3,$4,$5,'',$6,true,$7,$8)`,
+      [usuario, nombreCompleto, correo, rol, fechaHora, firmaNombre, creadoPor, distritoAdmin]
     );
 
     res.status(200).json({ mensaje: 'Usuario registrado exitosamente' });
@@ -639,13 +643,27 @@ app.post("/guardar", async (req, res) => {
   const normalizar = v => Array.isArray(v) ? v[0] : v || null;
 
   try {
+    // Determinar distrito y lugar según rol
+    let distritoFinal;
+    let lugarFinal;
+
+    if (req.body.rol === "Administrador") {
+      // Para administradores: usar el mapeo fijo
+      distritoFinal = distritosPorUsuario[req.body.usuario]?.distrito || "";
+      lugarFinal = distritosPorUsuario[req.body.usuario]?.lugar || "";
+    } else {
+      // Para otros roles: usar lo que venga del formulario
+      distritoFinal = normalizar(req.body.distrito)?.replace(/^,/, "").trim();
+      lugarFinal = normalizar(req.body.lugarPresentacion)?.replace(/^,/, "").trim();
+    }
+
     const datos = {
       codigoFormulario: normalizar(req.body.codigoFormulario),
       usuario: normalizar(req.body.usuario),
       refLLE: normalizar(req.body.refLLE),
       municipio: normalizar(req.body.municipio),
-      distrito: normalizar(req.body.distrito)?.replace(/^,/, "").trim(),
-      lugarPresentacion: normalizar(req.body.lugarPresentacion)?.replace(/^,/, "").trim(),
+      distrito: distritoFinal,
+      lugarPresentacion: lugarFinal,
       fechaPresentacion: normalizar(req.body.fechaPresentacion),
       horaPresentacion: normalizar(req.body.horaPresentacion),
       contacto: normalizar(req.body.contacto),
@@ -696,42 +714,42 @@ app.post("/guardar", async (req, res) => {
     console.log("👉 Usuario recibido:", datos.usuario); 
     console.log("👉 Código de formulario recibido:", datos.codigoFormulario);
 
-    // Aquí sigue el INSERT en PostgreSQL (segunda parte)
-        // INSERT con parámetros en PostgreSQL
+    // INSERT en PostgreSQL
     await pool.query(
-  `INSERT INTO "Formularios" (
-    "NumeroFormulario","PrimerNombre","SegundoNombre","PrimerApellido","SegundoApellido","TercerApellido",
-    "PrimerNombreTitular","SegundoNombreTitular","PrimerApellidoTitular","SegundoApellidoTitular","TercerApellidoTitular",
-    "PrimerNombrePadre","SegundoNombrePadre","PrimerApellidoPadre","SegundoApellidoPadre",
-    "PrimerNombreMadre","SegundoNombreMadre","PrimerApellidoMadre","SegundoApellidoMadre","TercerApellidoMadre",
-    "Municipio","Distrito","Canton","Colonia","Calle","NumeroCasa","LugarHecho",
-    "FechaPresentacion","HoraPresentacion","Telefono","Correo","Declaraciones","DescripcionDocumentacion",
-    "RefLLE","LugarPresentacion","Contacto","Plazo","DocTipo","DUI","Pasaporte","OtroDoc",
-    "Titular","Caracter","DocTitular","DuiTitular","NuiTitular","OtroTitular","FechaHecho",
-    "CreadoPor"
-  ) VALUES (
-    $1,$2,$3,$4,$5,$6,
-    $7,$8,$9,$10,$11,
-    $12,$13,$14,$15,
-    $16,$17,$18,$19,$20,
-    $21,$22,$23,$24,$25,$26,$27,
-    $28,$29,$30,$31,$32,$33,
-    $34,$35,$36,$37,$38,$39,$40,$41,
-    $42,$43,$44,$45,$46,$47,$48,$49
-  )`,
-  [
-    datos.codigoFormulario, datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido,
-    datos.primerNombreTitular, datos.segundoNombreTitular, datos.primerApellidoTitular, datos.segundoApellidoTitular, datos.tercerApellidoTitular,
-    datos.primerNombrePadre, datos.segundoNombrePadre, datos.primerApellidoPadre, datos.segundoApellidoPadre,
-    datos.primerNombreMadre, datos.segundoNombreMadre, datos.primerApellidoMadre, datos.segundoApellidoMadre, datos.tercerApellidoMadre,
-    datos.municipio, datos.distrito, datos.canton, datos.colonia, datos.calle, datos.numeroCasa, datos.lugarHecho,
-    datos.fechaPresentacion, datos.horaPresentacion, datos.telefono, datos.correo, datos.declaracion, datos.descripcionDocumentacion,
-    datos.refLLE, datos.lugarPresentacion, datos.contacto, datos.plazo, datos.docTipo, datos.dui, datos.pasaporte, datos.otroDoc,
-    datos.titular, datos.caracter, datos.docTitular, datos.duiTitular, datos.nuiTitular, datos.otroTitular, datos.fechaHecho,
-    datos.usuario
-  ]
-);
-    // Registrar acción en la tabla Acciones
+      `INSERT INTO "Formularios" (
+        "NumeroFormulario","PrimerNombre","SegundoNombre","PrimerApellido","SegundoApellido","TercerApellido",
+        "PrimerNombreTitular","SegundoNombreTitular","PrimerApellidoTitular","SegundoApellidoTitular","TercerApellidoTitular",
+        "PrimerNombrePadre","SegundoNombrePadre","PrimerApellidoPadre","SegundoApellidoPadre",
+        "PrimerNombreMadre","SegundoNombreMadre","PrimerApellidoMadre","SegundoApellidoMadre","TercerApellidoMadre",
+        "Municipio","Distrito","Canton","Colonia","Calle","NumeroCasa","LugarHecho",
+        "FechaPresentacion","HoraPresentacion","Telefono","Correo","Declaraciones","DescripcionDocumentacion",
+        "RefLLE","LugarPresentacion","Contacto","Plazo","DocTipo","DUI","Pasaporte","OtroDoc",
+        "Titular","Caracter","DocTitular","DuiTitular","NuiTitular","OtroTitular","FechaHecho",
+        "CreadoPor"
+      ) VALUES (
+        $1,$2,$3,$4,$5,$6,
+        $7,$8,$9,$10,$11,
+        $12,$13,$14,$15,
+        $16,$17,$18,$19,$20,
+        $21,$22,$23,$24,$25,$26,$27,
+        $28,$29,$30,$31,$32,$33,
+        $34,$35,$36,$37,$38,$39,$40,$41,
+        $42,$43,$44,$45,$46,$47,$48,$49
+      )`,
+      [
+        datos.codigoFormulario, datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido,
+        datos.primerNombreTitular, datos.segundoNombreTitular, datos.primerApellidoTitular, datos.segundoApellidoTitular, datos.tercerApellidoTitular,
+        datos.primerNombrePadre, datos.segundoNombrePadre, datos.primerApellidoPadre, datos.segundoApellidoPadre,
+        datos.primerNombreMadre, datos.segundoNombreMadre, datos.primerApellidoMadre, datos.segundoApellidoMadre, datos.tercerApellidoMadre,
+        datos.municipio, datos.distrito, datos.canton, datos.colonia, datos.calle, datos.numeroCasa, datos.lugarHecho,
+        datos.fechaPresentacion, datos.horaPresentacion, datos.telefono, datos.correo, datos.declaracion, datos.descripcionDocumentacion,
+        datos.refLLE, datos.lugarPresentacion, datos.contacto, datos.plazo, datos.docTipo, datos.dui, datos.pasaporte, datos.otroDoc,
+        datos.titular, datos.caracter, datos.docTitular, datos.duiTitular, datos.nuiTitular, datos.otroTitular, datos.fechaHecho,
+        datos.usuario
+      ]
+    );
+
+    // Registrar acción
     await pool.query(
       `INSERT INTO "Acciones" ("Usuario","TipoAccion","Declaracion","CodigoFormulario","Municipio","Distrito","FechaHoraLocal")
        VALUES ($1,$2,$3,$4,$5,$6,$7)`,
