@@ -20,12 +20,10 @@
 
     <form method="post"> 
       <!-- Campos ocultos para datos de la página 2 -->
-       <% if (typeof data !== 'undefined') { %>
-        <% Object.keys(data).forEach(key => {
-          if (key !== 'codigoFormulario') { %>
-            <input type="hidden" name="<%= key %>" value="<%= data[key] %>">
-        <% } }) %>
-       <% } %>
+       <% Object.keys(data).forEach(key => {
+  if (!['codigoFormulario','usuario','rol','distrito','lugarPresentacion'].includes(key)) { %>
+    <input type="hidden" name="<%= key %>" value="<%= data[key] %>">
+  <% } }) %>
   
       <p>Código del formulario:
         <input type="text" name="codigoFormulario" value="<%= data.codigoFormulario || '' %>" readonly>
