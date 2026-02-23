@@ -611,10 +611,12 @@ app.get("/formulario", async (req, res) => {
       modo: "nuevo",
       data: { 
         usuario: usuarioActual,
+        rol: result.rows.length > 0 ? result.rows[0].Rol : "Invitado", // aquí pasamos el rol
         distrito,
         lugarPresentacion: lugar
       },
-      usuarios //aquí se pasa al EJS
+      usuarios, //aquí se pasa al EJS
+      distritosPorUsuario // pasamos el mapeo al EJS
     });
   } catch (err) {
     console.error("❌ Error en /formulario:", err);
@@ -755,7 +757,7 @@ app.post("/guardar", async (req, res) => {
        VALUES ($1,$2,$3,$4,$5,$6,$7)`,
       [datos.usuario, 'Formulario enviado', datos.declaracion, datos.codigoFormulario, datos.municipio, datos.distrito, req.body.fechaHoraLocal]
     );
-    
+
 // ==============================
 // VOLCADO A GOOGLE SHEETS
 // ==============================
