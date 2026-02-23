@@ -39,6 +39,9 @@
         <label for="municipio">Municipio:</label>
 <input type="text" id="municipio" name="municipio" value="<%= data.municipio || 'La Libertad Este' %>" readonly>
 
+<!-- Campo oculto para enviar el rol -->
+<input type="hidden" name="rol" value="<%= data.rol %>">
+
 <label for="distrito">Distrito:</label>
 <% const distritoVal = data.distrito || ''; %>
 <select id="distrito" name="distrito" required>
