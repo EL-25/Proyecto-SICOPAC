@@ -38,20 +38,34 @@
 
         <label for="municipio">Municipio:</label>
         <input type="text" id="municipio" name="municipio" value="<%= data.municipio || 'La Libertad Este' %>" readonly>
-
-        <label for="distrito">Distrito:</label>
-        <% const distritoVal = data.distrito || ''; %>
-        <select id="distrito" name="distrito" required>
-          <option value="Antiguo Cuscatlán" <%= distritoVal === 'Antiguo Cuscatlán' ? 'selected' : '' %>>Antiguo Cuscatlán</option>
-          <option value="Nuevo Cuscatlán" <%= distritoVal === 'Nuevo Cuscatlán' ? 'selected' : '' %>>Nuevo Cuscatlán</option>
-          <option value="San José Villanueva" <%= distritoVal === 'San José Villanueva' ? 'selected' : '' %>>San José Villanueva</option>
-          <option value="Huizúcar" <%= distritoVal === 'Huizúcar' ? 'selected' : '' %>>Huizúcar</option>
-          <option value="Zaragoza" <%= distritoVal === 'Zaragoza' ? 'selected' : '' %>>Zaragoza</option>
-        </select>
         
-        <p>Lugar de presentación:
-          <input type="text" id="lugarPresentacion" name="lugarPresentacion" value="<%= data.lugarPresentacion || '' %>">
-        </p>
+        <% if (rol === 'Administrador') { %>
+          <!-- Para administradores: distrito fijo del mapeo -->
+           <label for="distrito">Distrito:</label>
+           <input type="text" id="distrito" name="distrito" 
+           value="<%= distritosPorUsuario[data.usuario]?.distrito %>" readonly>
+
+           <p>Lugar de presentación:
+            <input type="text" id="lugarPresentacion" name="lugarPresentacion" 
+            value="<%= distritosPorUsuario[data.usuario]?.lugar %>" readonly>
+          </p>
+          
+          <% } else { %>
+            <!-- Para otros roles: selección manual -->
+             <label for="distrito">Distrito:</label>
+             <% const distritoVal = data.distrito || ''; %>
+             <select id="distrito" name="distrito" required>
+              <option value="Antiguo Cuscatlán" <%= distritoVal === 'Antiguo Cuscatlán' ? 'selected' : '' %>>Antiguo Cuscatlán</option>
+              <option value="Nuevo Cuscatlán" <%= distritoVal === 'Nuevo Cuscatlán' ? 'selected' : '' %>>Nuevo Cuscatlán</option>
+              <option value="San José Villanueva" <%= distritoVal === 'San José Villanueva' ? 'selected' : '' %>>San José Villanueva</option>
+              <option value="Huizúcar" <%= distritoVal === 'Huizúcar' ? 'selected' : '' %>>Huizúcar</option>
+              <option value="Zaragoza" <%= distritoVal === 'Zaragoza' ? 'selected' : '' %>>Zaragoza</option>
+            </select>
+            
+            <p>Lugar de presentación:
+              <input type="text" id="lugarPresentacion" name="lugarPresentacion" value="<%= data.lugarPresentacion || '' %>">
+            </p>
+            <% } %>
 
         <p>
           Fecha de presentación:
