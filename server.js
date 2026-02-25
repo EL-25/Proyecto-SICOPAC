@@ -776,7 +776,7 @@ switch (datos.declaracion) {
   case 'Nacimiento': hojaDestino = 'NACIMIENTOS'; break;
   case 'Defuncion': hojaDestino = 'DEFUNCIONES'; break;
   case 'Bodas': hojaDestino = 'BODAS'; break;
-  case 'MAR. BODAS': hojaDestino = 'MAR. BODAS'; break;
+  case 'Marginacion Bodas': hojaDestino = 'MAR. BODAS'; break;
   case 'MAR. DEFUNCIONES': hojaDestino = 'MAR. DEFUNCIONES'; break;
   case 'Divorcios CPM': hojaDestino = 'DIVORCIOS C.P.M'; break;
   case 'MAR. DIVORCIOS': hojaDestino = 'MAR. DIVORCIOS'; break;
