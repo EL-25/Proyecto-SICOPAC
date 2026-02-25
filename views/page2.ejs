@@ -57,7 +57,7 @@
   <input type="date" name="fechaHecho" value="<%= data.fechaHecho || '' %>">
 
   <label>Lugar del hecho o acto jurídico:</label>
-  <input type="text" id="lugarHecho" name="lugarHecho" value="<%= data.lugarHecho || '' %>">
+  <input type="text" id="lugarHecho" name="lugarHecho" value="<%= data.lugarHecho || '' %>" required>
 
   <fieldset>
     <legend>Nombre de la madre</legend>
@@ -214,10 +214,20 @@
       console.log("🚀 Evento submit disparado, enviando formulario...");
       const nombre = document.querySelector("[name='primerNombreTitular']");
       const apellido = document.querySelector("[name='primerApellidoTitular']");
+      const lugarHechoInput = document.getElementById("lugarHecho");
+
       if (!nombre.value.trim() || !apellido.value.trim()) {
         e.preventDefault();
         alert("Debe completar al menos el primer nombre y primer apellido del titular.");
         nombre.focus();
+        return;
+      }
+
+      //Validar campo Lugar del hecho
+      if (!lugarHechoInput.value.trim()) {
+        e.preventDefault();
+        alert("Debe completar el campo 'Lugar del hecho o acto jurídico'.");
+        lugarHechoInput.focus();
         return;
       }
 
