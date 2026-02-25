@@ -650,14 +650,12 @@ app.post("/guardar", async (req, res) => {
     let lugarFinal;
 
     if (req.body.rol === "Administrador") {
-      // Para administradores: usar el mapeo fijo
-      distritoFinal = distritosPorUsuario[req.body.usuario]?.distrito || "";
-      lugarFinal = distritosPorUsuario[req.body.usuario]?.lugar || "";
-    } else {
-      // Para otros roles: usar lo que venga del formulario
-      distritoFinal = normalizar(req.body.distrito)?.replace(/^,/, "").trim();
-      lugarFinal = normalizar(req.body.lugarPresentacion)?.replace(/^,/, "").trim();
-    }
+  distritoFinal = distritosPorUsuario[req.body.usuario]?.distrito || req.body.distrito || null;
+  lugarFinal = distritosPorUsuario[req.body.usuario]?.lugar || req.body.lugarPresentacion || null;
+} else {
+  distritoFinal = normalizar(req.body.distrito)?.replace(/^,/, "").trim() || null;
+  lugarFinal = normalizar(req.body.lugarPresentacion)?.replace(/^,/, "").trim() || null;
+}
 
     const datos = {
       codigoFormulario: normalizar(req.body.codigoFormulario),
