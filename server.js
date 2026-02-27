@@ -825,31 +825,42 @@ const nuevaPartida = String(ultimoCorrelativo + 1);
 
 // Construir nueva fila con condición de columnas
 let nuevaFila;
-if (['NACIMIENTOS','DEFUNCIONES','BODAS','REC.ALCALDIA'].includes(hojaDestino)) {
-  // 5 columnas
+if (hojaDestino === 'REC.ALCALDIA') {
+  // 5 columnas con TIPO
   nuevaFila = [
-    nuevoCorrelativo,        // Columna A: correlativo
-    nuevaPartida,            // Columna B: NO. DE PARTIDA
-    datos.fechaPresentacion, // Columna C: FECHA
+    nuevoCorrelativo,
+    nuevaPartida,
+    datos.fechaPresentacion,
     [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
-      .filter(Boolean).join(" "), // Columna D: NOMBRE DEL ASENTADO
-    datos.distrito           // Columna E: DISTRITO
+      .filter(Boolean).join(" "),
+    datos.declaracion   // aquí va TIPO
+  ];
+} else if (['NACIMIENTOS','DEFUNCIONES','BODAS'].includes(hojaDestino)) {
+  // 5 columnas estándar
+  nuevaFila = [
+    nuevoCorrelativo,
+    nuevaPartida,
+    datos.fechaPresentacion,
+    [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
+      .filter(Boolean).join(" "),
+    datos.distrito
   ];
 } else {
   // 4 columnas
   nuevaFila = [
-    nuevoCorrelativo,        // Columna A: correlativo
-    datos.fechaPresentacion, // Columna B: FECHA
+    nuevoCorrelativo,
+    datos.fechaPresentacion,
     [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
-      .filter(Boolean).join(" "), // Columna C: NOMBRE DEL ASENTADO
-    datos.distrito           // Columna D: DISTRITO
+      .filter(Boolean).join(" "),
+    datos.distrito
   ];
 }
 
-// Actualizar la fila existente en lugar de agregar al final
-const rango = (['NACIMIENTOS','DEFUNCIONES','BODAS','REC.ALCALDIA'].includes(hojaDestino))
+const rango = hojaDestino === 'REC.ALCALDIA'
   ? `${hojaDestino}!A${nuevaPartida}:E${nuevaPartida}`
-  : `${hojaDestino}!A${nuevaPartida}:D${nuevaPartida}`;
+  : (['NACIMIENTOS','DEFUNCIONES','BODAS'].includes(hojaDestino)
+      ? `${hojaDestino}!A${nuevaPartida}:E${nuevaPartida}`
+      : `${hojaDestino}!A${nuevaPartida}:D${nuevaPartida}`);
 
 await sheets.spreadsheets.values.update({
   spreadsheetId,
@@ -861,6 +872,7 @@ await sheets.spreadsheets.values.update({
 });
 
 console.log(`✅ Actualizado en hoja ${hojaDestino} correlativo ${nuevoCorrelativo} en partida ${nuevaPartida}`);
+
     // Construir objeto para vista previa
     const documentos = [...(req.body.doc || []), ...(req.body.doc2 || [])];
     const datosConCodigo = {
