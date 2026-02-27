@@ -823,20 +823,37 @@ let ultimaPartida = partidas.length > 0
 const nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
 const nuevaPartida = String(ultimoCorrelativo + 1);
 
-// Construir nueva fila
-const nuevaFila = [
-  nuevoCorrelativo,        // Columna A: correlativo
-  nuevaPartida,            // Columna B: NO. DE PARTIDA
-  datos.fechaPresentacion, // Columna C: FECHA
-  [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
-    .filter(Boolean).join(" "), // Columna D: NOMBRE DEL ASENTADO
-  datos.distrito           // Columna E: DISTRITO
-];
+// Construir nueva fila con condición de columnas
+let nuevaFila;
+if (['NACIMIENTOS','DEFUNCIONES','BODAS','REC.ALCALDIA'].includes(hojaDestino)) {
+  // 5 columnas
+  nuevaFila = [
+    nuevoCorrelativo,        // Columna A: correlativo
+    nuevaPartida,            // Columna B: NO. DE PARTIDA
+    datos.fechaPresentacion, // Columna C: FECHA
+    [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
+      .filter(Boolean).join(" "), // Columna D: NOMBRE DEL ASENTADO
+    datos.distrito           // Columna E: DISTRITO
+  ];
+} else {
+  // 4 columnas
+  nuevaFila = [
+    nuevoCorrelativo,        // Columna A: correlativo
+    datos.fechaPresentacion, // Columna B: FECHA
+    [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
+      .filter(Boolean).join(" "), // Columna C: NOMBRE DEL ASENTADO
+    datos.distrito           // Columna D: DISTRITO
+  ];
+}
 
 // Actualizar la fila existente en lugar de agregar al final
+const rango = (['NACIMIENTOS','DEFUNCIONES','BODAS','REC.ALCALDIA'].includes(hojaDestino))
+  ? `${hojaDestino}!A${nuevaPartida}:E${nuevaPartida}`
+  : `${hojaDestino}!A${nuevaPartida}:D${nuevaPartida}`;
+
 await sheets.spreadsheets.values.update({
   spreadsheetId,
-  range: `${hojaDestino}!A${nuevaPartida}:E${nuevaPartida}`, // fila según NO. DE PARTIDA
+  range: rango, // fila según NO. DE PARTIDA
   valueInputOption: 'USER_ENTERED',
   requestBody: {
     values: [nuevaFila],
@@ -844,7 +861,6 @@ await sheets.spreadsheets.values.update({
 });
 
 console.log(`✅ Actualizado en hoja ${hojaDestino} correlativo ${nuevoCorrelativo} en partida ${nuevaPartida}`);
-
     // Construir objeto para vista previa
     const documentos = [...(req.body.doc || []), ...(req.body.doc2 || [])];
     const datosConCodigo = {
