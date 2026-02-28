@@ -802,27 +802,30 @@ const existing = await sheets.spreadsheets.values.get({
 
 const rows = existing.data.values || [];
 
-// Correlativos válidos en columna A
-const correlativos = rows
-  .map(r => (r[0] || "").trim())
-  .filter(v => /^\d+\/2026$/.test(v));
+// Detectar formato de correlativo automáticamente
+const correlativosRaw = rows.map(r => (r[0] || "").trim());
 
-let ultimoCorrelativo = correlativos.length > 0
-  ? Math.max(...correlativos.map(v => parseInt(v.split('/')[0], 10)))
-  : 0;
+const correlativosFormatoComplejo = correlativosRaw.filter(v => /^\d+\/2026$/.test(v));
+const correlativosFormatoSimple = correlativosRaw.map(v => parseInt(v, 10)).filter(n => !isNaN(n));
 
-// Números de partida válidos en columna B
-const partidas = rows
-  .map(r => parseInt(r[1], 10))
-  .filter(n => !isNaN(n));
+let ultimoCorrelativo, nuevoCorrelativo, nuevaPartida;
 
-let ultimaPartida = partidas.length > 0
-  ? Math.max(...partidas)
-  : 0;
-
-// Generar nuevos valores
-const nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
-const nuevaPartida = String(ultimoCorrelativo + 1);
+if (correlativosFormatoComplejo.length > 0) {
+  // Formato 000/2026
+  ultimoCorrelativo = Math.max(...correlativosFormatoComplejo.map(v => parseInt(v.split('/')[0], 10)));
+  nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
+  nuevaPartida = String(ultimoCorrelativo + 1);
+} else if (correlativosFormatoSimple.length > 0) {
+  // Formato simple 1,2,3...
+  ultimoCorrelativo = Math.max(...correlativosFormatoSimple);
+  nuevoCorrelativo = String(ultimoCorrelativo + 1);
+  nuevaPartida = String(ultimoCorrelativo + 1);
+} else {
+  // Si no hay correlativos, arrancar con formato complejo por defecto
+  ultimoCorrelativo = 0;
+  nuevoCorrelativo = '001/2026';
+  nuevaPartida = '1';
+}
 
 // Construir nueva fila con condición de columnas
 let nuevaFila;
