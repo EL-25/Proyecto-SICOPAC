@@ -772,24 +772,25 @@ const spreadsheetId = '1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc';
 
 // Determinar hoja destino según la declaración
 let hojaDestino;
-switch (datos.declaracion) {
-  case 'Nacimiento': hojaDestino = 'NACIMIENTOS'; break;
-  case 'Defuncion': hojaDestino = 'DEFUNCIONES'; break;
-  case 'Bodas': hojaDestino = 'BODAS'; break;
-  case 'Marginacion Bodas': hojaDestino = 'MAR. BODAS'; break;
-  case 'MAR. DEFUNCIONES': hojaDestino = 'MAR. DEFUNCIONES'; break;
-  case 'Divorcios CPM': hojaDestino = 'DIVORCIOS C.P.M'; break;
-  case 'MAR. DIVORCIOS': hojaDestino = 'MAR. DIVORCIOS'; break;
-  case 'MAR. VIUDEZ': hojaDestino = 'MAR. VIUDEZ'; break;
-  case 'REC. ALCALDIA': hojaDestino = 'REC.ALCALDIA'; break;
-  case 'REC. NOTARIO': hojaDestino = 'REC. NOTARIO'; break;
-  case 'REPO': hojaDestino = 'REPO.'; break;
+const declaracionNormalizada = (datos.declaracion || "").toUpperCase().trim();
+switch (declaracionNormalizada) {
+  case 'NACIMIENTO': hojaDestino = 'NACIMIENTOS'; break;
+  case 'DEFUNCION': hojaDestino = 'DEFUNCIONES'; break;
+  case 'BODAS': hojaDestino = 'BODAS'; break;
+  case 'MARGINACION BODAS': hojaDestino = 'MAR. BODAS'; break;
+  case 'MARGINACION DEFUNCIONES': hojaDestino = 'MAR. DEFUNCIONES'; break;
+  case 'DIVORCIOS CPM': hojaDestino = 'DIVORCIOS C.P.M'; break;
+  case 'MARGINACION DIVORCIOS': hojaDestino = 'MAR. DIVORCIOS'; break;
+  case 'MARGINACION VIUDEZ': hojaDestino = 'MAR. VIUDEZ'; break;
+  case 'REC.ALCALDIA': hojaDestino = 'REC.ALCALDIA'; break;
+  case 'REC.NOTARIO': hojaDestino = 'REC. NOTARIO'; break;
+  case 'REPOSICIONES': hojaDestino = 'REPO.'; break;
   case 'IDENTIDADES': hojaDestino = 'IDENTIDADES'; break;
-  case 'ADECUA': hojaDestino = 'ADECUA.'; break;
-  case 'ADOP': hojaDestino = 'ADOP.'; break;
-  case 'CANC. POR RECON': hojaDestino = 'CANC. POR RECON'; break;
-  case 'UNION NO MATRI': hojaDestino = 'UNION NO MATRI'; break;
-  case 'NOM. TUTOR': hojaDestino = 'NOM. TUTOR'; break;
+  case 'ADECUACIONES': hojaDestino = 'ADECUA.'; break;
+  case 'ADOPCIONES': hojaDestino = 'ADOP.'; break;
+  case 'CANCELACION POR RECON.': hojaDestino = 'CANC. POR RECON'; break;
+  case 'UNION NO MATRIMONIAL': hojaDestino = 'UNION NO MATRI'; break;
+  case 'NOM.TUTOR': hojaDestino = 'NOM. TUTOR'; break;
   default: hojaDestino = 'GENERAL';
 }
 
