@@ -831,17 +831,27 @@ if (['REC.ALCALDIA','MAR. VIUDEZ'].includes(hojaDestino)) {
 }
 
 // Construir nueva fila con condición de columnas
-let nuevaFila;
 if (hojaDestino === 'REC.ALCALDIA') {
-  // 5 columnas con TIPO
+  // 5 columnas: Correlativo, Fecha, Nombre, Tipo, Distrito
   nuevaFila = [
-    nuevoCorrelativo,
-    nuevaPartida,
-    datos.fechaPresentacion,
+    nuevoCorrelativo,          // Columna A: correlativo simple
+    datos.fechaPresentacion,   // ✅ Columna B: fecha (ya no duplicamos correlativo)
     [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
-      .filter(Boolean).join(" "),
-    datos.declaracion   // aquí va TIPO
+      .filter(Boolean).join(" "), // Columna C: nombre
+    datos.declaracion,         // Columna D: tipo
+    datos.distrito             // Columna E: distrito
   ];
+
+  if (hojaDestino === 'MAR. VIUDEZ') {
+  // 4 columnas: Correlativo, Fecha, Nombre, Distrito
+  nuevaFila = [
+    nuevoCorrelativo,          // Columna A: correlativo simple
+    datos.fechaPresentacion,   // Columna B: fecha
+    [datos.primerNombre, datos.segundoNombre, datos.primerApellido, datos.segundoApellido, datos.tercerApellido]
+      .filter(Boolean).join(" "), // Columna C: nombre
+    datos.distrito             // Columna D: distrito
+  ];
+}
 } else if (['NACIMIENTOS','DEFUNCIONES','BODAS'].includes(hojaDestino)) {
   // 5 columnas estándar
   nuevaFila = [
