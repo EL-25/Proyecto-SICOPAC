@@ -802,29 +802,32 @@ const existing = await sheets.spreadsheets.values.get({
 
 const rows = existing.data.values || [];
 
-// Detectar formato de correlativo automáticamente
-const correlativosRaw = rows.map(r => (r[0] || "").trim());
-
-const correlativosFormatoComplejo = correlativosRaw.filter(v => /^\d+\/2026$/.test(v));
-const correlativosFormatoSimple = correlativosRaw.map(v => parseInt(v, 10)).filter(n => !isNaN(n));
-
 let ultimoCorrelativo, nuevoCorrelativo, nuevaPartida;
 
-if (correlativosFormatoComplejo.length > 0) {
-  // Formato 000/2026
-  ultimoCorrelativo = Math.max(...correlativosFormatoComplejo.map(v => parseInt(v.split('/')[0], 10)));
-  nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
-  nuevaPartida = String(ultimoCorrelativo + 1);
-} else if (correlativosFormatoSimple.length > 0) {
-  // Formato simple 1,2,3...
-  ultimoCorrelativo = Math.max(...correlativosFormatoSimple);
+if (['REC.ALCALDIA','MAR. VIUDEZ'].includes(hojaDestino)) {
+  // Forzar formato simple 1,2,3...
+  const correlativosSimples = rows
+    .map(r => parseInt(r[0], 10))
+    .filter(n => !isNaN(n));
+
+  ultimoCorrelativo = correlativosSimples.length > 0
+    ? Math.max(...correlativosSimples)
+    : 0;
+
   nuevoCorrelativo = String(ultimoCorrelativo + 1);
   nuevaPartida = String(ultimoCorrelativo + 1);
 } else {
-  // Si no hay correlativos, arrancar con formato complejo por defecto
-  ultimoCorrelativo = 0;
-  nuevoCorrelativo = '001/2026';
-  nuevaPartida = '1';
+  // Formato 000/2026 para todas las demás hojas
+  const correlativos = rows
+    .map(r => (r[0] || "").trim())
+    .filter(v => /^\d+\/2026$/.test(v));
+
+  ultimoCorrelativo = correlativos.length > 0
+    ? Math.max(...correlativos.map(v => parseInt(v.split('/')[0], 10)))
+    : 0;
+
+  nuevoCorrelativo = String(ultimoCorrelativo + 1).padStart(3, '0') + '/2026';
+  nuevaPartida = String(ultimoCorrelativo + 1);
 }
 
 // Construir nueva fila con condición de columnas
