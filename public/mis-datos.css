@@ -19,7 +19,7 @@ body.fondo-datos::before {
 
 /* Encabezado institucional */
 .encabezado {
-  background: linear-gradient(90deg, #ff3586, #0077cc);
+  background: linear-gradient(90deg, #ff3586, #ff3586);
   color: white;
   min-height: 100px;
   display: flex;
