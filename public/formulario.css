@@ -19,7 +19,7 @@ body.fondo-datos::before {
 
 /* Encabezado institucional */
 .encabezado {
-  background-color: #0056b3;
+  background-color: #ff3586;
   color: white;
   height: 100px;
   display: flex;
@@ -59,7 +59,7 @@ body.fondo-datos::before {
   bottom: 10px;
   left: 20px;
   background-color: #ffffff;
-  color: #0056b3;
+  color: #ff3586;
   border: none;
   padding: 6px 12px;
   border-radius: 4px;
