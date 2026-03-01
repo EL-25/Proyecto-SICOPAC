@@ -212,6 +212,17 @@ button:hover {
   caret-color: #333;
 }
 
+.modal .modal-content button {
+  background: white !important;   /* fuerza fondo blanco */
+  color: #007ACC !important;      /* fuerza texto azul */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
 /* Responsividad */
 @media screen and (max-width: 768px) {
   .main-container {
