@@ -106,8 +106,8 @@ h2 {
   padding: 8px;
 }
 
-/* Botón de login */
-button {
+/* Botón de login (solo dentro del contenedor de login) */
+.login-container button {
   width: 100%;
   padding: 10px;
   background-color: #FF3586;
@@ -119,7 +119,7 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button:hover {
+.login-container button:hover {
   background-color: #e02d74;
 }
 
