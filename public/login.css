@@ -37,7 +37,7 @@ body::before {
 
 .info-panel h1 {
   font-size: 2em;
-  color: #FF3586;
+  color: #007ACC;
   margin-bottom: 20px;
 }
 
@@ -110,7 +110,7 @@ h2 {
 button {
   width: 100%;
   padding: 10px;
-  background-color: #007ACC;
+  background-color: #FF3586;
   color: white;
   border: none;
   border-radius: 5px;
