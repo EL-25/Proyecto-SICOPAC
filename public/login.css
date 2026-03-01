@@ -179,8 +179,8 @@ button:hover {
 }
 
 .modal-content button {
-  background: white;
-  color: #007ACC;
+  background: white !important;
+  color: #007ACC !important;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
