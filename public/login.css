@@ -37,7 +37,7 @@ body::before {
 
 .info-panel h1 {
   font-size: 2em;
-  color: #007ACC;
+  color: #FF3586;
   margin-bottom: 20px;
 }
 
@@ -76,7 +76,7 @@ body::before {
 h2 {
   margin-top: 4px;
   margin-bottom: 18px;
-  color: #FF3586;
+  color: #007ACC;
   font-size: 1.3em;
 }
 
