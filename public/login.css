@@ -37,7 +37,7 @@ body::before {
 
 .info-panel h1 {
   font-size: 2em;
-  color: #005baa;
+  color: #FF3586;
   margin-bottom: 20px;
 }
 
@@ -76,7 +76,7 @@ body::before {
 h2 {
   margin-top: 4px;
   margin-bottom: 18px;
-  color: #005baa;
+  color: #FF3586;
   font-size: 1.3em;
 }
 
@@ -110,7 +110,7 @@ h2 {
 button {
   width: 100%;
   padding: 10px;
-  background-color: #005baa;
+  background-color: #FF3586;
   color: white;
   border: none;
   border-radius: 5px;
@@ -120,7 +120,7 @@ button {
 }
 
 button:hover {
-  background-color: #004080;
+  background-color: #e02d74;
 }
 
 /* Mensaje de error elegante */
