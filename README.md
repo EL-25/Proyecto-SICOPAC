@@ -58,6 +58,8 @@ img/ → Recursos gráficos.
 
 server.js → Configuración del servidor, conexión a base de datos y volcado hacia Google Sheets.
 
+.env → Archivo de configuración de credenciales y variables de entorno.
+
 📖 Manual de uso
 Clonar el repositorio desde GitHub o copiarlo desde la memoria USB.
 
@@ -94,6 +96,10 @@ const spreadsheetId = 'ID_DEL_SHEET_DE_LA_ALCALDIA';
 
 👉 Acción necesaria: reemplazar spreadsheetId por el ID del Google Sheet oficial de la Alcaldía.
 
+Actualmente se encuentra asi:
+const spreadsheetId = '1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc';
+Se debe reemplazar este ID "1oPWwKFb-bl1tMWtQr43tpNlKWX1G1re4hJn7p1hY8vc" por el ID del sheet que utiliza la alcaldía
+
 🔹 Bloque de credenciales del servidor (Base de Datos)
 const pool = new Pool({
   host: process.env.PGHOST,
@@ -105,6 +111,44 @@ const pool = new Pool({
 });
 
 👉 Acción necesaria: ajustar las variables de entorno (PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE) con las credenciales reales del servidor de la Alcaldía.
+
+Ejemplo de archivo .env
+El archivo .env debe contener las siguientes variables de entorno:
+# Puerto del servidor
+PORT=3000
+
+# Opciones de Node.js
+NODE_OPTIONS=--openssl-legacy-provider
+
+# Credenciales de Google Sheets
+GOOGLE_CLIENT_EMAIL=sicopac-service@proyecto-sicopac.iam.gserviceaccount.com
+GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBK...\n-----END PRIVATE KEY-----\n"
+
+# ID del Google Sheet oficial de la Alcaldía
+SPREADSHEET_ID_ALCALDIA=ID_DEL_SHEET_DE_LA_ALCALDIA
+
+# Credenciales de la base de datos PostgreSQL
+PGHOST=servidor.alcaldia.gob.sv
+PGPORT=5432
+PGUSER=usuario_db
+PGPASSWORD=contraseña_db
+PGDATABASE=nombre_db
+
+Importante:
+
+Los valores aquí son ejemplos. Deben ser reemplazados por las credenciales reales que proporcione la Alcaldía.
+
+La clave privada de Google debe mantenerse con los saltos de línea \n para que funcione correctamente.
+
+Nunca subir el archivo .env al repositorio público.
+
+Actualmente el archivo .env contiene esto:
+GOOGLE_CLIENT_EMAIL=sicopac-service@proyecto-sicopac.iam.gserviceaccount.com
+GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDThKxp+EhAPC1T\nXwbtwWZ53ItzTwfFKpuqUXh3jLIwbtfnyZ+valaI6ctIj2pUHo5KiagZD4tvEL1/\n3D4j0Yz18WU2FZsOfpud5lnd9UKEziCXqRVpwa1GvaAjfpoXJqOjImfx+fpsWgAy\nomq01sh6zy0u8ldwBxXaM/P6bgpjstotdcvHRKbnfBZbbkCd46pbO7yvSDxCDzg7\nhdp/rtqpBlig+8KLkL/rC1c/ZebMkz54oV1il7wriOigvoUJRLz8bqQ3RQodQf1F\n/t8wNJkt3n+5YURAkW4frXPJ/kngEjiPN7Y5LSI3+dBGT/Z/6BWWGyAzElG1xuym\nRzt5DDflAgMBAAECggEAKGsXlDdavRWStrX3qbqVda9gYWQmcLV74f+n9LZIvYsM\nzFDBqCA6kXaVfxPSpmjhWVp1KfbHtu08vOBN6oPKOxwJ8lwOEWa9n15raUfK0nxe\nC4UGn7sf/J7TKT0xvj9GsS9rq/hP82D+XS6ek9hgHmGU+X3bGf/sm9HmKwJYj2S+\nmABS05mCxLLLvlA8ScZJTdECkARF8uor4tAvlueRRsafZSZVF2Ed928eA0ji2uJO\njqB+wUlbZFZPsxycbvDwRvgbup3PTO0W9/M/LKLrXbG2pMR7l55+/3MCq8EMIVd9\nuhMxFsiL8gCr1qyWUZrW8w+tQpaum7WLWCR++wo1yQKBgQDzoxaO4XK8um9PPTY2\ncGAXnUFJZedRgDJ/5Fadk5/n1Iq/kVjPYDNkFijvbQtlhNgUaSICdiEHGgZPV+Qn\nC90OOhIVF2/XRnfHJv7HHGpU4wsZJtLBu+xX8sIGjwcWJ1zAX6wNjfZqGAPh9T7o\nNv3JeCVJLbBV3nE0Op9KVlSceQKBgQDeQFpyoD0iuCVi0oXPJsBR7w7mX9pP+hxm\nomD9meoJb9qnmucvdWv1Gr+NlcvWa64dASv0Tec4rhtcZQVTNfSLOlPgneceIGDN\n8/xtYlI3UczLzoFbuOh4oVjEs4XZONeBA+s+AMlEqZV6i/OFu80PIBQePuRvcVjB\nQ1J4tMGDzQKBgDZJkb42mAVbmW/TmN/afF7mqGR9c2Sipx3+OBqWiVvz7RKwhVR4\nABt+IJLw/kgZqLgrkOtxfPyDHQLS98CHkTMZV2whs8cJKalTlBOzzjGqAZASKYYH\npKsYKYmilxaloLIw3zqJ9m0/eqX/qou9rSEWR2Cd8JvBnAHiShobUHEpAoGBAIy8\ne4nyZkRCD4qQfSM8CrTXiLvhHsFeQ/XKBVkRyd3H8tIHiTXISWCgW4Qwwy84aLz9\nLPQ7EJwXxEOxxLl4hS5U9SBbXSr6ndJNGh+6Dw3wwpqcXdXTNYKNyURl2fA/ylds\nP963aLwOFxXO4Zph3ewiCBtPACCByg43r1W4QIJRAoGAQiYvxkAD2YrUYuepuU2i\ng8+x1Y57yYBJsOX4pPT8Gfjo+YaJuAlFNxT9hOhroDzRKFFqBcTyJSAodJax0QzD\nB8dQToduqK4n7Uq6/BEJ9KpRdAcm9fZWokg+Zb5+6Depq5vuvcaCzqpAtgGigCIJ\nSZpFlwnINKMt9JxaeTei3zA=\n-----END PRIVATE KEY-----\n"
+
+NODE_OPTIONS=--openssl-legacy-provider
+
+SPREADSHEET_ID_ALCALDIA=
 
 Iniciar el servidor con:
 node server.js
