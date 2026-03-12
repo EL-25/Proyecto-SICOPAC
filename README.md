@@ -120,7 +120,9 @@ const pool = new Pool({
 👉 Acción necesaria: ajustar las variables de entorno (PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE) con las credenciales reales del servidor de la Alcaldía.
 
 Ejemplo de archivo .env
+
 El archivo .env debe contener las siguientes variables de entorno:
+
 # Puerto del servidor
 PORT=3000
 
